@@ -1,0 +1,682 @@
+{
+    "header":{
+        "title":"Gustoso",
+        "home":"Home",
+        "about":"About",
+        "menu":"Menu",
+        "contact":"Contact",
+        "gallery":"Gallery",
+        "login":"Login"
+
+    },
+    "footer":{
+        "title": "Gustoso",
+        "description": "Delicious food for every mood. Experience the taste of perfection with our handcrafted delicacies.",
+         "home":"Home",
+        "about":"About",
+        "menu":"Menu",
+        "contact":"Contact",
+        "gallery":"Gallery",
+        "reservations":"Reservations",
+        "contactus":"Contact Us",
+        "address":"Address",
+        "location":"Old Bus Stand, Vyara",
+        "hours":"Hours",
+        "opening":"Opening Hours",
+        "phone":"Phone",
+        "email":"Email",
+        "connect":"Connect With Us",
+        "subscribe":"Subscribe to our newsletter",
+        "placeholder":"Enter your email",
+        "join":"Join",
+        "coppyright":"Gustoso Restaurant. All rights reserved."
+
+    },
+
+    "login":{
+        "welcome":"Welcome Back",
+        "join":"Join Gustoso",
+        "signin":"Sign in to access your account",
+        "crete":"Create an account to start your culinary journey",
+        "fullname":"Full Name",
+        "placholdername":"Enter your full name",
+        "email":"Email",
+        "placholderemail":"Enter your email",
+        "password":"Password",
+        "forget":"Forgot Password?",
+        "placholderpassword":"Enter your password",
+        "iagree":"I agree to the",
+        "terms":"Terms and Service",
+        "and":"and",
+        "privacy":"Privacy Policy",
+        "processing":"Processing...",
+        "signinbtn":"Sign In",
+        "create" :"Create account",
+        "right":"Gustoso. All rights reserved."
+
+    },
+
+    "aboutherosection":{
+        "title": "Welcome to Gustoso",
+        "description":"At Gustoso, we don't just serve food – we",
+        "words": [
+            "craft experiences.",
+            "tell stories.",
+            "create memories.",
+            "celebrate traditions."
+        ] 
+    },
+    "abouthistory":{
+    "storySegments": [
+         {
+     "year": "2015",
+      "title": "The Beginning",
+      "content": "Gustoso was born from a simple dream – to bring authentic, soulful cuisine to your table, made with fresh ingredients and time-honored recipes. What began as a small family-owned restaurant has grown into a culinary destination loved by locals and visitors alike."
+   
+    },
+    {
+      "year": "2018",
+      "title": "Growing Reputation",
+      "content": "From humble beginnings in a cozy corner of the city, Gustoso quickly became known for its vibrant flavors, warm atmosphere, and commitment to quality. Our name, 'Gustoso' – meaning tasty or flavorful in Italian – reflects everything we stand for."
+   
+    },
+    {
+      "year": "2022",
+      "title": "Culinary Excellence",
+      "content": "As we've grown over the years, we've remained true to our founding principles: sourcing the finest ingredients, preparing them with care, and serving them with pride. Our chefs blend traditional techniques with modern creativity, resulting in dishes that honor their heritage while delighting contemporary palates."
+    
+    },
+    {
+      "year": "Present",
+      "title": "Our Legacy",
+      "content": "Each dish tells a story – of family gatherings, of seasonal celebrations, of culinary traditions passed down through generations. Today, Gustoso continues to evolve while staying rooted in what matters most: creating memorable dining experiences that nourish both body and soul."
+    
+    }
+    ],
+    "our":"Our",
+    "story":"Story",
+    "discription":"A culinary journey spanning a decade, crafting memorable experiences and exquisite flavors",
+    "trade":"Tradition",
+    "meet":"Meets",
+    "innovation":"Innovation",
+    "storydis":" Where time-honored recipes meet contemporary culinary artistry, creating unforgettable dining experiences since 2015.",
+    "goto":"Go to story segment",
+    "readdiscription":" Whether you're a first-time visitor or a regular guest, we welcome you to our table with open arms and warm hearts. Every meal is an opportunity to create memories."
+},
+
+"customerreview":{
+    "customerReviews" :[
+    {
+      "name": "Amit S.",
+      "position": "Food Enthusiast",
+      "rating": 5,
+      "review": "One of the best dining experiences I've ever had! The pasta was out of this world and the staff was incredibly friendly.",
+      "color": "from-purple-500 to-pink-500"
+    },
+    {
+      "name": "Riya M.",
+      "position": "Coffee Lover",
+      "rating": 5,
+      "review": "If you're looking for flavor, this is the place. The ambiance is cozy and the food is authentic.",
+      "color": "from-red-500 to-orange-500"
+    },
+    {
+      "name": "Karan T.",
+      "position": "Food Critic",
+      "rating": 5,
+      "review": "Gustoso is a hidden gem. You can taste the love in every bite.",
+      "color": "from-blue-500 to-teal-500"
+    },
+    {
+      "name": "Priya D.",
+      "position": "Regular Customer",
+      "rating": 5,
+     "review": "Every dish tells a story here. The chef's special changes weekly, and I've never been disappointed. My family and I drive an hour just to eat here regularly.",
+      
+      "color": "from-amber-500 to-yellow-500"
+    }
+  ],
+  "what":"What Our Guests Say",
+  "customer":"Customer",
+  "review":"Reviews",
+  "dis":"Discover why our guests keep coming back to experience the unforgettable flavors at Gustoso.",
+  "lable1":"Five-Star Reviews",
+    "lable2":"Customer Satisfaction",
+    "lable3":"Happy Diners Yearly"
+},
+
+"homehero":{
+    "title":"Authentic Italian cuisine with",
+    "words": [
+     "passion.",
+     "tradition.",
+    "love.",
+    "flavor."
+    ],
+    "lable1":"Years of Excellence",
+    "lable2":"Star Rating",
+    "lable3":"Italian Dishes"
+},
+
+"homepopulardish":{
+    "popularDishes":[
+        {
+            "name":"Spaghetti with Anchovies",
+            "description": "Fresh spaghetti with anchovies, tomatoes, and white wine sauce",
+            "tag": "Chef's Special"
+        },{
+            "name":"Artisan Pizza Margherita",
+            "description":"Thin crust pizza with fresh mozzarella, basil, and San Marzano tomatoes",
+            "tag": "Bestseller"
+
+        },{
+             "name": "Risotto al Tartufo",
+      "description": "Creamy Arborio rice with truffle, porcini mushrooms, and Parmigiano-Reggiano",
+      "tag": "New Arrival"
+        },{
+            "name":"Tiramisu Classico",
+            "description":"Classic Italian dessert with coffee-soaked ladyfingers and mascarpone cream",
+            "tag":"Dessert"
+        }
+    ],
+    "popular":"Popular",
+    "dish":"Dishes",
+    "dis":"Discover our most beloved culinary creations of the week",
+    "label":"Popular Dish of the Week",
+    "buttonlable": "Previous dish",
+    "buttonlable2":"Next dish",
+    "order":"Order Now",
+    "visit":"Visit our restaurant to try more of our chef's signature dishes",
+    "buttonV":"View Full Menu"
+
+
+},
+"contact":{
+    "contact":"Contact",
+    "us":"Us",
+    "dis":"Have a question or want to make a reservation? We're here to help.",
+    "location":"Our Location",
+    "oneadd": "Unistar Softech Pvt Ltd",
+    "twoadd":"Surat, Gujarat 395007",
+    "phone":"Phone",
+    "dis1":"For reservations and inquiries",
+    "email":"Email",
+    "dis2":"We'll respond within 24 hours",
+    "hours":"Hours of Operation",
+    "dis3":"Monday - Thursday",
+    "dis4":"Friday - Saturday",
+    "dis5":"Sunday",
+    "dis6":"Kitchen closes 30 minutes before closing time."
+},
+"contactform":{
+    "getintouch":"Get in Touch",
+    "dis":"We'd love to hear from you. Send us a message below.",
+    "name":"Full Name",
+    "placeholdername":"Enter your full name",
+    "email":"Email",
+    "placeholderemail":"Enter your email",
+    "subject":"Subject",
+    "placeholdersubject":"Reservation Request",
+    "message":"Message",
+    "placeholdermessage":"Tell us how we can help you...",
+    "submit":"Send Message",
+    "tost": "Thank you for your message! We will get back to you soon."
+},
+
+"adminheader":{
+  "tittle":"Gustoso-Admin Pannnel",
+  "name": "Alex Johnson",
+  "role": "restaurant manager",
+  "placeholdersearch":"Search",
+  "profile":"Profile",
+  "prefrences":"Preferences",
+  "logout":"Logout",
+  "account": "My Account"
+
+},
+"adminsidebar":{
+  "name":"Alex Johnson",
+  "role":"Admin",
+  "title":"Admin Panel",
+  "logout":"Logout"
+
+},
+"adminnav":{
+  "Dashboard": "Dashboard",
+    "Components": "Components",
+    "Master": "Master",
+    "Category": "Category",
+    "SubCategory": "SubCategory",
+    "Dish": "Dish",
+    "View Dish": "View Dish",
+    "Table": "Table",
+    "View Table": "View Table",
+    "Waiter": "Waiter",
+    "Waiter Registration": "Waiter Registration",
+    "Waiter Detail": "Waiter Detail",
+    "Customer Detail": "Customer Detail",
+    "NEW": "NEW"
+},
+"adminaddcategory":{
+  "errorcategoryen":"English name is required",
+  "errorcategoryen2":"English name must be at least 3 characters",
+  "errorcategoryen3":"English name must be under 20 characters",
+  "errorcategoryes":"Spanish name is required",
+  "errorcategoryes2":"Spanish name must be at least 3 characters",
+  "errorcategoryes3":"Spanish name must be under 20 characters",
+  "title":"Add New Category",
+  "alert":"Category Fetched Successfully",
+  "title1":"Category Information",
+  "dis":"Enter the details for the new category in both languages",
+  "lable1":"Category Name (English)",
+  "placeholderen":"Enter category name in English",
+  "lable2":"Category Name (Spanish)",
+  "placeholderes":"Enter category name in Spanish",
+  "clear":"Clear Form",
+  "save":"Saveing...",
+  "save1":"Save Category"
+},
+"viewcategory":{
+  "err1":"English name is required",
+  "err2":"English name must be at least 3 characters",
+  "err3":"English name must be under 20 characters",
+  "err4":"Spanish name is required",
+  "err5":"Spanish name must be at least 3 characters",
+  "err6":"Spanish name must be under 20 characters",
+  "err7":"Status is required",
+  "title":"Category Management",
+  "dis":"View, search, edit and delete categories",
+  "serchlab":"Search categories by name...",
+  "load":"Loading categories...",
+  "table1":"Category Name (EN/ES)",
+  "table2":"Status",
+  "table3":"Edit",
+  "table4":"Delete",
+  "button":"Active",
+  "button1":"Deactive",
+  "button2":"Edit",
+  "button3":"Delete",
+  "dis1":"No categories found",
+  "dis2":"Try adjusting your search or add a new category",
+  "modeltitle":"Edit category",
+  "dis3":"Update category information in both languages",
+  "lable1":"Category Name (English)",
+  "placeholderen":"Enter category name in English",
+  "lable2":"Category Name (Spanish)",
+  "placeholderes":"Enter category name in Spanish",
+  "lable3":"Status",
+  "placeholderstatus":"Select status",
+  "modeltitle2":"Are you sure you want to delete",
+  "dis4":"This action cannot be undone",
+  "modeltitle3":"Change Status for",
+  "dis5":"Are you sure you want to",
+  "dis6":"this category?",
+  "dis7":"This will change the category status from Active to Deactive.",
+  "dis8":"This will change the category status from Deactive to Active."
+
+},
+"addsubcategory":{
+  "err1":"Category selection is required",
+  "err2": "English name is required",
+  "err3":"English name must be at least 3 characters",
+  "err4":"English name must be under 20 characters",
+  "err5":"Spanish name is required",
+  "err6":"Spanish name must be at least 3 characters",
+  "err7":"Spanish name must be under 20 characters",
+  "tittle":"Add New Subcategory",
+  "alert":"Subcategory Fetched successfully!",
+  "title1":"Subcategory Information",
+  "dis":"Enter the details for the new subcategory in both languages",
+  "label":"Select Category",
+  "label1":"Select a category",
+  "label2":"Subcategory Name (English)",
+  "placeholder":"Enter subcategory name in English",
+  "label3":"Subcategory Name (Spanish)",
+  "placeholder1":"Enter subcategory name in Spanish",
+  "clear":"Clear Form",
+  "save":"Saveing...",
+  "save1":"Save Subcategory"
+},
+"viewsubcategory":{
+  "err1":"English name is required",
+  "err2":"English name must be at least 3 characters",
+  "err3":"English name must be under 20 characters",
+  "err4":"Spanish name is required",
+  "err5":"Spanish name must be at least 3 characters",
+  "err6":"Spanish name must be under 20 characters",
+  "err7":"Category is required",
+  "err8": "Status is required",
+  "title":"Subcategory Management",
+  "dis":"View, search, edit and delete subcategories",
+  "search":"Search subcategories by name or category...",
+  "load":"Loading subcategories...",
+  "table":"Subcategory Name (EN/ES)",
+  "table1":"Category",
+  "table2":"Status",
+  "table3":"Edit",
+  "table4":"Delete",
+   "button":"Active",
+  "button1":"Deactive",
+  "button2":"Edit",
+  "button3":"Delete",
+  "label":"No subcategories found",
+  "dis1":"Try adjusting your search or add a new subcategory",
+  "title1":"Edit subcategory",
+  "dis2":"Update subcategory information in both languages",
+  "label2":"Subcategory Name (English)",
+  "placeholder":"Enter subcategory name in English",
+  "label3":"Subcategory Name (Spanish)",
+  "placeholder1":"Enter subcategory name in Spanish",
+  "label4":"Category",
+  "placeholder2":"Select category",
+  "label5":"Status",
+  "title2":"Are you sure you want to delete",
+  "dis3":"This action cannot be undone.",
+  "title3": "Change Status for",
+  "dis4":"Are you sure you want to",
+  "dis5":"this subcategory?",
+  "dis6":"This will change the subcategory status from Active to Deactive.",
+  "dis7":"This will change the subcategory status from Deactive to Active."
+},
+"customesadmin":{
+  "button1":"Cancel",
+  "button2":"Submit"
+},
+"adddish":{
+  "err":"Category is required",
+  "err1":"Subcategory is required",
+  "err2":"English dish name is required",
+  "err3":"English dish name must be at least 3 characters",
+  "err4": "English dish name must be under 20 characters",
+  "err5":"Spanish dish name is required",
+  "err6":"Spanish dish name must be at least 3 characters",
+  "err7":"Spanish dish name must be under 20 characters",
+  "err8":"Price is required",
+  "err9":"Price must be a valid positive number",
+  "err10":"English description is required",
+  "err11":"English description must be at least 3 characters",
+  "err12":"English description must be under 100 characters",
+  "err13":"Spanish description is required",
+  "err14":"Spanish description must be at least 3 characters",
+  "err15":"Spanish description must be under 100 characters",
+  "err16":"Dish image is required",
+  "err17": "Please select a valid image file (JPEG, PNG, WebP)",
+  "err18":"Image size must be less than 5MB",
+  "title":"Add New Dish",
+  "alert":"Dish Fetched successfully!",
+  "title1":"Dish Information",
+  "dis":"Enter the details for the new dish in both languages.",
+  "label":"Category",
+  "label1":"Select a category",
+  "label2":"Subcategory",
+  "label3":"Select a subcategory",
+  "label4":"Dish Name (English)",
+  "placeholder":"Enter dish name in English",
+  "label5":"Dish Name (Spanish)",
+  "placeholder1":"Enter dish name in Spanish",
+  "label6":"Price",
+  "placeholder2":"Enter dish price",
+  "label7":"Description (English)",
+  "placeholder3":"Enter dish description in English",
+   "label8":"Description (Spanish)",
+  "placeholder4":"Enter dish description in Spanish",
+  "label9":"Dish Image",
+  "choose":"Choose Image",
+  "img":"PNG, JPG, WebP up to 5MB",
+   "clear":"Clear Form",
+  "save":"Saveing...",
+  "save1":"Save Dish"
+},
+"viewdish":{
+  
+"currencies": {
+  "USD": {
+    "name": "United States Dollar",
+    "symbol": "$"
+  },
+  "EUR": {
+    "name": "Euro",
+    "symbol": "€"
+  },
+  "GBP": {
+    "name": "British Pound",
+    "symbol": "£"
+  },
+  "JPY": {
+    "name": "Japanese Yen",
+    "symbol": "¥"
+  },
+  "CAD": {
+    "name": "Canadian Dollar",
+    "symbol": "C$"
+  },
+  "AUD": {
+    "name": "Australian Dollar",
+    "symbol": "A$"
+  },
+  "CHF": {
+    "name": "Swiss Franc",
+    "symbol": "CHF"
+  },
+  "CNY": {
+    "name": "Chinese Yuan",
+    "symbol": "¥"
+  },
+  "MXN": {
+    "name": "Mexican Peso",
+    "symbol": "$"
+  },
+  "INR": {
+    "name": "Indian Rupee",
+    "symbol": "₹"
+  }
+},
+
+"err":"Error converting currency:",
+"title":"Dish Management",
+"dis":"View, search, edit and delete dishes",
+"convert":"Convert All Currencies",
+"current":"Current Currency:",
+"search":"Search dishes by name, category, subcategory, or price...",
+"load":"Loading dishes...",
+"label":"Image",
+"label1":"Dish Name (EN/ES)",
+"label2":"Category",
+"label3":"Subcategory",
+"label4":"Price & Currency",
+"label5":"Edit",  
+"label6":"Delete",
+"dis1":"No dishes found",
+"dis2":"Try adjusting your search or add a new dish",
+"convert1":"Convert All Dish Currencies",
+"convert2":"Convert Currency",
+"convert3":"ℹ️ Information:",
+"covert4":"This will convert all dish prices from the current currency to the selected currency using live exchange rates. The conversion will be applied automatically.",
+"convert5":"Current Currency:",
+"convert6":"Convert To Currency *",
+"convert7":"Conversion:",
+"convert8":"Exchange rates will be fetched automatically",
+"convert9":"Note:",
+"convert10":"Total dishes to be converted:",
+"delete":"Delete Dish",
+"delete1":"Are you sure you want to delete",
+"delete2":"This action cannot be undone.",
+"delete3": "Delete",
+"alert":"Operation completed successfully!"
+
+},
+"dishmodal":{
+  "err":"Category is required",
+  "err1":"Subcategory is required",
+  "err2":"English dish name is required",
+  "err3":"English dish name must be at least 3 characters",
+  "err4": "English dish name must be under 20 characters",
+  "err5":"Spanish dish name is required",
+  "err6":"Spanish dish name must be at least 3 characters",
+  "err7": "Spanish dish name must be under 20 characters",
+  "err8":"Price is required",
+  "err9":"Price must be a valid positive number",
+  "err10":"English description is required",
+  "err11":"English description must be at least 3 characters",
+  "err12":"English description must be under 100 characters",
+  "err13":"Spanish description is required",
+  "err14":"Spanish description must be at least 3 characters",
+  "err15":"Spanish description must be under 100 characters",
+  "err16":"Please select a valid image file (JPEG, PNG, WebP)",
+  "err17":"Image size must be less than 5MB",
+  "title":"Edit Dish",
+  "title1":"Add New Dish",
+  "dis":"Update dish information in both languages",
+  "dis1":"Add new dish information in both languages",
+  "label":"Category",
+  "label1":"Select a category",
+  "label2":"Subcategory", 
+  "label3":"Select a subcategory",
+  "label4":"Dish Name (English)",
+  "placeholder":"Enter dish name in English",
+  "label5":"Dish Name (Spanish)",
+  "placeholder1":"Enter dish name in Spanish",
+  "label6":"Price",
+  "placeholder2":"Enter dish price",
+  "label7":"Description (English)",
+  "placeholder3":"Enter dish description in English",
+  "label8":"Description (Spanish)",
+  "placeholder4":"Enter dish description in Spanish",
+  "label9":"Dish Image",
+  "choose":"Choose Image",
+  "img":"PNG, JPG, WebP up to 5MB",
+  "change":"Change Image"
+
+},
+"adminaddtable": {
+    "title": "Add Table",
+    "title1": "Table Information",
+    "dis": "Create a new table for your restaurant",
+    "lable1": "Table Number",
+    "lable2": "Table Capacity",
+    "placeholdertablenumber": "Enter table number",
+    "placeholdertablecapacity": "Enter seating capacity",
+    "errortablenumber": "Table number is required",
+    "errortablenumber2": "Table number cannot be empty",
+    "errortablecapacity": "Table capacity is required", 
+    "errortablecapacity2": "Table capacity must be a positive number",
+    "errortablecapacity3": "Table capacity cannot exceed 20",
+    "clear": "Clear",
+    "save": "Saving...",
+    "save1": "Add Table",
+    "alert": "Table created successfully!"
+  },
+  "tablemanagement": {
+    "title": "Table Management",
+    "totaltables": "Total Tables",
+    "loadingtables": "Loading tables...",
+    "notablesfound": "No tables found",
+    "notablescreated": "No tables have been created yet.",
+    "capacity": "Capacity",
+    "people": "people",
+    "created": "Created",
+    "view": "View",
+    "status": {
+      "available": "Available",
+      "occupied": "Occupied",
+      "reserved": "Reserved",
+      "maintenance": "Maintenance"
+    },
+    "modal": {
+      "title": "Table Details",
+      "tablenumber": "Table Number",
+      "status": "Status",
+      "capacity": "Capacity",
+      "created": "Created",
+      "lastupdated": "Last Updated",
+      "close": "Close"
+    }
+  },
+  "waiterregistration":{
+    "err":"English name is required",
+    "err1":"English name must be at least 2 characters",
+    "err2":"English name must not exceed 50 characters",
+    "err3":"Spanish name is required",
+    "err4":"Spanish name must be at least 2 characters",
+    "err5":"Spanish name must not exceed 50 characters",
+    "err6":"Email is required",
+    "err7":"Invalid email format",
+    "err8":"Password is required",
+    "err9": "Password must be at least 8 characters",
+    "err10":"Password must contain at least one uppercase letter, one lowercase letter, and one number",
+    "err11":"Please confirm your password",
+    "err12":"Passwords do not match",
+    "err13": "Phone number is required",
+    "err40": "Phone number must be at least 10 digits",
+    "err14":"Phone number must contain only digits",
+    "err15":"English address is required",
+    "err16":"English address must be at least 5 characters",
+    "err17":"English address must not exceed 200 characters",
+    "err18":"Spanish address is required",
+    "err19":"Spanish address must be at least 5 characters",
+    "err20":"Spanish address must not exceed 200 characters",
+    "err21":"English city is required",
+    "err22":"English city must be at least 2 characters",
+    "err23":"English city must not exceed 50 characters",
+    "err24":"Spanish city is required",
+    "err25":"Spanish city must be at least 2 characters",
+    "err26":"Spanish city must not exceed 50 characters",
+    "err27":"Date of birth is required",
+    "err28":"Waiter must be at least 18 years old",
+    "err29":"Age cannot exceed 65 years",
+    "err30":"Per day salary is required",
+    "err31":"Per day salary must be a valid positive number",
+    "err32":"Per day salary cannot exceed $10",
+    "err33":"OT per hour salary is required",
+    "err34":"OT per hour salary must be a valid positive number",
+    "err35":"OT per hour salary must be at least $5",
+    "err36":"Gender is required",
+    "err37":"Photo is required",
+    "err38":"Please select a valid image file (JPEG, PNG, WebP)",
+    "err39":"Image size must be less than 5MB",
+    "message":"Waiter registered successfully!",
+    "message1":"Failed to register waiter. Please try again.",
+    "title":"Register New Waiter",
+    "title1":"Waiter Information",
+    "dis":"Fill in the details to register a new waiter",
+    "label":"Name (English)",
+    "placeholder":"Enter name in English",
+    "label1":"Name (Spanish)",
+    "placeholder1":"Enter name in Spanish",
+    "label2":"Email",
+    "placeholder2":"Enter email address",
+    "label3":"Phone Number",
+    "placeholder3":"Enter phone number",
+    "label4":"Password",
+    "placeholder4":"Enter password",
+    "label5":"Confirm Password",
+    "placeholder5":"Confirm password",
+    "label6":"Address (English)",
+    "placeholder6":"Enter address in English",
+    "label7":"Address (Spanish)",
+    "placeholder7":"Enter address in Spanish",
+    "label8":"City (English)",
+    "placeholder8":"Enter city in English",
+    "label9":"City (Spanish)",
+    "placeholder9":"Enter city in Spanish",
+    "label10":"Date of Birth",
+    "label11":"Gender",
+    "option":"Select Gender",
+    "option1":"Male",
+    "option2":"Female",
+    "option3":"Other",
+    "label12":"Per Day Salary",
+    "placeholder12":"Enter per daily salary",
+    "label13":"OT Per Hour Salary",
+    "placeholder13":"Enter hourly OT rate",
+    "label14":"Photo",
+    "choose":"Choose Photo",
+    "img":"PNG, JPG, WebP up to 5MB", 
+    "register":"Registering...",
+    "register1":"Register Waiter",
+    "clear":"Clear Form"
+
+  }
+
+
+}

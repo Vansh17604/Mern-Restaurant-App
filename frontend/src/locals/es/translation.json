@@ -1,0 +1,683 @@
+{
+    "header":{
+        "title":"Gustoso",
+        "home":"Inicio",
+         "about": "Acerca de",
+          "menu": "Menú",
+        "contact": "Contacto",
+        "gallery": "Galería",
+        "login": "Iniciar sesión"
+
+    },
+
+  "footer": {
+    "title": "Gustoso",
+    "description": "Comida deliciosa para cada estado de ánimo. Experimenta el sabor de la perfección con nuestras delicias artesanales.",
+    "home": "Inicio",
+    "about": "Acerca de",
+    "menu": "Menú",
+    "contact": "Contacto",
+    "gallery": "Galería",
+    "reservations": "Reservaciones",
+    "contactus": "Contáctanos",
+    "address": "Dirección",
+    "location": "Parada de autobuses antigua, Vyara",
+    "hours": "Horario",
+    "opening": "Horario de apertura",
+    "phone": "Teléfono",
+    "email": "Correo electrónico",
+    "connect": "Conéctate con nosotros",
+    "subscribe": "Suscríbete a nuestro boletín",
+    "placeholder": "Ingresa tu correo electrónico",
+    "join": "Unirse",
+    "coppyright": "Restaurante Gustoso. Todos los derechos reservados."
+  },
+  
+  "login": {
+    "welcome": "Bienvenido de nuevo",
+    "join": "Únete a Gustoso",
+    "signin": "Inicia sesión para acceder a tu cuenta",
+    "crete": "Crea una cuenta para comenzar tu viaje culinario",
+    "fullname": "Nombre completo",
+    "placholdername": "Ingresa tu nombre completo",
+    "email": "Correo electrónico",
+    "placholderemail": "Ingresa tu correo electrónico",
+    "password": "Contraseña",
+    "forget": "¿Olvidaste tu contraseña?",
+    "placholderpassword": "Ingresa tu contraseña",
+    "iagree": "Estoy de acuerdo con los",
+    "terms": "Términos y servicios",
+    "and": "y",
+    "privacy": "Política de privacidad",
+    "processing": "Procesando...",
+    "signinbtn": "Iniciar sesión",
+    "create": "Crear cuenta",
+    "right": "Gustoso. Todos los derechos reservados."
+  },
+
+  "aboutherosection": {
+    "title": "Bienvenido a Gustoso",
+    "description": "En Gustoso, no solo servimos comida – nosotros",
+    "words": [
+        "creamos experiencias.",
+        "contamos historias.",
+        "creamos recuerdos.",
+        "celebramos tradiciones."
+    ]
+},
+"abouthistory": {
+  "storySegments": [
+    {
+      "year": "2015",
+      "title": "El Comienzo",
+      "content": "Gustoso nació de un simple sueño: llevar cocina auténtica y llena de alma a tu mesa, elaborada con ingredientes frescos y recetas tradicionales. Lo que comenzó como un pequeño restaurante familiar se ha convertido en un destino culinario amado por locales y visitantes por igual."
+    },
+    {
+      "year": "2018",
+      "title": "Reputación en Crecimiento",
+      "content": "Desde sus humildes comienzos en una acogedora esquina de la ciudad, Gustoso se convirtió rápidamente en sinónimo de sabores vibrantes, ambiente cálido y compromiso con la calidad. Nuestro nombre, 'Gustoso', que significa sabroso o lleno de sabor en italiano, refleja todo lo que representamos."
+    },
+    {
+      "year": "2022",
+      "title": "Excelencia Culinaria",
+      "content": "A lo largo de los años, hemos permanecido fieles a nuestros principios fundamentales: seleccionar los mejores ingredientes, prepararlos con esmero y servirlos con orgullo. Nuestros chefs combinan técnicas tradicionales con creatividad moderna, dando como resultado platos que honran su herencia y deleitan al paladar contemporáneo."
+    },
+    {
+      "year": "Presente",
+      "title": "Nuestro Legado",
+      "content": "Cada plato cuenta una historia: de reuniones familiares, celebraciones de temporada y tradiciones culinarias transmitidas de generación en generación. Hoy, Gustoso continúa evolucionando mientras se mantiene arraigado en lo que más importa: crear experiencias gastronómicas memorables que nutren el cuerpo y el alma."
+    }
+  ],
+  "our": "Nuestra",
+  "story": "Historia",
+  "discription": "Un viaje culinario de una década, creando experiencias memorables y sabores exquisitos.",
+  "trade": "Tradición",
+  "meet": "Se encuentra con",
+  "innovation": "Innovación",
+  "storydis": "Donde las recetas tradicionales se encuentran con el arte culinario contemporáneo, creando experiencias gastronómicas inolvidables desde 2015.",
+  "goto": "Ir al segmento de la historia",
+  "readdiscription": "Ya sea que nos visites por primera vez o seas un huésped habitual, te damos la bienvenida a nuestra mesa con los brazos abiertos y el corazón cálido. Cada comida es una oportunidad para crear recuerdos."
+},
+"customerreview": {
+  "customerReviews": [
+    {
+      "name": "Amit S.",
+      "position": "Amante de la Comida",
+      "rating": 5,
+      "review": "¡Una de las mejores experiencias gastronómicas que he tenido! La pasta fue increíble y el personal fue increíblemente amable.",
+      "color": "from-purple-500 to-pink-500"
+    },
+    {
+      "name": "Riya M.",
+      "position": "Amante del Café",
+      "rating": 5,
+      "review": "Si buscas sabor, este es el lugar. El ambiente es acogedor y la comida es auténtica.",
+      "color": "from-red-500 to-orange-500"
+    },
+    {
+      "name": "Karan T.",
+      "position": "Crítico Gastronómico",
+      "rating": 5,
+      "review": "Gustoso es una joya escondida. Puedes saborear el amor en cada bocado.",
+      "color": "from-blue-500 to-teal-500"
+    },
+    {
+      "name": "Priya D.",
+      "position": "Cliente Frecuente",
+      "rating": 5,
+      "review": "Cada plato cuenta una historia aquí. El especial del chef cambia cada semana y nunca me ha decepcionado. Mi familia y yo manejamos una hora solo para comer aquí regularmente.",
+      "color": "from-amber-500 to-yellow-500"
+    }
+  ],
+  "what": "Lo Que Dicen Nuestros Clientes",
+  "customer": "Cliente",
+  "review": "Reseñas",
+  "dis": "Descubre por qué nuestros clientes siguen regresando para disfrutar de los sabores inolvidables de Gustoso.",
+  "lable1": "Reseñas de Cinco Estrellas",
+  "lable2": "Satisfacción del Cliente",
+  "lable3": "Comensales Felices al Año"
+},
+"homehero": {
+  "title": "Cocina italiana auténtica con",
+  "words": [
+    "pasión.",
+    "tradición.",
+    "amor.",
+    "sabor."
+  ],
+  "lable1": "Años de Excelencia",
+  "lable2": "Calificación Estelar",
+  "lable3": "Platos Italianos"
+},
+
+"homepopulardish": {
+  "popularDishes": [
+    {
+      "name": "Espaguetis con Anchoas",
+      "description": "Espaguetis frescos con anchoas, tomates y salsa de vino blanco",
+      "tag": "Especial del Chef"
+    },
+    {
+      "name": "Pizza Margherita Artesanal",
+      "description": "Pizza de masa fina con mozzarella fresca, albahaca y tomates San Marzano",
+      "tag": "Más Vendido"
+    },
+    {
+      "name": "Risotto al Tartufo",
+      "description": "Arroz Arborio cremoso con trufa, hongos porcini y Parmigiano-Reggiano",
+      "tag": "Nueva Llegada"
+    },
+    {
+      "name": "Tiramisú Clásico",
+      "description": "Postre italiano clásico con bizcochos empapados en café y crema de mascarpone",
+      "tag": "Postre"
+    }
+  ],
+  "popular": "Popular",
+  "dish": "Platos",
+  "dis": "Descubre nuestras creaciones culinarias más queridas de la semana",
+  "label": "Plato Popular de la Semana",
+  "buttonlable": "Plato anterior",
+  "buttonlable2": "Siguiente plato",
+  "order": "Ordenar ahora",
+  "visit": "Visita nuestro restaurante para probar más de los platos exclusivos del chef",
+  "buttonV": "Ver Menú Completo"
+},"contact": {
+  "contact": "Contacto",
+  "us": "Nosotros",
+  "dis": "¿Tienes una pregunta o quieres hacer una reserva? Estamos aquí para ayudarte.",
+  "location": "Nuestra Ubicación",
+  "oneadd": "Unistar Softech Pvt Ltd",
+  "twoadd": "Surat, Gujarat 395007",
+  "phone": "Teléfono",
+  "dis1": "Para reservas y consultas",
+  "email": "Correo Electrónico",
+  "dis2": "Responderemos dentro de 24 horas",
+  "hours": "Horario de Atención",
+  "dis3": "Lunes - Jueves",
+  "dis4": "Viernes - Sábado",
+  "dis5": "Domingo",
+  "dis6": "La cocina cierra 30 minutos antes del horario de cierre."
+},
+"contactform": {
+  "getintouch": "Ponte en Contacto",
+  "dis": "Nos encantaría saber de ti. Envíanos un mensaje abajo.",
+  "name": "Nombre Completo",
+  "placeholdername": "Ingresa tu nombre completo",
+  "email": "Correo Electrónico",
+  "placeholderemail": "Ingresa tu correo electrónico",
+  "subject": "Asunto",
+  "placeholdersubject": "Solicitud de Reserva",
+  "message": "Mensaje",
+  "placeholdermessage": "Cuéntanos cómo podemos ayudarte...",
+  "submit": "Enviar Mensaje",
+  "tost": "¡Gracias por tu mensaje! Nos pondremos en contacto contigo pronto."
+},
+"adminheader": {
+  "tittle": "Gustoso - Panel de Administración",
+  "name": "Alex Johnson",
+  "role": "gerente del restaurante",
+  "placeholdersearch": "Buscar",
+  "profile": "Perfil",
+  "prefrences": "Preferencias",
+  "logout": "Cerrar sesión",
+  "account": "Mi cuenta"
+},
+"adminsidebar": {
+  "name": "Alex Johnson",
+  "role": "Administrador",
+  "title": "Panel de Administración",
+  "logout": "Cerrar sesión"
+},
+"adminnav":{
+   "Dashboard": "Tablero",
+    "Components": "Componentes",
+    "Master": "Maestro",
+    "Category": "Categoría",
+    "SubCategory": "Subcategoría",
+    "Dish": "Plato",
+    "View Dish": "Ver Plato",
+    "Waiter": "Camarero",
+    "Table": "Mesa",
+"View Table": "Ver Mesa",
+
+    "Waiter Registration": "Registro de Camarero",
+    "Waiter Detail": "Detalle del Camarero",
+    "Customer Detail": "Detalle del Cliente",
+    "NEW": "NUEVO"
+},
+"adminaddcategory": {
+  "errorcategoryen": "Se requiere el nombre en inglés",
+  "errorcategoryen2": "El nombre en inglés debe tener al menos 3 caracteres",
+  "errorcategoryen3": "El nombre en inglés debe tener menos de 20 caracteres",
+  "errorcategoryes": "Se requiere el nombre en español",
+  "errorcategoryes2": "El nombre en español debe tener al menos 3 caracteres",
+  "errorcategoryes3": "El nombre en español debe tener menos de 20 caracteres",
+  "title": "Agregar Nueva Categoría",
+  "alert": "Categoría obtenida con éxito",
+  "title1": "Información de la Categoría",
+  "dis": "Ingrese los detalles de la nueva categoría en ambos idiomas",
+  "lable1": "Nombre de la Categoría (English)",
+  "placeholderen": "Ingrese el nombre de la categoría en inglés",
+  "lable2": "Nombre de la Categoría (Español)",
+  "placeholderes": "Ingrese el nombre de la categoría en español",
+  "clear": "Limpiar Formulario",
+  "save": "Guardando...",
+  "save1": "Guardar Categoría"
+},
+"viewcategory": {
+  "err1": "Se requiere el nombre en inglés",
+  "err2": "El nombre en inglés debe tener al menos 3 caracteres",
+  "err3": "El nombre en inglés debe tener menos de 20 caracteres",
+  "err4": "Se requiere el nombre en español",
+  "err5": "El nombre en español debe tener al menos 3 caracteres",
+  "err6": "El nombre en español debe tener menos de 20 caracteres",
+  "err7": "Se requiere el estado",
+  "title": "Gestión de Categorías",
+  "dis": "Ver, buscar, editar y eliminar categorías",
+  "serchlab": "Buscar categorías por nombre...",
+  "load": "Cargando categorías...",
+  "table1": "Nombre de Categoría (EN/ES)",
+  "table2": "Estado",
+  "table3": "Editar",
+  "table4": "Eliminar",
+  "button": "Activo",
+  "button1": "Inactivo",
+  "button2": "Editar",
+  "button3": "Eliminar",
+  "dis1": "No se encontraron categorías",
+  "dis2": "Intenta ajustar tu búsqueda o agrega una nueva categoría",
+  "modeltitle": "Editar categoría",
+  "dis3": "Actualizar la información de la categoría en ambos idiomas",
+  "lable1": "Nombre de la Categoría (Inglés)",
+  "placeholderen": "Ingrese el nombre de la categoría en inglés",
+  "lable2": "Nombre de la Categoría (Español)",
+  "placeholderes": "Ingrese el nombre de la categoría en español",
+  "lable3": "Estado",
+  "placeholderstatus": "Seleccione el estado",
+  "modeltitle2": "¿Estás seguro de que deseas eliminar",
+  "dis4": "Esta acción no se puede deshacer",
+  "modeltitle3": "Cambiar estado para",
+  "dis5": "¿Estás seguro de que deseas",
+  "dis6": "esta categoría?",
+  "dis7": "Esto cambiará el estado de la categoría de Activo a Inactivo.",
+  "dis8": "Esto cambiará el estado de la categoría de Inactivo a Activo."
+},
+"addsubcategory": {
+  "err1": "La selección de categoría es obligatoria",
+  "err2": "El nombre en inglés es obligatorio",
+  "err3": "El nombre en inglés debe tener al menos 3 caracteres",
+  "err4": "El nombre en inglés debe tener menos de 20 caracteres",
+  "err5": "El nombre en español es obligatorio",
+  "err6": "El nombre en español debe tener al menos 3 caracteres",
+  "err7": "El nombre en español debe tener menos de 20 caracteres",
+  "tittle": "Agregar Nueva Subcategoría",
+  "alert": "¡Subcategoría obtenida con éxito!",
+  "title1": "Información de la Subcategoría",
+  "dis": "Ingrese los detalles de la nueva subcategoría en ambos idiomas",
+  "label": "Seleccionar Categoría",
+  "label1": "Seleccione una categoría",
+  "label2": "Nombre de Subcategoría (Inglés)",
+  "placeholder": "Ingrese el nombre de la subcategoría en inglés",
+  "label3": "Nombre de Subcategoría (Español)",
+  "placeholder1": "Ingrese el nombre de la subcategoría en español",
+  "clear": "Limpiar Formulario",
+  "save": "Guardando...",
+  "save1": "Guardar Subcategoría"
+},
+"viewsubcategory": {
+  "err1": "El nombre en inglés es obligatorio",
+  "err2": "El nombre en inglés debe tener al menos 3 caracteres",
+  "err3": "El nombre en inglés debe tener menos de 20 caracteres",
+  "err4": "El nombre en español es obligatorio",
+  "err5": "El nombre en español debe tener al menos 3 caracteres",
+  "err6": "El nombre en español debe tener menos de 20 caracteres",
+  "err7": "La categoría es obligatoria",
+  "err8": "El estado es obligatorio",
+  "title": "Gestión de Subcategorías",
+  "dis": "Ver, buscar, editar y eliminar subcategorías",
+  "search": "Buscar subcategorías por nombre o categoría...",
+  "load": "Cargando subcategorías...",
+  "table": "Nombre de Subcategoría (EN/ES)",
+  "table1": "Categoría",
+  "table2": "Estado",
+  "table3": "Editar",
+  "table4": "Eliminar",
+  "button": "Activo",
+  "button1": "Inactivo",
+  "button2": "Editar",
+  "button3": "Eliminar",
+  "label": "No se encontraron subcategorías",
+  "dis1": "Intente ajustar su búsqueda o agregue una nueva subcategoría",
+  "title1": "Editar subcategoría",
+  "dis2": "Actualizar la información de la subcategoría en ambos idiomas",
+  "label2": "Nombre de Subcategoría (Inglés)",
+  "placeholder": "Ingrese el nombre de la subcategoría en inglés",
+  "label3": "Nombre de Subcategoría (Español)",
+  "placeholder1": "Ingrese el nombre de la subcategoría en español",
+  "label4": "Categoría",
+  "placeholder2": "Seleccione categoría",
+  "label5": "Estado",
+  "title2": "¿Está seguro de que desea eliminar",
+  "dis3": "Esta acción no se puede deshacer.",
+  "title3": "Cambiar Estado de",
+  "dis4": "¿Está seguro de que desea",
+  "dis5": "esta subcategoría?",
+  "dis6": "Esto cambiará el estado de la subcategoría de Activo a Inactivo.",
+  "dis7": "Esto cambiará el estado de la subcategoría de Inactivo a Activo."
+},"customesadmin": {
+  "button1": "Cancelar",
+  "button2": "Enviar"
+},
+"adddish": {
+  "err": "La categoría es obligatoria",
+  "err1": "La subcategoría es obligatoria",
+  "err2": "El nombre del plato en inglés es obligatorio",
+  "err3": "El nombre del plato en inglés debe tener al menos 3 caracteres",
+  "err4": "El nombre del plato en inglés debe tener menos de 20 caracteres",
+  "err5": "El nombre del plato en español es obligatorio",
+  "err6": "El nombre del plato en español debe tener al menos 3 caracteres",
+  "err7": "El nombre del plato en español debe tener menos de 20 caracteres",
+  "err8": "El precio es obligatorio",
+  "err9": "El precio debe ser un número positivo válido",
+  "err10": "La descripción en inglés es obligatoria",
+  "err11": "La descripción en inglés debe tener al menos 3 caracteres",
+  "err12": "La descripción en inglés debe tener menos de 100 caracteres",
+  "err13": "La descripción en español es obligatoria",
+  "err14": "La descripción en español debe tener al menos 3 caracteres",
+  "err15": "La descripción en español debe tener menos de 100 caracteres",
+  "err16": "La imagen del plato es obligatoria",
+  "err17": "Por favor seleccione un archivo de imagen válido (JPEG, PNG, WebP)",
+  "err18": "El tamaño de la imagen debe ser menor a 5MB",
+  "title": "Agregar Nuevo Plato",
+  "alert": "¡Plato obtenido con éxito!",
+  "title1": "Información del Plato",
+  "dis": "Ingrese los detalles del nuevo plato en ambos idiomas.",
+  "label": "Categoría",
+  "label1": "Seleccione una categoría",
+  "label2": "Subcategoría",
+  "label3": "Seleccione una subcategoría",
+  "label4": "Nombre del Plato (Inglés)",
+  "placeholder": "Ingrese el nombre del plato en inglés",
+  "label5": "Nombre del Plato (Español)",
+  "placeholder1": "Ingrese el nombre del plato en español",
+  "label6": "Precio",
+  "placeholder2": "Ingrese el precio del plato",
+  "label7": "Descripción (Inglés)",
+  "placeholder3": "Ingrese la descripción del plato en inglés",
+  "label8": "Descripción (Español)",
+  "placeholder4": "Ingrese la descripción del plato en español",
+  "label9": "Imagen del Plato",
+  "choose": "Elegir Imagen",
+  "img": "PNG, JPG, WebP hasta 5MB",
+  "clear": "Limpiar Formulario",
+  "save": "Guardando...",
+  "save1": "Guardar Plato"
+},
+"viewdish": {
+  "currencies": {
+    "USD": {
+      "name": "Dólar estadounidense",
+      "symbol": "$"
+    },
+    "EUR": {
+      "name": "Euro",
+      "symbol": "€"
+    },
+    "GBP": {
+      "name": "Libra esterlina",
+      "symbol": "£"
+    },
+    "JPY": {
+      "name": "Yen japonés",
+      "symbol": "¥"
+    },
+    "CAD": {
+      "name": "Dólar canadiense",
+      "symbol": "C$"
+    },
+    "AUD": {
+      "name": "Dólar australiano",
+      "symbol": "A$"
+    },
+    "CHF": {
+      "name": "Franco suizo",
+      "symbol": "CHF"
+    },
+    "CNY": {
+      "name": "Yuan chino",
+      "symbol": "¥"
+    },
+    "MXN": {
+      "name": "Peso mexicano",
+      "symbol": "$"
+    },
+    "INR": {
+      "name": "Rupia india",
+      "symbol": "₹"
+    }
+  },
+  "err": "Error al convertir la moneda:",
+  "title": "Gestión de Platos",
+  "dis": "Ver, buscar, editar y eliminar platos",
+  "convert": "Convertir Todas las Monedas",
+  "current": "Moneda Actual:",
+  "search": "Buscar platos por nombre, categoría, subcategoría o precio...",
+  "load": "Cargando platos...",
+  "label": "Imagen",
+  "label1": "Nombre del Plato (EN/ES)",
+  "label2": "Categoría",
+  "label3": "Subcategoría",
+  "label4": "Precio y Moneda",
+  "label5": "Editar",
+  "label6": "Eliminar",
+  "dis1": "No se encontraron platos",
+  "dis2": "Intenta ajustar tu búsqueda o agrega un nuevo plato",
+  "convert1": "Convertir Todas las Monedas de los Platos",
+  "convert2": "Convertir Moneda",
+  "convert3": "ℹ️ Información:",
+  "covert4": "Esto convertirá todos los precios de los platos de la moneda actual a la moneda seleccionada usando tasas de cambio en tiempo real. La conversión se aplicará automáticamente.",
+  "convert5": "Moneda Actual:",
+  "convert6": "Convertir a Moneda *",
+  "convert7": "Conversión:",
+  "convert8": "Las tasas de cambio se obtendrán automáticamente",
+  "convert9": "Nota:",
+  "convert10": "Total de platos a convertir:",
+  "delete": "Eliminar Plato",
+  "delete1": "¿Estás seguro de que deseas eliminar",
+  "delete2": "Esta acción no se puede deshacer.",
+  "delete3": "Eliminar",
+  "alert": "¡Operación completada con éxito!"
+},
+
+"dishmodal": {
+  "err": "La categoría es obligatoria",
+  "err1": "La subcategoría es obligatoria",
+  "err2": "El nombre en inglés del plato es obligatorio",
+  "err3": "El nombre en inglés del plato debe tener al menos 3 caracteres",
+  "err4": "El nombre en inglés del plato debe tener menos de 20 caracteres",
+  "err5": "El nombre en español del plato es obligatorio",
+  "err6": "El nombre en español del plato debe tener al menos 3 caracteres",
+  "err7": "El nombre en español del plato debe tener menos de 20 caracteres",
+  "err8": "El precio es obligatorio",
+  "err9": "El precio debe ser un número positivo válido",
+  "err10": "La descripción en inglés es obligatoria",
+  "err11": "La descripción en inglés debe tener al menos 3 caracteres",
+  "err12": "La descripción en inglés debe tener menos de 100 caracteres",
+  "err13": "La descripción en español es obligatoria",
+  "err14": "La descripción en español debe tener al menos 3 caracteres",
+  "err15": "La descripción en español debe tener menos de 100 caracteres",
+  "err16": "Por favor selecciona un archivo de imagen válido (JPEG, PNG, WebP)",
+  "err17": "El tamaño de la imagen debe ser menor de 5MB",
+  "title": "Editar Plato",
+  "title1": "Agregar Nuevo Plato",
+  "dis": "Actualizar la información del plato en ambos idiomas",
+  "dis1": "Agregar nueva información del plato en ambos idiomas",
+  "label": "Categoría",
+  "label1": "Selecciona una categoría",
+  "label2": "Subcategoría",
+  "label3": "Selecciona una subcategoría",
+  "label4": "Nombre del Plato (Inglés)",
+  "placeholder": "Ingresa el nombre del plato en inglés",
+  "label5": "Nombre del Plato (Español)",
+  "placeholder1": "Ingresa el nombre del plato en español",
+  "label6": "Precio",
+  "placeholder2": "Ingresa el precio del plato",
+  "label7": "Descripción (Inglés)",
+  "placeholder3": "Ingresa la descripción en inglés",
+  "label8": "Descripción (Español)",
+  "placeholder4": "Ingresa la descripción en español",
+  "label9": "Imagen del Plato",
+  "choose": "Elegir Imagen",
+  "img": "PNG, JPG, WebP hasta 5MB",
+  "change": "Cambiar Imagen"
+},"adminaddtable": {
+  "title": "Agregar Mesa",
+  "title1": "Información de la Mesa",
+  "dis": "Crea una nueva mesa para tu restaurante",
+  "lable1": "Número de Mesa",
+  "lable2": "Capacidad de la Mesa",
+  "placeholdertablenumber": "Ingrese el número de mesa",
+  "placeholdertablecapacity": "Ingrese la capacidad de asientos",
+  "errortablenumber": "El número de mesa es obligatorio",
+  "errortablenumber2": "El número de mesa no puede estar vacío",
+  "errortablecapacity": "La capacidad de la mesa es obligatoria", 
+  "errortablecapacity2": "La capacidad debe ser un número positivo",
+  "errortablecapacity3": "La capacidad no puede exceder de 20",
+  "clear": "Limpiar",
+  "save": "Guardando...",
+  "save1": "Agregar Mesa",
+  "alert": "¡Mesa creada con éxito!"
+},
+"tablemanagement": {
+  "title": "Gestión de Mesas",
+  "totaltables": "Mesas Totales",
+  "loadingtables": "Cargando mesas...",
+  "notablesfound": "No se encontraron mesas",
+  "notablescreated": "Aún no se han creado mesas.",
+  "capacity": "Capacidad",
+  "people": "personas",
+  "created": "Creado",
+  "view": "Ver",
+  "status": {
+    "available": "Disponible",
+    "occupied": "Ocupada",
+    "reserved": "Reservada",
+    "maintenance": "Mantenimiento"
+  },
+  "modal": {
+    "title": "Detalles de la Mesa",
+    "tablenumber": "Número de Mesa",
+    "status": "Estado",
+    "capacity": "Capacidad",
+    "created": "Creado",
+    "lastupdated": "Última Actualización",
+    "close": "Cerrar"
+  }
+},
+"waiterregistration": {
+  "err": "Se requiere el nombre en inglés",
+  "err1": "El nombre en inglés debe tener al menos 2 caracteres",
+  "err2": "El nombre en inglés no debe exceder los 50 caracteres",
+  "err3": "Se requiere el nombre en español",
+  "err4": "El nombre en español debe tener al menos 2 caracteres",
+  "err5": "El nombre en español no debe exceder los 50 caracteres",
+  "err6": "Se requiere el correo electrónico",
+  "err7": "Formato de correo electrónico inválido",
+  "err8": "Se requiere la contraseña",
+  "err9": "La contraseña debe tener al menos 8 caracteres",
+  "err10": "La contraseña debe contener al menos una letra mayúscula, una letra minúscula y un número",
+  "err11": "Por favor confirme su contraseña",
+  "err12": "Las contraseñas no coinciden",
+  "err13": "Se requiere el número de teléfono",
+  "err14": "El número de teléfono debe contener solo dígitos",
+  "err15": "Se requiere la dirección en inglés",
+  "err16": "La dirección en inglés debe tener al menos 5 caracteres",
+  "err17": "La dirección en inglés no debe exceder los 200 caracteres",
+  "err18": "Se requiere la dirección en español",
+  "err19": "La dirección en español debe tener al menos 5 caracteres",
+  "err20": "La dirección en español no debe exceder los 200 caracteres",
+  "err21": "Se requiere la ciudad en inglés",
+  "err22": "La ciudad en inglés debe tener al menos 2 caracteres",
+  "err23": "La ciudad en inglés no debe exceder los 50 caracteres",
+  "err24": "Se requiere la ciudad en español",
+  "err25": "La ciudad en español debe tener al menos 2 caracteres",
+  "err26": "La ciudad en español no debe exceder los 50 caracteres",
+  "err27": "Se requiere la fecha de nacimiento",
+  "err28": "El camarero debe tener al menos 18 años",
+  "err29": "La edad no puede exceder los 65 años",
+  "err30": "Se requiere el salario por día",
+  "err31": "El salario por día debe ser un número positivo válido",
+  "err32": "El salario por día no puede exceder los $10",
+  "err33": "Se requiere el salario por hora extra",
+  "err34": "El salario por hora extra debe ser un número positivo válido",
+  "err35": "El salario por hora extra debe ser al menos $5",
+  "err36": "Se requiere el género",
+  "err37": "Se requiere la foto",
+  "err38": "Por favor seleccione un archivo de imagen válido (JPEG, PNG, WebP)",
+  "err39": "El tamaño de la imagen debe ser menor de 5MB",
+ "err40": "El número de teléfono debe tener al menos 10 dígitos",
+
+  "message": "¡Camarero registrado con éxito!",
+  "message1": "Error al registrar el camarero. Por favor, inténtelo de nuevo.",
+  "title": "Registrar Nuevo Camarero",
+  "title1": "Información del Camarero",
+  "dis": "Complete los detalles para registrar un nuevo camarero",
+  "label": "Nombre (Inglés)",
+  "placeholder": "Ingrese el nombre en inglés",
+  "label1": "Nombre (Español)",
+  "placeholder1": "Ingrese el nombre en español",
+  "label2": "Correo Electrónico",
+  "placeholder2": "Ingrese el correo electrónico",
+  "label3": "Número de Teléfono",
+  "placeholder3": "Ingrese el número de teléfono",
+  "label4": "Contraseña",
+  "placeholder4": "Ingrese la contraseña",
+  "label5": "Confirmar Contraseña",
+  "placeholder5": "Confirme la contraseña",
+  "label6": "Dirección (Inglés)",
+  "placeholder6": "Ingrese la dirección en inglés",
+  "label7": "Dirección (Español)",
+  "placeholder7": "Ingrese la dirección en español",
+  "label8": "Ciudad (Inglés)",
+  "placeholder8": "Ingrese la ciudad en inglés",
+  "label9": "Ciudad (Español)",
+  "placeholder9": "Ingrese la ciudad en español",
+  "label10": "Fecha de Nacimiento",
+  "label11": "Género",
+  "option": "Seleccione Género",
+  "option1": "Masculino",
+  "option2": "Femenino",
+  "option3": "Otro",
+  "label12": "Salario por Día",
+  "placeholder12": "Ingrese el salario diario",
+  "label13": "Salario por Hora Extra",
+  "placeholder13": "Ingrese la tarifa por hora extra",
+  "label14": "Foto",
+  "choose": "Seleccionar Foto",
+  "img": "PNG, JPG, WebP hasta 5MB",
+  "register": "Registrando...",
+  "register1": "Registrar Camarero",
+  "clear": "Limpiar Formulario"
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+}
