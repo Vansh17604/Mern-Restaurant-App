@@ -1,5 +1,6 @@
-
 import { useState, useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { useTranslation } from 'react-i18next';
 import { cn } from "../../lib/utils";
 import { 
   Clock, 
@@ -7,75 +8,48 @@ import {
   TrendingUp, 
   Bell, 
   User,
-  ChevronDown,
   Search,
-  Check,
-  ExternalLink
+  Timer,
+  ChefHat
 } from 'lucide-react';
+import { 
+  fetchAllOrders, 
+  assignKitchen, 
+  markOrderAsPrepared 
+} from '../../features/waiter/order/orderSlice';
 
-// Mock data for orders
-const initialOrders = [
-  {
-    id: 'ORD-001',
-    dish: 'Margherita Pizza',
-    image: '/assets/Pizza-3007395.jpg',
-    waiter: 'John Smith',
-    table: 4,
-    time: '10:15 AM',
-    status: 'pending',
-    priority: 'high'
-  },
-  {
-    id: 'ORD-002',
-    dish: 'Mushroom Risotto',
-    image: '/assets/Resioto.jpeg',
-    waiter: 'Emily Davis',
-    table: 7,
-    time: '10:22 AM',
-    status: 'pending',
-    priority: 'medium'
-  },
-  {
-    id: 'ORD-003',
-    dish: 'Grilled Dorade',
-    image: '/assets/grilled-dorade-vernick-fish.png',
-    waiter: 'Michael Brown',
-    table: 2,
-    time: '10:30 AM',
-    status: 'pending',
-    priority: 'medium'
-  },
-  {
-    id: 'ORD-004',
-    dish: 'Spaghetti with Anchovies',
-    image: '/assets/EG8_EP74_Spaghetti-w-Anchovies-Tomatoes-and-white-wine-sauce.jpg',
-    waiter: 'Lisa Johnson',
-    table: 9,
-    time: '10:35 AM',
-    status: 'pending',
-    priority: 'low'
-  },
-  {
-    id: 'ORD-005',
-    dish: 'Margherita Pizza',
-    image: '/assets/Pizza-3007395.jpg',
-    waiter: 'Robert Wilson',
-    table: 5,
-    time: '10:40 AM',
-    status: 'pending',
-    priority: 'high'
-  },
-  {
-    id: 'ORD-006',
-    dish: 'Mushroom Risotto',
-    image: '/assets/Resioto.jpeg',
-    waiter: 'Sarah Taylor',
-    table: 3,
-    time: '10:45 AM',
-    status: 'pending',
-    priority: 'medium'
-  }
-];
+// Timer Component for dishes in preparation
+const DishTimer = ({ startTime, onComplete, darkMode }) => {
+  const [timeElapsed, setTimeElapsed] = useState(0);
+  
+  useEffect(() => {
+    const interval = setInterval(() => {
+      const now = new Date();
+      const start = new Date(startTime);
+      const elapsed = Math.floor((now - start) / 1000);
+      setTimeElapsed(elapsed);
+      
+      if (elapsed >= 1800) {
+        onComplete();
+      }
+    }, 1000);
+    
+    return () => clearInterval(interval);
+  }, [startTime, onComplete]);
+  
+  const minutes = Math.floor(timeElapsed / 60);
+  const seconds = timeElapsed % 60;
+  
+  return (
+    <div className={cn(
+      "flex items-center text-sm",
+      darkMode ? "text-amber-300" : "text-orange-600"
+    )}>
+      <Timer size={14} className="mr-1" />
+      <span>{minutes}:{seconds.toString().padStart(2, '0')}</span>
+    </div>
+  );
+};
 
 // Stats Card Component
 const StatsCard = ({ title, value, icon: Icon, color, darkMode }) => (
@@ -98,43 +72,51 @@ const StatsCard = ({ title, value, icon: Icon, color, darkMode }) => (
   </div>
 );
 
-// Order Card Component
-const OrderCard = ({ order, onReady, onDeliver, darkMode }) => {
-  const priorityColors = {
-    high: darkMode 
-      ? 'bg-red-900/30 text-red-300' 
-      : 'bg-red-100 text-red-800',
-    medium: darkMode 
-      ? 'bg-amber-900/30 text-amber-300' 
-      : 'bg-yellow-100 text-yellow-800',
-    low: darkMode 
-      ? 'bg-blue-900/30 text-blue-300' 
-      : 'bg-blue-100 text-blue-800'
+const DishCard = ({ dish, order, onAssignKitchen, onMarkPrepared, kitchenId, darkMode }) => {
+  const { t,i18n } = useTranslation();
+  const base_url = import.meta.env.VITE_BASE_URL;
+  
+  const getStatusColor = (status) => {
+    const colors = {
+      order: darkMode 
+        ? 'bg-blue-900/30 text-blue-300' 
+        : 'bg-blue-100 text-blue-800',
+      prepare: darkMode 
+        ? 'bg-amber-900/30 text-amber-300' 
+        : 'bg-yellow-100 text-yellow-800',
+      prepared: darkMode 
+        ? 'bg-green-900/30 text-green-300' 
+        : 'bg-green-100 text-green-800'
+    };
+    return colors[status] || colors.order;
   };
 
-  const statusColors = {
-    pending: darkMode 
-      ? 'bg-slate-700 text-slate-300' 
-      : 'bg-gray-100 text-gray-800',
-    ready: darkMode 
-      ? 'bg-green-900/30 text-green-300' 
-      : 'bg-green-100 text-green-800',
-    delivered: darkMode 
-      ? 'bg-purple-900/30 text-purple-300' 
-      : 'bg-purple-100 text-purple-800'
+  const getButtonColor = (action) => {
+    const colors = {
+      assign: darkMode 
+        ? 'bg-blue-900/30 hover:bg-blue-800/50 text-blue-300' 
+        : 'bg-blue-100 hover:bg-blue-200 text-blue-800',
+      prepared: darkMode 
+        ? 'bg-green-900/30 hover:bg-green-800/50 text-green-300' 
+        : 'bg-green-100 hover:bg-green-200 text-green-800',
+      completed: darkMode 
+        ? 'bg-slate-700 text-slate-400' 
+        : 'bg-gray-100 text-gray-500'
+    };
+    return colors[action];
   };
 
-  const buttonColors = {
-    ready: darkMode 
-      ? 'bg-blue-900/30 hover:bg-blue-800/50 text-blue-300' 
-      : 'bg-blue-100 hover:bg-blue-200 text-blue-800',
-    deliver: darkMode 
-      ? 'bg-green-900/30 hover:bg-green-800/50 text-green-300' 
-      : 'bg-green-100 hover:bg-green-200 text-green-800',
-    completed: darkMode 
-      ? 'bg-slate-700 text-slate-400' 
-      : 'bg-gray-100 text-gray-500'
+  const formatTime = (dateString) => {
+    return new Date(dateString).toLocaleTimeString('en-US', {
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: true
+    });
   };
+
+  const dishImage = dish.dish_id?.imageUrl;
+const dishName = dish.dish_id?.dishName?.[i18n.language]
+  const dishStatus = dish.status || 'order';
 
   return (
     <div className={cn(
@@ -142,93 +124,146 @@ const OrderCard = ({ order, onReady, onDeliver, darkMode }) => {
       darkMode ? "bg-slate-800 text-white" : "bg-white"
     )}>
       <div className="flex mb-3">
-        <div className="h-16 w-16 rounded-md overflow-hidden mr-3 flex-shrink-0">
-          <img 
-            src={order.image} 
-            alt={order.dish} 
-            className="h-full w-full object-cover"
-          />
+        <div className="h-16 w-16 rounded-md overflow-hidden mr-3 flex-shrink-0 bg-gray-100 flex items-center justify-center">
+          {dishImage ? (
+            <img
+              src={`${base_url}${dishImage}`}
+              alt={dishName}
+              className="w-16 h-16 object-cover"
+              onError={(e) => {
+                e.target.style.display = 'none';
+                e.target.nextSibling.style.display = 'flex';
+              }}
+            />
+          ) : (
+            <ChefHat size={24} className={cn(
+              darkMode ? "text-slate-400" : "text-gray-400"
+            )} />
+          )}
+          <div className="w-16 h-16 items-center justify-center hidden">
+            <ChefHat size={24} className={cn(
+              darkMode ? "text-slate-400" : "text-gray-400"
+            )} />
+          </div>
         </div>
         <div className="flex-1">
-          <div className="flex justify-between">
+          <div className="flex justify-between items-start">
             <h3 className={cn(
-              "font-medium", 
+              "font-medium text-sm", 
               darkMode ? "text-white" : "text-gray-900"
-            )}>{order.dish}</h3>
-            <span className={`px-2 py-1 text-xs font-medium rounded-full ${priorityColors[order.priority]}`}>
-              {order.priority}
+            )}>
+              {dishName}
+            </h3>
+            <span className={`px-2 py-1 text-xs font-medium rounded-full ${getStatusColor(dishStatus)}`}>
+              {t(`kitchendashboard.status.${dishStatus}`)}
             </span>
           </div>
           <div className={cn(
             "text-sm mt-1", 
             darkMode ? "text-slate-300" : "text-gray-500"
-          )}>Order #{order.id}</div>
+          )}>
+            {t('kitchendashboard.dish.quantity')}: {dish.quantity || 1} | {t('kitchendashboard.dish.order')}{order._id?.slice(-6)}
+          </div>
           <div className="flex justify-between items-center mt-1">
             <div className={cn(
               "text-xs", 
               darkMode ? "text-slate-400" : "text-gray-500"
             )}>
-              {order.time}
+              {formatTime(order.createdAt)}
             </div>
-            <span className={`px-2 py-1 text-xs font-medium rounded-full ${statusColors[order.status]}`}>
-              {order.status}
-            </span>
+            {dishStatus === 'prepare' && (
+              <DishTimer 
+                startTime={dish.updatedAt || order.updatedAt} 
+                onComplete={() => onMarkPrepared(order._id, dish._id)}
+                darkMode={darkMode}
+              />
+            )}
           </div>
         </div>
       </div>
       
       <div className={cn(
-        "flex justify-between items-center border-t pt-3",
+        "flex justify-between items-center border-t pt-3 text-sm",
         darkMode ? "border-slate-700" : "border-gray-200"
       )}>
-        <div className="flex items-center text-sm">
+        <div className="flex items-center">
           <User size={14} className={cn(
             "mr-1", 
             darkMode ? "text-slate-400" : "text-gray-400"
           )} />
-          <span>{`Waiter: ${order.waiter}`}</span>
+          <span>
+            {typeof order.waiterid === 'string' 
+              ? `${t('kitchendashboard.dish.waiter')}${order.waiterid.slice(-6)}` 
+              : order.waiterid?.name || t('kitchendashboard.dish.unknownWaiter')
+            }
+          </span>
         </div>
-        <div className="text-sm">{`Table #${order.table}`}</div>
+        <div>
+          {t('kitchendashboard.dish.table')}{typeof order.tableid === 'string' 
+            ? order.tableid.slice(-6) 
+            : order.tableid?.tablenumber || 'N/A'
+          }
+        </div>
       </div>
       
       <div className="flex justify-between mt-3 gap-2">
-        {order.status === 'pending' && (
+        {dishStatus === 'order' && (
           <button 
-            onClick={() => onReady(order.id)}
+            onClick={() => onAssignKitchen(order._id, dish._id)}
             className={cn(
-              "flex-1 py-2 rounded-md font-medium transition-colors",
-              buttonColors.ready
+              "flex-1 py-2 px-4 rounded-md font-medium transition-colors text-sm",
+              getButtonColor('assign')
             )}
           >
-            Ready
+            {t('kitchendashboard.buttons.startPreparing')}
           </button>
         )}
-        {order.status === 'ready' && (
+        {dishStatus === 'prepare' && (
           <button 
-            onClick={() => onDeliver(order.id)}
+            onClick={() => onMarkPrepared(order._id, dish._id)}
             className={cn(
-              "flex-1 py-2 rounded-md font-medium transition-colors",
-              buttonColors.deliver
+              "flex-1 py-2 px-4 rounded-md font-medium transition-colors text-sm",
+              getButtonColor('prepared')
             )}
           >
-            Deliver
+            {t('kitchendashboard.buttons.markAsPrepared')}
           </button>
         )}
-        {order.status === 'delivered' && (
+        {dishStatus === 'prepared' && (
           <div className={cn(
-            "flex-1 py-2 rounded-md font-medium text-center",
-            buttonColors.completed
+            "flex-1 py-2 px-4 rounded-md font-medium text-center text-sm",
+            getButtonColor('completed')
           )}>
-            Completed
+            {t('kitchendashboard.buttons.readyToServe')}
           </div>
         )}
       </div>
+      
+      {/* Dish Price (if available) */}
+      {dish.dish_id?.price && (
+        <div className={cn(
+          "mt-3 pt-3 border-t text-sm flex justify-between",
+          darkMode ? "border-slate-700" : "border-gray-200"
+        )}>
+          <span className={cn(
+            darkMode ? "text-slate-400" : "text-gray-500"
+          )}>{t('kitchendashboard.dish.price')}:</span>
+          <span className={cn(
+            "font-medium",
+            darkMode ? "text-slate-300" : "text-gray-600"
+          )}>
+            ${(dish.dish_id.price * dish.quantity).toFixed(2)}
+          </span>
+        </div>
+      )}
     </div>
   );
 };
 
 // Filter menu
 const FilterMenu = ({ filter, setFilter, darkMode }) => {
+  const { t } = useTranslation();
+  
   const filterButtonClass = (currentFilter) => cn(
     "px-4 py-2 rounded-md text-sm font-medium transition-colors",
     filter === currentFilter 
@@ -242,35 +277,39 @@ const FilterMenu = ({ filter, setFilter, darkMode }) => {
         onClick={() => setFilter('all')}
         className={filterButtonClass('all')}
       >
-        All
+        {t('kitchendashboard.filters.allDishes')}
       </button>
       <button 
-        onClick={() => setFilter('pending')}
-        className={filterButtonClass('pending')}
+        onClick={() => setFilter('order')}
+        className={filterButtonClass('order')}
       >
-        Pending
+        {t('kitchendashboard.filters.newOrders')}
       </button>
       <button 
-        onClick={() => setFilter('ready')}
-        className={filterButtonClass('ready')}
+        onClick={() => setFilter('prepare')}
+        className={filterButtonClass('prepare')}
       >
-        Ready
+        {t('kitchendashboard.filters.inPreparation')}
       </button>
       <button 
-        onClick={() => setFilter('delivered')}
-        className={filterButtonClass('delivered')}
+        onClick={() => setFilter('prepared')}
+        className={filterButtonClass('prepared')}
       >
-        Delivered
+        {t('kitchendashboard.filters.readyToServe')}
       </button>
     </div>
   );
 };
 
-// Main Kitchen Dashboard Component
 const KitchenDashboard = () => {
-  const [orders, setOrders] = useState(initialOrders);
+  const { t } = useTranslation();
+  const dispatch = useDispatch();
+  const { orders, isLoading } = useSelector((state) => state.order);
+  const { user } = useSelector((state) => state.auth);
+  const currentKitchenId = user?.id;
   const [filter, setFilter] = useState('all');
   const [darkMode, setDarkMode] = useState(false);
+  const [searchTerm, setSearchTerm] = useState('');
   
   useEffect(() => {
     const checkDarkMode = () => {
@@ -279,10 +318,8 @@ const KitchenDashboard = () => {
       }
     };
     
-    // Initial check
     checkDarkMode();
     
-    // Create a mutation observer to watch for changes to the body's class list
     const observer = new MutationObserver(checkDarkMode);
     
     if (document) {
@@ -292,37 +329,81 @@ const KitchenDashboard = () => {
       });
     }
     
-    // Cleanup
     return () => {
       observer.disconnect();
     };
   }, []);
 
-  // Stats for dashboard
+  useEffect(() => {
+    dispatch(fetchAllOrders());
+  }, [dispatch]);
+
+  // Flatten all dishes from all orders
+  const allDishes = orders.reduce((acc, order) => {
+    if (order.dishes && order.dishes.length > 0) {
+      order.dishes.forEach(dish => {
+        acc.push({
+          ...dish,
+          order: order
+        });
+      });
+    }
+    return acc;
+  }, []);
+
+  // Calculate stats based on individual dishes
   const stats = {
-    pending: orders.filter(order => order.status === 'pending').length,
-    ready: orders.filter(order => order.status === 'ready').length,
-    delivered: orders.filter(order => order.status === 'delivered').length,
-    total: orders.length
+    pending: allDishes.filter(dish => (dish.status || 'order') === 'order').length,
+    preparing: allDishes.filter(dish => (dish.status || 'order') === 'prepare').length,
+    ready: allDishes.filter(dish => (dish.status || 'order') === 'prepared').length,
+    total: allDishes.length
   };
 
-  // Handle order status changes
-  const handleReady = (orderId) => {
-    setOrders(orders.map(order => 
-      order.id === orderId ? { ...order, status: 'ready' } : order
-    ));
+  const handleAssignKitchen = async (orderId, dishId) => {
+    if (currentKitchenId) {
+      await dispatch(assignKitchen({ 
+        orderId, 
+        dishId,
+        kitchenId: currentKitchenId
+      }));
+      // Refresh orders after assignment
+      dispatch(fetchAllOrders());
+    }
   };
 
-  const handleDeliver = (orderId) => {
-    setOrders(orders.map(order => 
-      order.id === orderId ? { ...order, status: 'delivered' } : order
-    ));
+  // Handle mark dish as prepared
+  const handleMarkPrepared = async (orderId, dishId) => {
+    await dispatch(markOrderAsPrepared({ orderId, dishId }));
+    dispatch(fetchAllOrders());
   };
 
-  // Filter orders based on current filter
-  const filteredOrders = filter === 'all' 
-    ? orders 
-    : orders.filter(order => order.status === filter);
+  // Filter and search dishes
+  const filteredDishes = allDishes.filter(dish => {
+    const dishStatus = dish.status || 'order';
+    const matchesFilter = filter === 'all' || dishStatus === filter;
+    const matchesSearch = searchTerm === '' || 
+      dish.order._id.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      dish.dish_id?.dishName?.en?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      dish.dish_id?.dishName?.es?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (typeof dish.order.waiterid === 'string' && dish.order.waiterid.includes(searchTerm)) ||
+      (typeof dish.order.tableid === 'string' && dish.order.tableid.includes(searchTerm));
+    
+    return matchesFilter && matchesSearch;
+  });
+
+  if (isLoading && orders.length === 0) {
+    return (
+      <div className={cn(
+        "p-4 md:p-6 w-full min-h-screen flex items-center justify-center",
+        darkMode ? "bg-slate-900 text-white" : "bg-gray-50 text-gray-900"
+      )}>
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto mb-4"></div>
+          <p>{t('kitchendashboard.loading.loadingDishes')}</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className={cn(
@@ -333,77 +414,113 @@ const KitchenDashboard = () => {
         <h1 className={cn(
           "text-xl md:text-2xl font-bold mb-2",
           darkMode ? "text-white" : ""
-        )}>Kitchen Dashboard</h1>
+        )}>{t('kitchendashboard.title')}</h1>
         <p className={cn(
           "text-sm md:text-base",
           darkMode ? "text-slate-300" : "text-gray-500"
-        )}>Manage kitchen ordersefficiently</p>
-       </div>
+        )}>{t('kitchendashboard.subtitle')}</p>
+      </div>
       
-       {/* Stats Cards */}
-       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+      {/* Stats Cards */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
         <StatsCard 
-          title="Pending Orders" 
+          title={t('kitchendashboard.stats.newDishes')} 
           value={stats.pending} 
           icon={Clock} 
-          color="bg-amber-100" 
+          color="bg-blue-100" 
+          darkMode={darkMode}
         />
         <StatsCard 
-          title="Ready to Serve" 
+          title={t('kitchendashboard.stats.inPreparation')} 
+          value={stats.preparing} 
+          icon={Timer} 
+          color="bg-amber-100" 
+          darkMode={darkMode}
+        />
+        <StatsCard 
+          title={t('kitchendashboard.stats.readyToServe')} 
           value={stats.ready} 
           icon={CheckCircle} 
           color="bg-green-100" 
+          darkMode={darkMode}
         />
         <StatsCard 
-          title="Delivered Today" 
-          value={stats.delivered} 
-          icon={TrendingUp} 
-          color="bg-blue-100" 
-        />
-        <StatsCard 
-          title="Total Orders" 
+          title={t('kitchendashboard.stats.totalDishes')} 
           value={stats.total} 
           icon={Bell} 
           color="bg-purple-100" 
+          darkMode={darkMode}
         />
       </div>
       
       {/* Search & Filter */}
       <div className="mb-6">
         <div className="relative mb-4">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={18} />
+          <Search className={cn(
+            "absolute left-3 top-1/2 transform -translate-y-1/2",
+            darkMode ? "text-slate-400" : "text-gray-400"
+          )} size={18} />
           <input 
             type="text" 
-            placeholder="Search orders..." 
-            className="pl-10 pr-4 py-2 w-full rounded-md border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            placeholder={t('kitchendashboard.search.placeholder')} 
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className={cn(
+              "pl-10 pr-4 py-2 w-full rounded-md border focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent",
+              darkMode 
+                ? "bg-slate-800 border-slate-600 text-white placeholder-slate-400" 
+                : "bg-white border-gray-200 text-gray-900 placeholder-gray-400"
+            )}
           />
         </div>
         
-        <FilterMenu filter={filter} setFilter={setFilter} />
+        <FilterMenu filter={filter} setFilter={setFilter} darkMode={darkMode} />
       </div>
-      
-      {/* Orders Grid */}
+
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {filteredOrders.map(order => (
-          <OrderCard 
-            key={order.id} 
-            order={order} 
-            onReady={handleReady} 
-            onDeliver={handleDeliver} 
+        {filteredDishes.map((dish, index) => (
+          <DishCard 
+            key={`${dish.order._id}-${dish._id || index}`}
+            dish={dish} 
+            order={dish.order}
+            onAssignKitchen={handleAssignKitchen}
+            onMarkPrepared={handleMarkPrepared}
+            kitchenId={user?._id}
+            darkMode={darkMode}
           />
         ))}
       </div>
       
       {/* Empty state */}
-      {filteredOrders.length === 0 && (
+      {filteredDishes.length === 0 && !isLoading && (
         <div className="text-center py-12">
           <div className="mb-4 flex justify-center">
-            <CheckCircle size={48} className="text-gray-300" />
+            <CheckCircle size={48} className={cn(
+              darkMode ? "text-slate-600" : "text-gray-300"
+            )} />
           </div>
-          <h3 className="text-lg font-medium mb-2">No orders found</h3>
-          <p className="text-gray-500">
-            There are no {filter !== 'all' ? filter : ''} orders at the moment
+          <h3 className="text-lg font-medium mb-2">{t('kitchendashboard.empty.noDishesFound')}</h3>
+          <p className={cn(
+            darkMode ? "text-slate-400" : "text-gray-500"
+          )}>
+            {searchTerm 
+              ? `${t('kitchendashboard.empty.noMatchingDishes')} "${searchTerm}"` 
+              : `${t('kitchendashboard.empty.there')} ${filter !== 'all' ? t(`kitchendashboard.status.${filter}`) : ''} ${t('kitchendashboard.empty.noDishesAtMoment')}`
+            }
           </p>
+        </div>
+      )}
+      
+      {/* Loading overlay for actions */}
+      {isLoading && orders.length > 0 && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className={cn(
+            "p-6 rounded-lg shadow-lg",
+            darkMode ? "bg-slate-800 text-white" : "bg-white text-gray-900"
+          )}>
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500 mx-auto mb-4"></div>
+            <p>{t('kitchendashboard.loading.processing')}</p>
+          </div>
         </div>
       )}
     </div>

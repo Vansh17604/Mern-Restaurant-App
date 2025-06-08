@@ -44,21 +44,26 @@ const CustomInput = (props) => {
 
 // 2. CustomModal Component
 const CustomModal = (props) => {
-  const { open, hideModal, performAction, title, description } = props;
+  const { open, hideModal, performAction, title, description, actionText = "Ok", disabled = false, children } = props;
   
   return (
     <Dialog open={open} onOpenChange={hideModal}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>Confirmation</DialogTitle>
+          <DialogTitle>{title}</DialogTitle>
           <DialogDescription>{description}</DialogDescription>
         </DialogHeader>
+
+        {/* ✅ Add children here */}
         <div className="py-4">
-          <p>{title}</p>
+          {children}
         </div>
+
         <DialogFooter className="flex justify-between">
           <Button variant="outline" onClick={hideModal}>Cancel</Button>
-          <Button onClick={performAction}>Ok</Button>
+          <Button onClick={performAction} disabled={disabled}>
+            {actionText}
+          </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

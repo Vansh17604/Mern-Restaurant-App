@@ -1,16 +1,17 @@
-// waiterSlice.js
-
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import waiterService from "./waiterService";
 import { toast } from "sonner";
 
 const initialState = {
   waiters: [],
+  profile: null,
+  header: null,
   isError: false,
   isSuccess: false,
   isLoading: false,
   message: "",
 };
+
 
 // Register Waiter
 export const registerWaiter = createAsyncThunk(
@@ -57,6 +58,49 @@ export const deleteWaiter = createAsyncThunk(
       return id; // Return only ID to remove from state
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response?.data?.message || "Delete waiter failed");
+    }
+  }
+);
+export const changeWaiterPassword = createAsyncThunk(
+  "waiter/changePassword",
+  async ({ id, passwordData }, thunkAPI) => {
+    try {
+      return await waiterService.changeWaiterPassword(id, passwordData);
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response?.data?.msg || "Change password failed");
+    }
+  }
+);
+
+export const updateWaiterProfile = createAsyncThunk(
+  "waiter/updateProfile",
+  async ({ id, profileData }, thunkAPI) => {
+    try {
+      return await waiterService.updateWaiterProfile(id, profileData);
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response?.data?.msg || "Update profile failed");
+    }
+  }
+);
+
+export const fetchWaiterProfile = createAsyncThunk(
+  "waiter/fetchProfile",
+  async (id, thunkAPI) => {
+    try {
+      return await waiterService.fetchWaiterProfile(id);
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response?.data?.msg || "Fetch profile failed");
+    }
+  }
+);
+
+export const fetchWaiterHeader = createAsyncThunk(
+  "waiter/fetchHeader",
+  async (id, thunkAPI) => {
+    try {
+      return await waiterService.fetchWaiterHeader(id);
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response?.data?.msg || "Fetch header failed");
     }
   }
 );
@@ -141,7 +185,74 @@ export const waiterSlice = createSlice({
         state.isError = true;
         state.message = action.payload;
         toast.error(action.payload);
+      })
+            // Change Password
+      .addCase(changeWaiterPassword.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(changeWaiterPassword.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isSuccess = true;
+        toast.success("Password changed");
+      })
+      .addCase(changeWaiterPassword.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.message = action.payload;
+        toast.error(action.payload);
+      })
+
+      // Update Profile
+      .addCase(updateWaiterProfile.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(updateWaiterProfile.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isSuccess = true;
+        state.waiters = state.waiters.map((waiter) =>
+          waiter._id === action.payload.waiter._id ? action.payload.waiter : waiter
+        );
+        toast.success("Profile updated");
+      })
+      .addCase(updateWaiterProfile.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.message = action.payload;
+        toast.error(action.payload);
+      })
+
+      // Fetch Single Waiter Profile
+      .addCase(fetchWaiterProfile.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(fetchWaiterProfile.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isSuccess = true;
+         state.profile = action.payload;
+      })
+      .addCase(fetchWaiterProfile.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.message = action.payload;
+        toast.error(action.payload);
+      })
+
+      .addCase(fetchWaiterHeader.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(fetchWaiterHeader.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isSuccess = true;
+          state.header = action.payload;
+        
+      })
+      .addCase(fetchWaiterHeader.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.message = action.payload;
+        toast.error(action.payload);
       });
+
   },
 });
 

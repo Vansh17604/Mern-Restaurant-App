@@ -10,14 +10,6 @@ const paymentSchema = new Schema({
         type: String,
         required: true
     },
-    customeremail: {
-        type: String,
-        required: true
-    },
-    customerphone: {
-        type: String,
-        required: true
-    },
     paymentmethod: {
         type: String,
         required: true
@@ -25,6 +17,14 @@ const paymentSchema = new Schema({
     paymentstatus: {
         type: String,
         required: true
+    },
+    paymentdate: {
+        type: Date,
+        required: true
+    },
+    billno:{
+        type:String,
+        required:true
     },
     amount: {
         type: Number,

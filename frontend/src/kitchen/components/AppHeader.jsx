@@ -1,6 +1,9 @@
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import Flag from 'react-world-flags';
+import { useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from "react-redux";
+
 import { 
   Bell, 
   Search, 
@@ -28,18 +31,40 @@ import {
 import { Badge } from "../../components/ui/badge";
 import { Input } from "../../components/ui/input";
 import { Separator } from "../../components/ui/separator";
+import { fetchKitchenHeader } from '../../features/admin/kitchen/kitchenSlice';
+import { logout } from '../../features/auth/authSlice';
 
 const AppHeader = ({ onToggleSidebar }) => {
   const { t, i18n } = useTranslation();
   const [languageMenuOpen, setLanguageMenuOpen] = useState(false);
   const [darkMode, setDarkMode] = useState(false);
   const [currentTime, setCurrentTime] = useState('');
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const { user } = useSelector((state) => state.auth);
+  const { kitchenHeader } = useSelector((state) => state.kitchen);
+  const kitchenId = user?.id;
+  const base_url = import.meta.env.VITE_BASE_URL;
+
+  useEffect(() => {
+    if (kitchenId) {
+      dispatch(fetchKitchenHeader(kitchenId));
+    }
+  }, [dispatch, kitchenId]);
   
-  // Mock chef data
+  
+  const handleLogout = async () => {
+    try {
+      await dispatch(logout());
+    } catch (err) {
+      console.error('Logout error:', err);
+    }
+  };
+
   const chef = {
-    name: "Marco Rivera",
-    role: t('head_chef'),
-    avatar: "/api/placeholder/32/32"
+    name: kitchenHeader?.name || "bhavesh",
+    role: "Kitchen",
+    avatar: kitchenHeader?.photo
   };
 
   // Update time every minute
@@ -98,11 +123,7 @@ const AppHeader = ({ onToggleSidebar }) => {
         {/* Search bar */}
         <div className="hidden md:flex items-center ml-4 md:ml-8 flex-1 max-w-md">
           <div className="relative w-full">
-            <Search className={`absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 ${darkMode ? 'text-slate-400' : 'text-amber-500'}`} />
-            <Input 
-              placeholder={t('search_orders_recipes')}
-              className={`pl-10 w-full ${darkMode ? 'bg-slate-800 border-slate-700 text-white placeholder:text-slate-400 focus-visible:border-amber-500' : 'bg-white border-amber-200 focus-visible:border-amber-400'}`}
-            />
+          
           </div>
         </div>
         
@@ -167,7 +188,7 @@ const AppHeader = ({ onToggleSidebar }) => {
           </div>
 
           {/* Orders notifications */}
-          <DropdownMenu>
+          {/* <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant={darkMode ? "outline" : "ghost"} size="icon" className="relative">
                 <Coffee size={18} className={darkMode ? 'text-slate-300' : 'text-amber-700'} />
@@ -205,10 +226,10 @@ const AppHeader = ({ onToggleSidebar }) => {
                 <span className="text-sm w-full">{t('view_all_orders')}</span>
               </DropdownMenuItem>
             </DropdownMenuContent>
-          </DropdownMenu>
+          </DropdownMenu> */}
           
           {/* Alerts */}
-          <DropdownMenu>
+          {/* <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant={darkMode ? "outline" : "ghost"} size="icon" className="relative">
                 <Bell size={18} className={darkMode ? 'text-slate-300' : 'text-amber-700'} />
@@ -226,20 +247,14 @@ const AppHeader = ({ onToggleSidebar }) => {
                     <div className={`text-xs ${darkMode ? 'text-slate-400' : 'text-amber-600'}`}>{t('time_10_minutes_ago')}</div>
                   </div>
                 </DropdownMenuItem>
-                <DropdownMenuItem className={`p-3 cursor-pointer ${darkMode ? 'hover:bg-slate-700' : 'hover:bg-amber-50'}`}>
-                  <div className="flex flex-col gap-1">
-                    <div className={`font-medium ${darkMode ? 'text-red-400' : 'text-red-600'}`}>{t('equipment_issue')}</div>
-                    <div className={`text-sm ${darkMode ? 'text-slate-300' : 'text-amber-900'}`}>{t('oven_temperature_issue')}</div>
-                    <div className={`text-xs ${darkMode ? 'text-slate-400' : 'text-amber-600'}`}>{t('time_25_minutes_ago')}</div>
-                  </div>
-                </DropdownMenuItem>
+          
               </div>
               <DropdownMenuSeparator className={darkMode ? 'bg-slate-700' : 'bg-amber-200'} />
               <DropdownMenuItem className={`text-center cursor-pointer ${darkMode ? 'hover:bg-slate-700 text-amber-400' : 'hover:bg-amber-50 text-amber-600'}`}>
                 <span className="text-sm w-full">{t('view_all_alerts')}</span>
               </DropdownMenuItem>
             </DropdownMenuContent>
-          </DropdownMenu>
+          </DropdownMenu> */}
           
           {/* Dark mode toggle */}
           <Button 
@@ -265,8 +280,10 @@ const AppHeader = ({ onToggleSidebar }) => {
                 className={`relative h-9 flex items-center gap-2 px-2 ${darkMode ? 'border-slate-700 hover:bg-slate-700' : 'hover:bg-amber-100'}`}
               >
                 <Avatar className="h-8 w-8 border-2 border-amber-400">
-                  <AvatarImage src={chef.avatar} alt={chef.name} />
-                  <AvatarFallback className={`${darkMode ? 'bg-amber-600 text-white' : 'bg-amber-100 text-amber-900'}`}>MR</AvatarFallback>
+                  <AvatarImage src={chef.avatar ? `${base_url}${chef.avatar}` : undefined} alt={chef.name} />
+                  <AvatarFallback className={`${darkMode ? 'bg-amber-600 text-white' : 'bg-amber-100 text-amber-900'}`}>
+                    {chef.name.charAt(0).toUpperCase()}
+                  </AvatarFallback>
                 </Avatar>
                 <div className="hidden md:flex flex-col items-start text-sm">
                   <span className={`font-medium leading-none ${darkMode ? 'text-white' : 'text-amber-900'}`}>{chef.name}</span>
@@ -278,17 +295,16 @@ const AppHeader = ({ onToggleSidebar }) => {
             <DropdownMenuContent align="end" className={`w-56 ${darkMode ? 'bg-slate-800 text-white border-slate-700' : 'bg-white border-amber-200'}`}>
               <DropdownMenuLabel className={darkMode ? 'text-white' : 'text-amber-900'}>{t('my_account')}</DropdownMenuLabel>
               <DropdownMenuSeparator className={darkMode ? 'bg-slate-700' : 'bg-amber-200'} />
-              <DropdownMenuItem className={darkMode ? 'hover:bg-slate-700' : 'hover:bg-amber-50'}>
-                <div className="flex items-center gap-2 w-full">
-                  <div className="h-4 w-4 rounded-full bg-green-500"></div>
-                  <span>{t('available')}</span>
-                </div>
+            
+              <DropdownMenuItem onClick={() => navigate("/kitchen/profile")}>
+                Profile
               </DropdownMenuItem>
-              <DropdownMenuItem className={darkMode ? 'hover:bg-slate-700' : 'hover:bg-amber-50'}>{t('kitchen_settings')}</DropdownMenuItem>
-              <DropdownMenuItem className={darkMode ? 'hover:bg-slate-700' : 'hover:bg-amber-50'}>{t('recipe_book')}</DropdownMenuItem>
-              <DropdownMenuItem className={darkMode ? 'hover:bg-slate-700' : 'hover:bg-amber-50'}>{t('inventory')}</DropdownMenuItem>
+              <DropdownMenuItem onClick={() => navigate("/kitchen/changepassword")}>
+                Change Password
+              </DropdownMenuItem>
+      
               <DropdownMenuSeparator className={darkMode ? 'bg-slate-700' : 'bg-amber-200'} />
-              <DropdownMenuItem className={`${darkMode ? 'hover:bg-slate-700 text-red-400' : 'hover:bg-amber-50 text-red-500'} flex items-center gap-2`}>
+              <DropdownMenuItem className={`${darkMode ? 'hover:bg-slate-700 text-red-400' : 'hover:bg-amber-50 text-red-500'} flex items-center gap-2`} onClick={handleLogout}>
                 <LogOut size={16} />
                 <span>{t('log_out')}</span>
               </DropdownMenuItem>

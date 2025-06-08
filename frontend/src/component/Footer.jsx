@@ -4,7 +4,6 @@ import { useTranslation } from 'react-i18next';
 
 const Footer = () => {
   const { t, i18n } = useTranslation();
-  // Get translations from the t function
   const title = t('footer.title');
   const description = t('footer.description');
   const home = t('footer.home');

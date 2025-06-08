@@ -1,13 +1,12 @@
 const Waiter= require('../models/waiter');
 const jwt= require('jsonwebtoken');
 const { check, validationResult } = require('express-validator');
+const bcrypt = require('bcrypt');
 const dotenv= require('dotenv');
 dotenv.config();
 
-
 module.exports.RegisterWaiter = [
-  check('name.en').notEmpty().withMessage('English name is required'),
-  check('name.es').notEmpty().withMessage('Spanish name is required'),
+  check('name').notEmpty().withMessage('Name is required'),
   check('email').isEmail().withMessage('Invalid email'),
   check('password').isLength({ min: 8 }).withMessage('Password must be at least 8 characters'),
   check('phone').isLength({ min: 10 }).withMessage('Phone number must be at least 10 digits'),
@@ -16,10 +15,7 @@ module.exports.RegisterWaiter = [
   check('city.en').notEmpty().withMessage('English city is required'),
   check('city.es').notEmpty().withMessage('Spanish city is required'),
   check('dob').notEmpty().withMessage('Date of birth is required'),
-  check('perdaySalery').notEmpty().withMessage('Per Day Salary is required'),
-  check('otperHourSalery').notEmpty().withMessage('OT Per Hour Salary is required'),
   check('gender').notEmpty().withMessage('Gender is required'),
-  
 
   async (req, res) => {
     const errors = validationResult(req);
@@ -35,12 +31,10 @@ module.exports.RegisterWaiter = [
       address,
       city,
       gender,
-      dob,
-      perdaySalery,
-      otperHourSalery,
-      
+      dob
     } = req.body;
-    const photo =req.file ? `/uploads/profilewaiter/${req.file.filename}` : req.body.photo;
+    
+    const photo = req.file ? `/uploads/profilewaiter/${req.file.filename}` : req.body.photo;
 
     try {
       const existingWaiter = await Waiter.findOne({ email });
@@ -57,27 +51,15 @@ module.exports.RegisterWaiter = [
         city,
         gender,
         dob,
-        perdaySalery,
-        otperHourSalery,
         photo,
         status: "Deactive"
       });
 
       await waiter.save();
 
-      const token = jwt.sign(
-        { id: waiter._id, role: "Waiter" },
-        process.env.JWT_SECRET_KEY,
-        { expiresIn: "1h" }
-      );
+   
 
-      res.cookie("auth_token", token, {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === 'production',
-        maxAge: 3600000
-      });
-
-      res.status(201).json({ msg: "Waiter registered successfully", token });
+      res.status(201).json({ msg: "Waiter registered successfully"});
     } catch (error) {
       console.error(error.message);
       res.status(500).json({ msg: "Error in registering waiter" });
@@ -85,10 +67,8 @@ module.exports.RegisterWaiter = [
   }
 ];
 
-
 module.exports.EditWaiter = [
-  check('name.en').notEmpty().withMessage('English name is required'),
-  check('name.es').notEmpty().withMessage('Spanish name is required'),
+  check('name').notEmpty().withMessage('Name is required'),
   check('email').isEmail().withMessage('Invalid email'),
   check('phone').isLength({ min: 10 }).withMessage('Phone number must be at least 10 digits'),
   check('address.en').notEmpty().withMessage('English address is required'),
@@ -96,8 +76,6 @@ module.exports.EditWaiter = [
   check('city.en').notEmpty().withMessage('English city is required'),
   check('city.es').notEmpty().withMessage('Spanish city is required'),
   check('dob').notEmpty().withMessage('Date of birth is required'),
-  check('perdaySalery').notEmpty().withMessage('Per Day Salary is required'),
-  check('otperHourSalery').notEmpty().withMessage('OT Per Hour Salary is required'),
   check('gender').notEmpty().withMessage('Gender is required'),
 
   async (req, res) => {
@@ -107,7 +85,6 @@ module.exports.EditWaiter = [
     }
 
     const waiterId = req.params.id;
-
     const {
       name,
       email,
@@ -116,9 +93,7 @@ module.exports.EditWaiter = [
       city,
       gender,
       dob,
-      perdaySalery,
-      otperHourSalery,
-      password // optional update
+      password
     } = req.body;
 
     const photo = req.file ? `/uploads/profilewaiter/${req.file.filename}` : req.body.photo;
@@ -141,17 +116,17 @@ module.exports.EditWaiter = [
       waiter.city = city;
       waiter.gender = gender;
       waiter.dob = dob;
-      waiter.perdaySalery = perdaySalery;
-      waiter.otperHourSalery = otperHourSalery;
-      waiter.photo = photo;
+      if(photo){
+        waiter.photo=photo;
+      }
 
+      if (password) {
         waiter.password = password;
-  
+      }
 
       await waiter.save();
 
       res.status(200).json({ msg: 'Waiter updated successfully' });
-
     } catch (error) {
       console.error(error.message);
       res.status(500).json({ msg: 'Error updating waiter' });
@@ -162,7 +137,7 @@ module.exports.EditWaiter = [
 module.exports.GetAllWaiters = async (req, res) => {
   try {
     const waiters = await Waiter.find();
-    res.status(200).json({ waiters });
+    res.status(200).json( waiters );
   } catch (error) {
     console.error(error.message);
     res.status(500).json({ msg: "Error fetching waiters" });
@@ -187,5 +162,94 @@ module.exports.DeleteWaiter = async (req, res) => {
     res.status(500).json({ msg: "Error deleting waiter" });
   }
 };
+
+module.exports.ChangeWaiterPassword = [
+  check("currentPassword").notEmpty().withMessage("Current password is required"),
+  check("newPassword").isLength({ min: 8 }).withMessage("New password must be at least 8 characters long"),
+
+  async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) return res.status(422).json({ errors: errors.array() });
+
+    const { currentPassword, newPassword } = req.body;
+
+    try {
+      const waiter = await Waiter.findById(req.params.id);
+      if (!waiter) return res.status(404).json({ msg: "Waiter not found" });
+
+      const isMatch = await bcrypt.compare(currentPassword, waiter.password);
+      if (!isMatch) return res.status(400).json({ msg: "Current password is incorrect" });
+
+      waiter.password = newPassword;
+      await waiter.save();
+
+      res.json({ msg: "Password changed successfully" });
+    } catch (error) {
+      console.error(error.message);
+      res.status(500).json({ msg: "Server error" });
+    }
+  },
+];
+module.exports.UpdateWaiterProfile = [
+  check("name").optional().notEmpty().withMessage("Name cannot be empty"),
+  check("email").optional().isEmail().withMessage("Invalid email format"),
+
+  async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) return res.status(422).json({ errors: errors.array() });
+
+    const { name, email, address, phone, gender, dob, city } = req.body;
+    const photo = req.file ? `/uploads/profilewaiter/${req.file.filename}` : req.body.photo;
+
+    try {
+      const waiter = await Waiter.findById(req.params.id);
+      if (!waiter) return res.status(404).json({ msg: "Waiter not found" });
+
+      if (name) waiter.name = name;
+      if (email) {
+        const existing = await Waiter.findOne({ email });
+        if (existing && existing._id.toString() !== req.params.id) {
+          return res.status(400).json({ msg: "Email already in use" });
+        }
+        waiter.email = email;
+      }
+      if (phone) waiter.phone = phone;
+      if (gender) waiter.gender = gender;
+      if (dob) waiter.dob = dob;
+      if (photo) waiter.photo = photo;
+      if (address) waiter.address = JSON.parse(address);
+      if (city) waiter.city = JSON.parse(city);
+
+      await waiter.save();
+
+      res.json({ msg: "Profile updated successfully", waiter });
+    } catch (error) {
+      console.error(error.message);
+      res.status(500).json({ msg: "Server error" });
+    }
+  },
+];
+module.exports.FetchWaiterDetails = async (req, res) => {
+  try {
+    const waiter = await Waiter.findById(req.params.id).select("-password");
+    if (!waiter) return res.status(404).json({ msg: "Waiter not found" });
+
+    res.json(waiter);
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).json({ msg: "Server error" });
+  }
+};
+module.exports.FetchNameandPhoto= async(req,res)=>{
+  try {
+    const waiter = await Waiter.findById(req.params.id);
+    if (!waiter) return res.status(404).json({ msg: "Waiter not found" });
+    res.json({ name: waiter.name, photo: waiter.photo });
+  }catch(err){
+    console.error(err.message);
+    res.status(500).json({ msg: "Server error" });
+  }
+}
+
 
 

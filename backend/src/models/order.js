@@ -1,22 +1,24 @@
 const mongoose = require('mongoose');
-const Table = require('./table');
 const { Schema } = mongoose;
 const orderSchema = new Schema({
-    categoryid:{
-        type: Schema.Types.ObjectId,
-        ref: 'Category',
-        required: true
+ dishes: [
+  {
+    dish_id: { 
+      type: Schema.Types.ObjectId, 
+      ref: 'Dish', 
+      required: true 
     },
-    subcategoryid:{
-        type: Schema.Types.ObjectId,
-        ref: 'Subcategory',
-        required: true
+    quantity: { 
+      type: Number, 
+      required: true, 
+      min: 1 
     },
-    dishid:{
-        type: Schema.Types.ObjectId,
-        ref: 'Dish',
-        required: true
-    },
+    status:{
+      type:String,
+      required:true
+    }
+  }
+],
     tableid:{
         type: Schema.Types.ObjectId,
         ref: 'Table',
@@ -30,15 +32,16 @@ const orderSchema = new Schema({
         type: Date,
         default: Date.now
     },
-    quantity:{
-        type: Number,
-        required: true
-    },
+  
     waiterid:{
         type: Schema.Types.ObjectId,
         ref: 'Waiter',
         required: true
-    }
+    },
+   kitchenid: {
+  type: Schema.Types.ObjectId,
+  ref: "Kitchen"
+}
 },{timestamps:true});
 
 const Order = mongoose.model('Order', orderSchema);

@@ -6,8 +6,6 @@ import { login, reset } from '../features/auth/authSlice';
 import { useTranslation } from 'react-i18next';
 import { useTheme } from '../context/ThemeContext';
 
-
-
 const Login = () => {
   const [isLogin, setIsLogin] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
@@ -23,32 +21,31 @@ const Login = () => {
   const dispatch = useDispatch();
   
   // Get current language and translations
-    const { t, i18n } = useTranslation();
- // Access login translations
+  const { t, i18n } = useTranslation();
   
   const { user, role, isLoading, isError, isSuccess, message } = useSelector(
     (state) => state.auth
   );
 
+
   useEffect(() => {
-   
-    if (isSuccess && user) {
+    if (isSuccess && user && role) {
       switch(role) {
         case 'Admin':
-          navigate('/admin');
+          navigate('/admin', { replace: true });
           break;
         case 'Kitchen':
-          navigate('/kitchen');
+          navigate('/kitchen', { replace: true });
           break;
         case 'Waiter':
-          navigate('/waiter');
+          navigate('/waiter', { replace: true });
           break;
         default:
-          navigate('/');
+          navigate('/', { replace: true });
       }
     }
 
-    // Reset the auth state
+    // Reset the auth state on unmount
     return () => {
       dispatch(reset());
     };
@@ -56,6 +53,13 @@ const Login = () => {
 
   const toggleAuthMode = () => {
     setIsLogin(!isLogin);
+    // Reset form when switching modes
+    setFormData({
+      email: '',
+      password: '',
+      fullName: ''
+    });
+    dispatch(reset());
   };
 
   const togglePasswordVisibility = () => {
@@ -70,7 +74,7 @@ const Login = () => {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     
     const userData = {
@@ -78,7 +82,11 @@ const Login = () => {
       password: formData.password
     };
 
-    dispatch(login(userData));
+    try {
+      await dispatch(login(userData)).unwrap();
+    } catch (error) {
+      console.error('Login failed:', error);
+    }
   };
 
   return (
@@ -117,7 +125,7 @@ const Login = () => {
             </div>
 
             {/* Status message */}
-            {isError && (
+            {isError && message && (
               <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded">
                 {message}
               </div>
@@ -224,11 +232,20 @@ const Login = () => {
               <div className="pt-2">
                 <button 
                   type="submit" 
-                  className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-150 ease-in-out"
+                  className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-150 ease-in-out disabled:opacity-50 disabled:cursor-not-allowed"
                   disabled={isLoading}
                 >
-                  {isLoading ? t('login.processing') : isLogin ? t('login.signinbtn') : t('create')}
-                  {!isLoading && <ArrowRight className="ml-2 h-5 w-5" />}
+                  {isLoading ? (
+                    <div className="flex items-center">
+                      <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                      {t('login.processing')}
+                    </div>
+                  ) : (
+                    <div className="flex items-center">
+                      {isLogin ? t('login.signinbtn') : t('create')}
+                      <ArrowRight className="ml-2 h-5 w-5" />
+                    </div>
+                  )}
                 </button>
               </div>
             </form>
@@ -243,8 +260,19 @@ const Login = () => {
               </div>
             </div>
 
-            {/* Toggle Login/Register Button (you can add this back if needed) */}
-            
+            {/* Toggle Login/Register Button */}
+            <div className="text-center">
+              <button
+                type="button"
+                onClick={toggleAuthMode}
+                className="text-sm text-indigo-600 dark:text-indigo-400 hover:text-indigo-500"
+              >
+                {isLogin 
+                  ? "Don't have an account? Sign up" 
+                  : "Already have an account? Sign in"
+                }
+              </button>
+            </div>
           </div>
         </div>
 

@@ -13,11 +13,13 @@ module.exports.verifyTokenAndAuthorize = (...allowedRoles) => {
       return res.status(401).json({ msg: 'No token provided. Unauthorized' });
     }
 
-    jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
+    jwt.verify(token, process.env.JWT_SECRET_KEY, (err, decoded) => {
       if (err) {
         return res.status(403).json({ msg: 'Invalid or expired token' });
       }
+
       req.user = decoded;
+
       if (!allowedRoles.includes(decoded.role)) {
         return res.status(403).json({ msg: 'Forbidden: Access denied' });
       }

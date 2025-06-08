@@ -7,22 +7,23 @@ import AdminLayout from './admin/componets/AdminLayout';
 // Admin pages
 import AdminDashboard from './admin/pages/AdminDashboard';
 
-import Home from './admin/pages/Home';
-import NotFound from './admin/pages/NotFound';
+
 import WaiterRegistration from './admin/pages/WaiterRegister';
 import AddCategory from './admin/pages/AddCategory';
 import AddSubCategory from './admin/pages/AddSubCategory';
 import AddDish from './admin/pages/AddDish';
 import ViewDish from './admin/pages/ViewDish';
 import AddTable from './admin/pages/AddTable';
+import ViewWaiter from './admin/pages/ViewWaiter';
+import KitchenRegister from './admin/pages/KitchenRegister';
+import ViewKitchen from './admin/pages/ViewKitchen';
 
 
 const AppRoutes = () => {
   return (
 
 <>
-        {/* Public routes */}
-        <Route path="/" element={<Home />} />
+  
         
         {/* Admin routes - All wrapped in AdminLayout */}
         <Route path="/admin" element={<AdminLayout />}>
@@ -35,13 +36,13 @@ const AppRoutes = () => {
            <Route path="adddish" element={<AddDish/>} />
             <Route path="viewdish" element={<ViewDish/>} />
           <Route path="addtable" element={<AddTable />} />
-          {/* Add more admin routes here */}
-          {/* <Route path="users" element={<AdminUsers />} /> */}
-          {/* <Route path="settings" element={<AdminSettings />} /> */}
+          <Route path="viewwaiter" element={<ViewWaiter />} />
+          <Route path="kitchen-register" element={<KitchenRegister />} />
+          <Route path="viewkitchen" element={<ViewKitchen />} />
+         
+          
         </Route>
         
-        {/* Not Found */}
-        <Route path="*" element={<NotFound />} />
      
  </>
   );

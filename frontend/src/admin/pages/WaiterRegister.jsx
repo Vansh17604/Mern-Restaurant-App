@@ -10,10 +10,7 @@ import { useTranslation } from 'react-i18next';
 
 export default function WaiterRegister() {
   const [formData, setFormData] = useState({
-    name: {
-      en: "",
-      es: ""
-    },
+    name: "",
     email: "",
     password: "",
     confirmPassword: "",
@@ -27,8 +24,6 @@ export default function WaiterRegister() {
       es: ""
     },
     dob: "",
-    perdaySalery: "",
-    otperHourSalery: "",
     gender: ""
   });
   
@@ -49,10 +44,7 @@ export default function WaiterRegister() {
   useEffect(() => {
     if (isSuccess) {
       setFormData({
-        name: {
-          en: "",
-          es: ""
-        },
+        name: "",
         email: "",
         password: "",
         confirmPassword: "",
@@ -66,151 +58,134 @@ export default function WaiterRegister() {
           es: ""
         },
         dob: "",
-        perdaySalery: "",
-        otperHourSalery: "",
         gender: ""
       });
       setSelectedImage(null);
       setImagePreview(null);
       setErrors({});
+ 
+      const navigationTimer = setTimeout(() => {
+        navigate("/admin/viewwaiter");
+      }, 2000);
       
-      const timer = setTimeout(() => {
+  
+      const resetTimer = setTimeout(() => {
         dispatch(resetWaiterState());
-      }, 3000);
+      }, 2500);
 
-      return () => clearTimeout(timer); 
+      return () => {
+        clearTimeout(navigationTimer);
+        clearTimeout(resetTimer);
+      };
+     
+
+     
     }
-  }, [isSuccess, dispatch]);
+  }, [isSuccess, dispatch,navigate]);
+    useEffect(() => {
+    dispatch(resetWaiterState());
+  }, [dispatch]);
 
   const validateForm = () => {
     const newErrors = {};
     
-    // English name validation
-    if (!formData.name.en) {
-      newErrors.nameEn = "English name is required";
-    } else if (formData.name.en.length < 2) {
-      newErrors.nameEn = "English name must be at least 2 characters";
-    } else if (formData.name.en.length > 50) {
-      newErrors.nameEn = "English name must not exceed 50 characters";
-    }
-    
-    // Spanish name validation
-    if (!formData.name.es) {
-      newErrors.nameEs = "Spanish name is required";
-    } else if (formData.name.es.length < 2) {
-      newErrors.nameEs = "Spanish name must be at least 2 characters";
-    } else if (formData.name.es.length > 50) {
-      newErrors.nameEs = "Spanish name must not exceed 50 characters";
+    // Name validation
+    if (!formData.name) {
+      newErrors.name = t("waiterregistration.err");
+    } else if (formData.name.length < 2) {
+      newErrors.name = t("waiterregistration.err1");
+    } else if (formData.name.length > 50) {
+      newErrors.name = t("waiterregistration.err2");
     }
     
     // Email validation
     if (!formData.email) {
-      newErrors.email = "Email is required";
+      newErrors.email = t("waiterregistration.err6");
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
-      newErrors.email = "Invalid email format";
+      newErrors.email = t("waiterregistration.err7");
     }
     
-    // Password validation
     if (!formData.password) {
-      newErrors.password = "Password is required";
+      newErrors.password = t("waiterregistration.err8");
     } else if (formData.password.length < 8) {
-      newErrors.password = "Password must be at least 8 characters";
+      newErrors.password = t("waiterregistration.err9");
     } else if (!/(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/.test(formData.password)) {
-      newErrors.password = "Password must contain at least one uppercase letter, one lowercase letter, and one number";
+      newErrors.password = t("waiterregistration.err10");
     }
     
-    // Confirm password validation
     if (!formData.confirmPassword) {
-      newErrors.confirmPassword = "Please confirm your password";
+      newErrors.confirmPassword = t("waiterregistration.err11");
     } else if (formData.password !== formData.confirmPassword) {
-      newErrors.confirmPassword = "Passwords do not match";
+      newErrors.confirmPassword = t("waiterregistration.err12");
     }
     
     // Phone validation
     if (!formData.phone) {
-      newErrors.phone = "Phone number is required";
+      newErrors.phone = t("waiterregistration.err13");
     } else if (formData.phone.length < 10) {
-      newErrors.phone = "Phone number must be at least 10 digits";
+      newErrors.phone = t("waiterregistration.err40");
     } else if (!/^\d+$/.test(formData.phone)) {
-      newErrors.phone = "Phone number must contain only digits";
+      newErrors.phone = t("waiterregistration.err14");
     }
     
     // English address validation
     if (!formData.address.en) {
-      newErrors.addressEn = "English address is required";
+      newErrors.addressEn = t("waiterregistration.err15");
     } else if (formData.address.en.length < 5) {
-      newErrors.addressEn = "English address must be at least 5 characters";
+      newErrors.addressEn = t("waiterregistration.err16");
     } else if (formData.address.en.length > 200) {
-      newErrors.addressEn = "English address must not exceed 200 characters";
+      newErrors.addressEn = t("waiterregistration.err17");
     }
     
     // Spanish address validation
     if (!formData.address.es) {
-      newErrors.addressEs = "Spanish address is required";
+      newErrors.addressEs = t("waiterregistration.err18");
     } else if (formData.address.es.length < 5) {
-      newErrors.addressEs = "Spanish address must be at least 5 characters";
+      newErrors.addressEs = t("waiterregistration.err19");
     } else if (formData.address.es.length > 200) {
-      newErrors.addressEs = "Spanish address must not exceed 200 characters";
+      newErrors.addressEs = t("waiterregistration.err20");
     }
     
     // English city validation
     if (!formData.city.en) {
-      newErrors.cityEn = "English city is required";
+      newErrors.cityEn = t("waiterregistration.err21");
     } else if (formData.city.en.length < 2) {
-      newErrors.cityEn = "English city must be at least 2 characters";
+      newErrors.cityEn = t("waiterregistration.err22");
     } else if (formData.city.en.length > 50) {
-      newErrors.cityEn = "English city must not exceed 50 characters";
+      newErrors.cityEn = t("waiterregistration.err23");
     }
     
     // Spanish city validation
     if (!formData.city.es) {
-      newErrors.cityEs = "Spanish city is required";
+      newErrors.cityEs = t("waiterregistration.err24");
     } else if (formData.city.es.length < 2) {
-      newErrors.cityEs = "Spanish city must be at least 2 characters";
+      newErrors.cityEs = t("waiterregistration.err25");
     } else if (formData.city.es.length > 50) {
-      newErrors.cityEs = "Spanish city must not exceed 50 characters";
+      newErrors.cityEs = t("waiterregistration.err26");
     }
     
     // Date of birth validation
     if (!formData.dob) {
-      newErrors.dob = "Date of birth is required";
+      newErrors.dob = t("waiterregistration.err27");
     } else {
       const today = new Date();
       const birthDate = new Date(formData.dob);
       const age = today.getFullYear() - birthDate.getFullYear();
       if (age < 18) {
-        newErrors.dob = "Waiter must be at least 18 years old";
+        newErrors.dob = t("waiterregistration.err28");
       } else if (age > 65) {
-        newErrors.dob = "Age cannot exceed 65 years";
+        newErrors.dob = t("waiterregistration.err29");
       }
-    }
-    
-    // Per day salary validation
-    if (!formData.perdaySalery) {
-      newErrors.perdaySalery = "Per day salary is required";
-    } else if (isNaN(formData.perdaySalery) || parseFloat(formData.perdaySalery) <= 0) {
-      newErrors.perdaySalery = "Per day salary must be a positive number";
-    } else if (parseFloat(formData.perdaySalery) < 10) {
-      newErrors.perdaySalery = "Per day salary must be at least $10";
-    }
-    
-    // OT per hour salary validation
-    if (!formData.otperHourSalery) {
-      newErrors.otperHourSalery = "OT per hour salary is required";
-    } else if (isNaN(formData.otperHourSalery) || parseFloat(formData.otperHourSalery) <= 0) {
-      newErrors.otperHourSalery = "OT per hour salary must be a positive number";
-    } else if (parseFloat(formData.otperHourSalery) < 5) {
-      newErrors.otperHourSalery = "OT per hour salary must be at least $5";
     }
     
     // Gender validation
     if (!formData.gender) {
-      newErrors.gender = "Gender is required";
+      newErrors.gender = t("waiterregistration.err36");
     }
     
     // Photo validation
     if (!selectedImage) {
-      newErrors.photo = "Photo is required";
+      newErrors.photo = t("waiterregistration.err37");
     }
     
     setErrors(newErrors);
@@ -231,14 +206,13 @@ export default function WaiterRegister() {
       ...prev,
       [parent]: {
         ...prev[parent],
-        [child]: newValue // ← use newValue here
+        [child]: newValue
       }
     }));
   } else {
-    setFormData(prev => ({ ...prev, [name]: newValue })); // ← use newValue here
+    setFormData(prev => ({ ...prev, [name]: newValue }));
   }
 };
-
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
@@ -246,13 +220,13 @@ export default function WaiterRegister() {
       // Validate file type
       const validTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
       if (!validTypes.includes(file.type)) {
-        setErrors(prev => ({ ...prev, photo: "Please select a valid image file (JPEG, JPG, PNG, WEBP)" }));
+        setErrors(prev => ({ ...prev, photo: t("waiterregistration.err38") }));
         return;
       }
       
       // Validate file size (5MB limit)
       if (file.size > 5 * 1024 * 1024) {
-        setErrors(prev => ({ ...prev, photo: "Image size must be less than 5MB" }));
+        setErrors(prev => ({ ...prev, photo: t("waiterregistration.err39") }));
         return;
       }
       
@@ -271,7 +245,7 @@ export default function WaiterRegister() {
   const removeImage = () => {
     setSelectedImage(null);
     setImagePreview(null);
-    // Reset file input
+    
     const fileInput = document.getElementById('photoInput');
     if (fileInput) fileInput.value = '';
   };
@@ -280,8 +254,7 @@ export default function WaiterRegister() {
     if (!validateForm()) return;
     
     const submitData = new FormData();
-    submitData.append('name[en]', formData.name.en);
-    submitData.append('name[es]', formData.name.es);
+    submitData.append('name', formData.name);
     submitData.append('email', formData.email);
     submitData.append('password', formData.password);
     submitData.append('phone', formData.phone);
@@ -290,23 +263,16 @@ export default function WaiterRegister() {
     submitData.append('city[en]', formData.city.en);
     submitData.append('city[es]', formData.city.es);
     submitData.append('dob', formData.dob);
-    submitData.append('perdaySalery', formData.perdaySalery);
-    submitData.append('otperHourSalery', formData.otperHourSalery);
     submitData.append('gender', formData.gender);
     submitData.append('photo', selectedImage);
     
     dispatch(registerWaiter(submitData));
-    if (isSuccess) {
-      navigate("/admin/waiters");
-    }
+ 
   };
 
   const handleClearForm = () => {
     setFormData({
-      name: {
-        en: "",
-        es: ""
-      },
+      name: "",
       email: "",
       password: "",
       confirmPassword: "",
@@ -320,8 +286,6 @@ export default function WaiterRegister() {
         es: ""
       },
       dob: "",
-      perdaySalery: "",
-      otperHourSalery: "",
       gender: ""
     });
     setSelectedImage(null);
@@ -346,7 +310,7 @@ export default function WaiterRegister() {
         <div className="px-6 py-5 max-w-7xl mx-auto">
           <div className="flex items-center space-x-3">
             <Users className="w-8 h-8 text-black dark:text-white" strokeWidth={1.5} />
-            <h1 className="text-2xl font-bold text-gray-800 dark:text-white">Register New Waiter</h1>
+            <h1 className="text-2xl font-bold text-gray-800 dark:text-white">{t("waiterregistration.title")}</h1>
           </div>
         </div>
       </div>
@@ -355,7 +319,7 @@ export default function WaiterRegister() {
         {isSuccess && (
           <Alert className="mb-6 bg-green-50 dark:bg-green-900 text-green-800 dark:text-green-200 border-green-200 dark:border-green-700">
             <AlertDescription>
-              Waiter registered successfully!
+              {t("waiterregistration.message")}
             </AlertDescription>
           </Alert>
         )}
@@ -363,47 +327,31 @@ export default function WaiterRegister() {
         {isError && (
           <Alert className="mb-6 bg-red-50 dark:bg-red-900 text-red-800 dark:text-red-200 border-red-200 dark:border-red-700">
             <AlertDescription>
-              {message}
+              {message || t("waiterregistration.message1")}
             </AlertDescription>
           </Alert>
         )}
         
         <div className="rounded-lg border shadow-sm p-6 bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700">
           <div className="mb-6">
-            <h2 className="text-lg font-medium mb-1 text-gray-800 dark:text-white">Waiter Information</h2>
-            <p className="text-sm text-gray-500 dark:text-gray-400">Fill in the details to register a new waiter</p>
+            <h2 className="text-lg font-medium mb-1 text-gray-800 dark:text-white">{t("waiterregistration.title1")}</h2>
+            <p className="text-sm text-gray-500 dark:text-gray-400">{t("waiterregistration.dis")}</p>
           </div>
           
           <div className="space-y-6">
-            {/* Name Fields */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div>
-                <CustomInput
-                  type="text"
-                  label="Name (English)"
-                  id="name.en"
-                  name="name.en"
-                  className={`dark:bg-gray-700 dark:border-gray-600 dark:text-white ${errors.nameEn ? "border-red-500 dark:border-red-400" : ""}`}
-                  value={formData.name.en}
-                  onChange={handleChange}
-                  placeholder="Enter name in English"
-                />
-                <ErrorMessage error={errors.nameEn} />
-              </div>
-              
-              <div>
-                <CustomInput
-                  type="text"
-                  label="Name (Spanish)"
-                  id="name.es"
-                  name="name.es"
-                  className={`dark:bg-gray-700 dark:border-gray-600 dark:text-white ${errors.nameEs ? "border-red-500 dark:border-red-400" : ""}`}
-                  value={formData.name.es}
-                  onChange={handleChange}
-                  placeholder="Ingrese el nombre en español"
-                />
-                <ErrorMessage error={errors.nameEs} />
-              </div>
+            {/* Name Field */}
+            <div>
+              <CustomInput
+                type="text"
+                label={t("waiterregistration.label") || "Name"}
+                id="name"
+                name="name"
+                className={`dark:bg-gray-700 dark:border-gray-600 dark:text-white ${errors.name ? "border-red-500 dark:border-red-400" : ""}`}
+                value={formData.name}
+                onChange={handleChange}
+                placeholder={t("waiterregistration.placeholder") || "Enter waiter name"}
+              />
+              <ErrorMessage error={errors.name} />
             </div>
 
             {/* Email and Phone */}
@@ -411,31 +359,31 @@ export default function WaiterRegister() {
               <div>
                 <CustomInput
                   type="email"
-                  label="Email"
+                  label={t("waiterregistration.label2") || "Email"}
                   id="email"
                   name="email"
                   className={`dark:bg-gray-700 dark:border-gray-600 dark:text-white ${errors.email ? "border-red-500 dark:border-red-400" : ""}`}
                   value={formData.email}
                   onChange={handleChange}
-                  placeholder="Enter email address"
+                  placeholder={t("waiterregistration.placeholder2") || "Enter email address"}
                 />
                 <ErrorMessage error={errors.email} />
               </div>
               
               <div>
-               <CustomInput
-  type="tel"
-  label="Phone Number"
-  inputMode="numeric"
-  pattern="[0-9]*"
-  id="phone"
-  maxLength="10"
-  name="phone"
-  className={`dark:bg-gray-700 dark:border-gray-600 dark:text-white ${errors.phone ? "border-red-500 dark:border-red-400" : ""}`}
-  value={formData.phone}
-  onChange={handleChange}
-  placeholder="Enter phone number"
-/>
+                <CustomInput
+                  type="tel"
+                  label={t("waiterregistration.label3") || "Phone"}
+                  inputMode="numeric"
+                  pattern="[0-9]*"
+                  id="phone"
+                  maxLength="10"
+                  name="phone"
+                  className={`dark:bg-gray-700 dark:border-gray-600 dark:text-white ${errors.phone ? "border-red-500 dark:border-red-400" : ""}`}
+                  value={formData.phone}
+                  onChange={handleChange}
+                  placeholder={t("waiterregistration.placeholder3") || "Enter phone number"}
+                />
                 <ErrorMessage error={errors.phone} />
               </div>
             </div>
@@ -444,7 +392,7 @@ export default function WaiterRegister() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
                 <label className="block text-sm font-medium mb-2 text-gray-700 dark:text-gray-300">
-                  Password <span className="text-red-500 dark:text-red-400">*</span>
+                  {t("waiterregistration.label4") || "Password"} <span className="text-red-500 dark:text-red-400">*</span>
                 </label>
                 <div className="relative">
                   <input
@@ -452,7 +400,7 @@ export default function WaiterRegister() {
                     name="password"
                     value={formData.password}
                     onChange={handleChange}
-                    placeholder="Enter password"
+                    placeholder={t("waiterregistration.placeholder4") || "Enter password"}
                     className={`w-full px-3 py-2 pr-10 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white ${
                       errors.password ? "border-red-500 dark:border-red-400" : ""
                     }`}
@@ -470,7 +418,7 @@ export default function WaiterRegister() {
               
               <div>
                 <label className="block text-sm font-medium mb-2 text-gray-700 dark:text-gray-300">
-                  Confirm Password <span className="text-red-500 dark:text-red-400">*</span>
+                  {t("waiterregistration.label5") || "Confirm Password"} <span className="text-red-500 dark:text-red-400">*</span>
                 </label>
                 <div className="relative">
                   <input
@@ -478,7 +426,7 @@ export default function WaiterRegister() {
                     name="confirmPassword"
                     value={formData.confirmPassword}
                     onChange={handleChange}
-                    placeholder="Confirm password"
+                    placeholder={t("waiterregistration.placeholder5") || "Confirm password"}
                     className={`w-full px-3 py-2 pr-10 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white ${
                       errors.confirmPassword ? "border-red-500 dark:border-red-400" : ""
                     }`}
@@ -499,7 +447,7 @@ export default function WaiterRegister() {
             <div className="space-y-6">
               <div>
                 <label className="block text-sm font-medium mb-2 text-gray-700 dark:text-gray-300">
-                  Address (English) <span className="text-red-500 dark:text-red-400">*</span>
+                  {t("waiterregistration.label6") || "Address (English)"} <span className="text-red-500 dark:text-red-400">*</span>
                 </label>
                 <textarea
                   name="address.en"
@@ -510,7 +458,7 @@ export default function WaiterRegister() {
                   className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-vertical border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white ${
                     errors.addressEn ? "border-red-500 dark:border-red-400" : ""
                   }`}
-                  placeholder="Enter address in English"
+                  placeholder={t("waiterregistration.placeholder6") || "Enter address in English"}
                 />
                 <div className="flex justify-between items-center mt-1">
                   <ErrorMessage error={errors.addressEn} />
@@ -522,7 +470,7 @@ export default function WaiterRegister() {
               
               <div>
                 <label className="block text-sm font-medium mb-2 text-gray-700 dark:text-gray-300">
-                  Address (Spanish) <span className="text-red-500 dark:text-red-400">*</span>
+                  {t("waiterregistration.label7") || "Address (Spanish)"} <span className="text-red-500 dark:text-red-400">*</span>
                 </label>
                 <textarea
                   name="address.es"
@@ -533,7 +481,7 @@ export default function WaiterRegister() {
                   className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-vertical border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white ${
                     errors.addressEs ? "border-red-500 dark:border-red-400" : ""
                   }`}
-                  placeholder="Address in Spanish"
+                  placeholder={t("waiterregistration.placeholder7") || "Enter address in Spanish"}
                 />
                 <div className="flex justify-between items-center mt-1">
                   <ErrorMessage error={errors.addressEs} />
@@ -549,13 +497,13 @@ export default function WaiterRegister() {
               <div>
                 <CustomInput
                   type="text"
-                  label="City (English)"
+                  label={t("waiterregistration.label8") || "City (English)"}
                   id="city.en"
                   name="city.en"
                   className={`dark:bg-gray-700 dark:border-gray-600 dark:text-white ${errors.cityEn ? "border-red-500 dark:border-red-400" : ""}`}
                   value={formData.city.en}
                   onChange={handleChange}
-                  placeholder="Enter city in English"
+                  placeholder={t("waiterregistration.placeholder8") || "Enter city in English"}
                 />
                 <ErrorMessage error={errors.cityEn} />
               </div>
@@ -563,13 +511,13 @@ export default function WaiterRegister() {
               <div>
                 <CustomInput
                   type="text"
-                  label="City (Spanish)"
+                  label={t("waiterregistration.label9") || "City (Spanish)"}
                   id="city.es"
                   name="city.es"
                   className={`dark:bg-gray-700 dark:border-gray-600 dark:text-white ${errors.cityEs ? "border-red-500 dark:border-red-400" : ""}`}
                   value={formData.city.es}
                   onChange={handleChange}
-                  placeholder="Ingrese la ciudad en español"
+                  placeholder={t("waiterregistration.placeholder9") || "Enter city in Spanish"}
                 />
                 <ErrorMessage error={errors.cityEs} />
               </div>
@@ -579,7 +527,7 @@ export default function WaiterRegister() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
                 <label className="block text-sm font-medium mb-2 text-gray-700 dark:text-gray-300">
-                  Date of Birth <span className="text-red-500 dark:text-red-400">*</span>
+                  {t("waiterregistration.label10") || "Date of Birth"} <span className="text-red-500 dark:text-red-400">*</span>
                 </label>
                 <input
                   type="date"
@@ -595,7 +543,7 @@ export default function WaiterRegister() {
               
               <div>
                 <label className="block text-sm font-medium mb-2 text-gray-700 dark:text-gray-300">
-                  Gender <span className="text-red-500 dark:text-red-400">*</span>
+                  {t("waiterregistration.label11") || "Gender"} <span className="text-red-500 dark:text-red-400">*</span>
                 </label>
                 <select
                   name="gender"
@@ -605,131 +553,106 @@ export default function WaiterRegister() {
                     errors.gender ? "border-red-500 dark:border-red-400" : ""
                   }`}
                 >
-                  <option value="">Select Gender</option>
-                  <option value="Male">Male</option>
-                  <option value="Female">Female</option>
-                  <option value="Other">Other</option>
+                  <option value="">{t("waiterregistration.option") || "Select gender"}</option>
+                  <option value="Male">{t("waiterregistration.option1") || "Male"}</option>
+                  <option value="Female">{t("waiterregistration.option2") || "Female"}</option>
+                  <option value="Other">{t("waiterregistration.option3") || "Other"}</option>
                 </select>
                 <ErrorMessage error={errors.gender} />
-              </div>
-            </div>
-
-            {/* Salary Fields */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div>
-                <label className="block text-sm font-medium mb-2 text-gray-700 dark:text-gray-300">
-                  Per Day Salary ($) <span className="text-red-500 dark:text-red-400">*</span>
-                </label>
-                <input
-                  type="number"
-                  name="perdaySalery"
-                  value={formData.perdaySalery}
-                  onChange={handleChange}
-                  step="0.01"
-                  min="0"
-                  placeholder="Enter daily salary"
-                  className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white ${
-                    errors.perdaySalery ? "border-red-500 dark:border-red-400" : ""
-                  }`}
-                />
-                <ErrorMessage error={errors.perdaySalery} />
-              </div>
-              
-              <div>
-                <label className="block text-sm font-medium mb-2 text-gray-700 dark:text-gray-300">
-                  OT Per Hour Salary ($) <span className="text-red-500 dark:text-red-400">*</span>
-                </label>
-                <input
-                  type="number"
-                  name="otperHourSalery"
-                  value={formData.otperHourSalery}
-                  onChange={handleChange}
-                  step="0.01"
-                  min="0"
-                  placeholder="Enter hourly OT rate"
-                  className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white ${
-                    errors.otperHourSalery ? "border-red-500 dark:border-red-400" : ""
-                  }`}
-                />
-                <ErrorMessage error={errors.otperHourSalery} />
               </div>
             </div>
 
             {/* Photo Upload */}
             <div>
               <label className="block text-sm font-medium mb-2 text-gray-700 dark:text-gray-300">
-                Photo <span className="text-red-500 dark:text-red-400">*</span>
+                {t("waiterregistration.label14") || "Photo"} <span className="text-red-500 dark:text-red-400">*</span>
               </label>
               
               {!imagePreview ? (
                 <div className="border-2 border-dashed rounded-lg p-6 text-center transition-colors border-gray-300 dark:border-gray-600 hover:border-gray-400 dark:hover:border-gray-500">
-                  <Upload className="mx-auto h-12 w-12 text-gray-400 dark:text-gray-400" />
-                  <div className="mt-2">
-                    <label
-                      htmlFor="photoInput"
-                      className="cursor-pointer inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-                    >
-                      Choose Photo
-                    </label>
-                    <input
-                      id="photoInput"
-                      type="file"
-                      accept="image/*"
-                      onChange={handleImageChange}
-                      className="hidden"
-                    />
-                  </div>
-                  <p className="mt-2 text-xs text-gray-500 dark:text-gray-400">
-                    PNG, JPG, JPEG, WEBP up to 5MB
+                  <Upload className="mx-auto h-12 w-12 text-gray-400 dark:text-gray-500 mb-4" />
+                  <p className="text-sm text-gray-500 dark:text-gray-400 mb-2">
+                    {t("waiterregistration.img") || "Click to upload photo"}
                   </p>
+                  <input
+                    id="photoInput"
+                    type="file"
+                    accept="image/jpeg,image/jpg,image/png,image/webp"
+                    onChange={handleImageChange}
+                    className="hidden"
+                  />
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => document.getElementById('photoInput').click()}
+                    className="mt-4 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-700"
+                  >
+                    <Upload className="h-4 w-4 mr-2" />
+                    {t("waiterregistration.choose") || "Choose File"}
+                  </Button>
                 </div>
               ) : (
                 <div className="relative">
-                  <img
-                   src={imagePreview}
-                    alt="Waiter preview"
-                    className="w-full h-48 object-cover rounded-lg border border-gray-200 dark:border-gray-600"
-                  />
-                  <button
-                    type="button"
-                    onClick={removeImage}
-                    className="absolute top-2 right-2 p-1 bg-red-500 text-white rounded-full hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-500"
-                  >
-                    <X className="h-4 w-4" />
-                  </button>
+                  <div className="border rounded-lg p-4 bg-gray-50 dark:bg-gray-700 border-gray-200 dark:border-gray-600">
+                    <div className="flex items-center space-x-4">
+                      <img
+                        src={imagePreview}
+                        alt="Preview"
+                        className="h-20 w-20 object-cover rounded-lg border border-gray-200 dark:border-gray-600"
+                      />
+                      <div className="flex-1">
+                        <p className="text-sm font-medium text-gray-900 dark:text-white">
+                          {selectedImage?.name}
+                        </p>
+                        <p className="text-xs text-gray-500 dark:text-gray-400">
+                          {(selectedImage?.size / 1024 / 1024).toFixed(2)} MB
+                        </p>
+                      </div>
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="sm"
+                        onClick={removeImage}
+                        className="text-red-600 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300 border-red-200 hover:border-red-300 dark:border-red-600 dark:hover:border-red-500"
+                      >
+                        <X className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  </div>
                 </div>
               )}
               <ErrorMessage error={errors.photo} />
             </div>
           </div>
 
-          {/* Action Buttons */}
-          <div className="flex flex-col sm:flex-row gap-4 pt-6 mt-6 border-t border-gray-200 dark:border-gray-700">
+          {/* Form Actions */}
+          <div className="flex flex-col sm:flex-row gap-4 pt-8 border-t border-gray-200 dark:border-gray-700">
             <Button
               onClick={handleSubmit}
               disabled={isLoading}
-              className="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="flex-1 sm:flex-none bg-blue-600 hover:bg-blue-700 text-white dark:bg-blue-700 dark:hover:bg-blue-800"
             >
               {isLoading ? (
                 <>
-                  <Loader2 className="animate-spin h-4 w-4 mr-2" />
-                  Registering...
+                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                  {t("waiterregistration.register") || "Registering..."}
                 </>
               ) : (
                 <>
                   <Plus className="h-4 w-4 mr-2" />
-                  Register Waiter
+                  {t("waiterregistration.register1") || "Register Waiter"}
                 </>
               )}
             </Button>
             
             <Button
               type="button"
+              variant="outline"
               onClick={handleClearForm}
               disabled={isLoading}
-              className="flex-1 bg-gray-200 hover:bg-gray-300 text-gray-800 font-medium py-2 px-4 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed dark:bg-gray-600 dark:hover:bg-gray-700 dark:text-white"
+              className="flex-1 sm:flex-none dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-700"
             >
-              Clear Form
+              {t("waiterregistration.clear") || "Clear Form"}
             </Button>
           </div>
         </div>

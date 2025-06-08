@@ -95,7 +95,7 @@ export const dishSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      // Create
+    
       .addCase(createDish.pending, (state) => {
         state.isLoading = true;
       })
@@ -135,7 +135,7 @@ export const dishSlice = createSlice({
 .addCase(updateDishPriceAndCurrency.fulfilled, (state, action) => {
   state.isLoading = false;
   state.isSuccess = true;
-  state.dishes = action.payload.dishes || []; // Assuming `dishes` is returned
+  state.dishes = action.payload.dishes || []; 
   toast.success("All dish prices & currencies updated");
 })
 .addCase(updateDishPriceAndCurrency.rejected, (state, action) => {

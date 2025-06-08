@@ -2,10 +2,7 @@ import React from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 
 // Admin layout components
-import KitchenDashboard from './kitchen/Pages/Kitchendashboard';
 
-// Admin pages
-import KitchenLayout from './kitchen/components/KitchenLayout'
 
 
 

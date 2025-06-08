@@ -27,6 +27,8 @@ import { Avatar, AvatarFallback, AvatarImage } from "../../components/ui/avatar"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "../../components/ui/tooltip";
 import { Separator } from "../../components/ui/separator";
 import { Badge } from "../../components/ui/badge";
+import { useSelector, useDispatch } from 'react-redux';
+import {fetchWaiterHeader} from '../../features/admin/waiter/waiterSlice';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "../../components/ui/collapsible";
 
 // Import navigation configuration
@@ -38,8 +40,20 @@ const AppSidebar = () => {
   const [activePath, setActivePath] = useState("/waiter/dashboard");
   const [showScrollTop, setShowScrollTop] = useState(false);
   const [openGroups, setOpenGroups] = useState({});
-
+  const dispatch = useDispatch();
+  const { user } = useSelector((state) => state.auth);
+  const currentWaiterId= user.id
+    const { header } = useSelector((state) => state.waiter);
+ const base_url = import.meta.env.VITE_BASE_URL;
   const navigate = useNavigate();
+    useEffect(() => {
+      if (currentWaiterId) {
+      
+        dispatch(fetchWaiterHeader(currentWaiterId));
+    
+        
+      }
+    }, [currentWaiterId, dispatch]);
 
   useEffect(() => {
     const checkDarkMode = () => {
@@ -79,10 +93,10 @@ const AppSidebar = () => {
     };
   }, []);
     
-  const waiter = {
-    name: "Alex Garcia",
-    role: "Head Waiter",
-    avatar: "/api/placeholder/32/32"
+    const waiter = {
+    name: header?.name || "Waiter",
+    role: user?.role || t('waiter'),
+    avatar: header?.photo || "/api/placeholder/32/32"
   };
 
   // Toggle nav group open/closed state
@@ -301,7 +315,7 @@ const AppSidebar = () => {
           <Tooltip>
             <TooltipTrigger asChild>
               <Avatar className="h-10 w-10 cursor-pointer border-2 border-blue-400">
-                <AvatarImage src={waiter.avatar} alt={waiter.name} />
+                <AvatarImage src={`${base_url}${waiter.avatar}`} alt={waiter.name} />
                 <AvatarFallback className={darkMode ? "bg-blue-600 text-white" : "bg-blue-100 text-blue-900"}>AG</AvatarFallback>
               </Avatar>
             </TooltipTrigger>

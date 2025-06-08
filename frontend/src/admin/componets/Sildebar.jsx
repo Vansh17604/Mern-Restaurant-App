@@ -1,7 +1,10 @@
-import { useState } from 'react';
+import { useState ,useEffect} from 'react';
 import { cn } from "../../lib/utils";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from 'react-i18next';
+
+import { fetchAdminDetails } from '../../features/admin/admin/adminSlice';
+import { useDispatch, useSelector } from 'react-redux';
 
 
 // Lucide icons
@@ -30,14 +33,23 @@ const Sidebar = () => {
   const [collapsed, setCollapsed] = useState(false);
   const [activePath, setActivePath] = useState("/dashboard");
   const [openGroups, setOpenGroups] = useState({});
+    const dispatch = useDispatch();
+    const { admin = {}, isLoading, isError, isSuccess, message } = useSelector((state) => state.admin || {});
+  const { user } = useSelector((state) => state.auth || {}); 
+  const adminId = user?.id;
   const  _nav  = useNav();
 
 const navigate = useNavigate();
 
+  useEffect(() => {
+    if (adminId) {
+      dispatch(fetchAdminDetails(adminId));
+    }
+  }, [dispatch, adminId]);
   // Mock user data
-  const user = {
-    name: t("adminsidebar.name"),
-    role: t("adminsidebar.role"),
+  const userData = {
+    name: admin?.name|| "Admin",
+    role: "Admin",
     avatar: "/api/placeholder/32/32"
   };
 
@@ -220,14 +232,14 @@ const navigate = useNavigate();
           <Tooltip>
             <TooltipTrigger asChild>
               <Avatar className="h-10 w-10 cursor-pointer border-2 border-primary">
-                <AvatarImage src={user.avatar} alt={user.name} />
-                <AvatarFallback>AJ</AvatarFallback>
+                <AvatarImage src={userData.avatar} alt={userData.name} />
+               <AvatarFallback>{userData.name.charAt(0) || 'A'}</AvatarFallback>
               </Avatar>
             </TooltipTrigger>
             {collapsed && (
               <TooltipContent side="right">
-                <p>{user.name}</p>
-                <p className="text-xs text-muted-foreground">{user.role}</p>
+                <p>{userData.name}</p>
+                <p className="text-xs text-muted-foreground">{userData.role}</p>
               </TooltipContent>
             )}
           </Tooltip>
@@ -235,8 +247,8 @@ const navigate = useNavigate();
         
         {!collapsed && (
           <div className="flex flex-col">
-            <span className="font-medium">{user.name}</span>
-            <span className="text-xs text-muted-foreground">{user.role}</span>
+            <span className="font-medium">{userData.name}</span>
+            <span className="text-xs text-muted-foreground">{userData.role}</span>
           </div>
         )}
       </div>

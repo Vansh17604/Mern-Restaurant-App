@@ -14,7 +14,7 @@ const Kitchen_nav = [
   {
     type: "item",
     title: "Dashboard",
-    path: "/dashboard",
+    path: "/waiter",
     icon: <LayoutDashboard size={20} />,
     badge: { text: "NEW", variant: "info" }
   },

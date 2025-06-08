@@ -8,7 +8,8 @@ import {
   AlertCircle,
   Eye,
   Loader2,
-  Table
+  Table,
+  Edit
 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { Alert, AlertDescription } from "../../components/ui/alert";
@@ -16,10 +17,11 @@ import { useDispatch, useSelector } from "react-redux";
 import { 
   resetTableState, 
   fetchTables, 
-  deleteTable 
+  deleteTable,
+  updateTable 
 } from "../../features/admin/table/tableSlice";
 
-const TableCard = ({ table, onDelete, onView, isDeleting }) => {
+const TableCard = ({ table, onDelete, onView, onEdit, isDeleting }) => {
   const { t } = useTranslation();
   
   const getStatusColor = (status) => {
@@ -89,7 +91,6 @@ const TableCard = ({ table, onDelete, onView, isDeleting }) => {
           alt="Table"
           className="w-full h-full object-cover"
           onError={(e) => {
-          
             e.target.style.display = 'none';
             e.target.nextSibling.style.display = 'flex';
           }}
@@ -125,10 +126,16 @@ const TableCard = ({ table, onDelete, onView, isDeleting }) => {
         <div className="flex space-x-2">
           <button
             onClick={() => onView(table)}
-            className="flex-1 flex items-center justify-center px-3 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700  text-sm group-hover:scale-105 transition-transform"
+            className="flex-1 flex items-center justify-center px-3 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 text-sm group-hover:scale-105 transition-transform"
           >
             <Eye className="w-4 h-4 mr-1" />
             {t("tablemanagement.view")}
+          </button>
+          <button
+            onClick={() => onEdit(table)}
+            className="flex items-center justify-center px-3 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors text-sm"
+          >
+            <Edit className="w-4 h-4" />
           </button>
           <button
             onClick={() => onDelete(table._id)}
@@ -204,8 +211,6 @@ const ViewTableModal = ({ isOpen, onClose, table }) => {
               <label className="block text-sm font-medium text-gray-700 mb-1">{t("tablemanagement.modal.capacity")}</label>
               <p className="text-gray-900">{table.tablecapacity} {t("tablemanagement.people")}</p>
             </div>
-            
-          
           </div>
         </div>
         
@@ -222,6 +227,158 @@ const ViewTableModal = ({ isOpen, onClose, table }) => {
   );
 };
 
+const EditTableModal = ({ isOpen, onClose, table, onSave, isUpdating }) => {
+  const { t } = useTranslation();
+  const [formData, setFormData] = useState({
+    tablenumber: '',
+    tablecapacity: ''
+  });
+  const [errors, setErrors] = useState({});
+
+  useEffect(() => {
+    if (table) {
+      setFormData({
+        tablenumber: table.tablenumber || '',
+        tablecapacity: table.tablecapacity || ''
+      });
+      setErrors({});
+    }
+  }, [table]);
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+    // Clear error when user starts typing
+    if (errors[name]) {
+      setErrors(prev => ({
+        ...prev,
+        [name]: ''
+      }));
+    }
+  };
+
+  const validateForm = () => {
+    const newErrors = {};
+    
+    if (!formData.tablenumber.trim()) {
+      newErrors.tablenumber = 'Table number is required';
+    }
+    
+    if (!formData.tablecapacity.trim()) {
+      newErrors.tablecapacity = 'Table capacity is required';
+    } else if (isNaN(formData.tablecapacity) || parseInt(formData.tablecapacity) <= 0) {
+      newErrors.tablecapacity = 'Table capacity must be a positive number';
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (validateForm()) {
+      onSave(table._id, {
+        tablenumber: formData.tablenumber.trim(),
+        tablecapacity: parseInt(formData.tablecapacity)
+      });
+    }
+  };
+
+  if (!isOpen || !table) return null;
+
+  return (
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+      <div className="bg-white rounded-lg w-full max-w-md mx-4">
+        <div className="border-b border-gray-200 px-6 py-4">
+          <div className="flex justify-between items-center">
+            <h2 className="text-xl font-bold text-gray-900">{t("tablemanagement.edit.title") || "Edit Table"}</h2>
+            <button
+              onClick={onClose}
+              className="text-gray-400 hover:text-gray-600 text-2xl"
+              disabled={isUpdating}
+            >
+              ×
+            </button>
+          </div>
+        </div>
+        
+        <form onSubmit={handleSubmit} className="p-6">
+          <div className="space-y-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                {t("tablemanagement.edit.tablenumber") || "Table Number"}
+              </label>
+              <input
+                type="text"
+                name="tablenumber"
+                value={formData.tablenumber}
+                onChange={handleInputChange}
+                className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+                  errors.tablenumber ? 'border-red-500' : 'border-gray-300'
+                }`}
+                placeholder="Enter table number"
+                disabled={isUpdating}
+              />
+              {errors.tablenumber && (
+                <p className="text-red-500 text-sm mt-1">{errors.tablenumber}</p>
+              )}
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                {t("tablemanagement.edit.capacity") || "Table Capacity"}
+              </label>
+              <input
+                type="number"
+                name="tablecapacity"
+                value={formData.tablecapacity}
+                onChange={handleInputChange}
+                className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+                  errors.tablecapacity ? 'border-red-500' : 'border-gray-300'
+                }`}
+                placeholder="Enter table capacity"
+                min="1"
+                disabled={isUpdating}
+              />
+              {errors.tablecapacity && (
+                <p className="text-red-500 text-sm mt-1">{errors.tablecapacity}</p>
+              )}
+            </div>
+          </div>
+
+          <div className="flex space-x-3 mt-6">
+            <button
+              type="button"
+              onClick={onClose}
+              className="flex-1 px-4 py-2 bg-gray-300 text-gray-700 rounded-md hover:bg-gray-400 transition-colors"
+              disabled={isUpdating}
+            >
+              {t("tablemanagement.edit.cancel") || "Cancel"}
+            </button>
+            <button
+              type="submit"
+              disabled={isUpdating}
+              className="flex-1 px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
+            >
+              {isUpdating ? (
+                <>
+                  <Loader2 className="w-4 h-4 animate-spin mr-2" />
+                  {t("tablemanagement.edit.updating") || "Updating..."}
+                </>
+              ) : (
+                t("tablemanagement.edit.save") || "Save Changes"
+              )}
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  );
+};
+
 const ViewTable = () => {
   const { t } = useTranslation();
   const dispatch = useDispatch();
@@ -231,13 +388,15 @@ const ViewTable = () => {
     tables, 
     isLoading, 
     isError, 
-    message,
-    isDeleting 
+    message 
   } = useSelector((state) => state.table);
 
   const [selectedTable, setSelectedTable] = useState(null);
   const [isViewModalOpen, setIsViewModalOpen] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [editingTable, setEditingTable] = useState(null);
   const [deletingTableId, setDeletingTableId] = useState(null);
+  const [isUpdating, setIsUpdating] = useState(false);
 
   // Fetch tables on component mount
   useEffect(() => {
@@ -257,19 +416,38 @@ const ViewTable = () => {
     setIsViewModalOpen(true);
   };
 
+  // Edit table
+  const handleEditTable = (table) => {
+    setEditingTable(table);
+    setIsEditModalOpen(true);
+  };
+
+  // Save edited table
+  const handleSaveTable = async (id, data) => {
+    setIsUpdating(true);
+    try {
+      await dispatch(updateTable({ id, data })).unwrap();
+      setIsEditModalOpen(false);
+      setEditingTable(null);
+    } catch (error) {
+      // Error is handled by Redux and toast
+      console.error('Update failed:', error);
+    } finally {
+      setIsUpdating(false);
+    }
+  };
+
   return (
     <div className="mt-8 bg-white rounded-lg border border-gray-200 shadow-sm p-6">
       <div className="mb-6">
         <div className="flex items-center space-x-3">           
           <Table className="w-8 h-8 text-black" strokeWidth={1.5} />
-              <h1 className="text-2xl font-bold text-gray-800">{t("tablemanagement.title")}</h1>
-            </div>
-            <div className="text-sm text-gray-600">
-              {t("tablemanagement.totaltables")}: {tables?.length || 0}
-            </div>
-          </div>
-        
-     
+          <h1 className="text-2xl font-bold text-gray-800">{t("tablemanagement.title")}</h1>
+        </div>
+        <div className="text-sm text-gray-600">
+          {t("tablemanagement.totaltables")}: {tables?.length || 0}
+        </div>
+      </div>
 
       <div className="flex-1 px-6 py-6 max-w-7xl w-full mx-auto">
         {/* Error Alert */}
@@ -298,7 +476,8 @@ const ViewTable = () => {
                 table={table}
                 onDelete={handleDeleteTable}
                 onView={handleViewTable}
-                isDeleting={deletingTableId === table._id && isDeleting}
+                onEdit={handleEditTable}
+                isDeleting={deletingTableId === table._id && isLoading}
               />
             ))}
           </div>
@@ -319,6 +498,18 @@ const ViewTable = () => {
         isOpen={isViewModalOpen}
         onClose={() => setIsViewModalOpen(false)}
         table={selectedTable}
+      />
+
+      {/* Edit Table Modal */}
+      <EditTableModal
+        isOpen={isEditModalOpen}
+        onClose={() => {
+          setIsEditModalOpen(false);
+          setEditingTable(null);
+        }}
+        table={editingTable}
+        onSave={handleSaveTable}
+        isUpdating={isUpdating}
       />
     </div>
   );

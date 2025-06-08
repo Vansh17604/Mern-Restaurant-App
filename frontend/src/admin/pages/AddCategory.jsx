@@ -68,10 +68,12 @@ export default function AddCategory() {
     return Object.keys(newErrors).length === 0;
   };
 
+  
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     
-    // Handle nested object structure for language fields
+    
     if (name.includes('.')) {
       const [parent, child] = name.split('.');
       setFormData(prev => ({

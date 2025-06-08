@@ -9,16 +9,12 @@ const validateToken = async () => {
 
 const Login = async (user) => {
   const response = await axios.post(`${base_url}/login`, user, config);
-  if (response.data) {
-    localStorage.setItem("user", JSON.stringify(response.data));
-  }
   return response.data;
 };
 
 const Logout = async () => {
   try {
     const response = await axios.post(`${base_url}/logout`, {}, config);
-    localStorage.removeItem("user");
     return response.data;
   } catch (error) {
     console.error("Logout failed:", error);

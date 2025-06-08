@@ -14,14 +14,8 @@ const waiterSchema = new Schema({
         required: true
     },
     name:{
-        en:{
-            type: String,
-            required: true
-        },
-        es:{
-            type: String,
-            required: true
-        }
+  type:String,
+  required: true
 
     },
     address:{
@@ -55,81 +49,11 @@ const waiterSchema = new Schema({
             type: String,
             required: true
         }
-    },
-    attendance:[
-        {
-            date: {
-                type: Date,
-                required: true
-            },
-            status:{
-                type: String,
-                enum: ['Present', 'Absent'],
-                required: true
-                },
-                overtime:[
-                    {
-                        start: {
-                            type: Date,
-                            required: true
-                        },
-                        end: {
-                            type: Date,
-                            required: true
-                        },
-                        hours: {
-                            type: Number,
-                            required: true
-                        }
-                    }
-                ]
-        }
-    ],
-    perdaySalery:{
-        type: Number,
-        required: true
-
-    },
-    otperHourSalery:{
-        type: Number,
-        required: true
     },photo:{
         type: String,
         required: true
     },
-    leave:[
-        {
-            date:{
-                type: Date,
-                required: true
-            },
-            reason:{
-                type: String,
-                required: true
-            },
-            status:{
-                type: String,
-                enum: ['Approved', 'Pending', 'Rejected'],
-                default: 'Pending'
-            }
-        }
-    ],
-    Salery:[
-        {
-            month: {
-                type: String,
-                required: true
-            },
-            year: {
-                type: Number,
-                required: true
-            },
-            amount: {
-                type: Number,
-                required: true
-            }
-        }
-    ],
+ 
     token:{
         type: String,
     },

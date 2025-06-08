@@ -252,6 +252,9 @@
     "Table": "Table",
     "View Table": "View Table",
     "Waiter": "Waiter",
+    "Kitchen": "Kitchen",
+    "Kitchen Registration": "Kitchen Registration",
+    "Kitchen Detail": "Kitchen Detail",
     "Waiter Registration": "Waiter Registration",
     "Waiter Detail": "Waiter Detail",
     "Customer Detail": "Customer Detail",
@@ -576,6 +579,14 @@
     "people": "people",
     "created": "Created",
     "view": "View",
+    "edit": {
+      "title": "Edit Table",
+      "tablenumber": "Table Number",
+      "capacity": "Table Capacity",
+      "cancel": "Cancel",
+      "save": "Save Changes",
+      "updating": "Updating..."
+    },
     "status": {
       "available": "Available",
       "occupied": "Occupied",
@@ -592,91 +603,923 @@
       "close": "Close"
     }
   },
-  "waiterregistration":{
-    "err":"English name is required",
-    "err1":"English name must be at least 2 characters",
-    "err2":"English name must not exceed 50 characters",
-    "err3":"Spanish name is required",
-    "err4":"Spanish name must be at least 2 characters",
-    "err5":"Spanish name must not exceed 50 characters",
-    "err6":"Email is required",
-    "err7":"Invalid email format",
-    "err8":"Password is required",
-    "err9": "Password must be at least 8 characters",
-    "err10":"Password must contain at least one uppercase letter, one lowercase letter, and one number",
-    "err11":"Please confirm your password",
-    "err12":"Passwords do not match",
+   "waiterregistration": {
+    "title": "Waiter Registration",
+    "title1": "Register New Waiter",
+    "dis": "Fill out the form below to register a new waiter in the system",
+    "label": "Full Name",
+    "placeholder": "Enter waiter's full name",
+    "label2": "Email Address",
+    "placeholder2": "Enter email address",
+    "label3": "Phone Number",
+    "placeholder3": "Enter phone number",
+    "label4": "Password",
+    "placeholder4": "Enter password",
+    "label5": "Confirm Password",
+    "placeholder5": "Confirm password",
+    "label6": "Address (English)",
+    "placeholder6": "Enter address in English",
+    "label7": "Address (Spanish)",
+    "placeholder7": "Enter address in Spanish",
+    "label8": "City (English)",
+    "placeholder8": "Enter city in English",
+    "label9": "City (Spanish)",
+    "placeholder9": "Enter city in Spanish",
+    "label10": "Date of Birth",
+    "label11": "Gender",
+    "label14": "Profile Photo",
+    "option": "Select gender",
+    "option1": "Male",
+    "option2": "Female",
+    "option3": "Other",
+    "img": "Click to upload a profile photo",
+    "choose": "Choose File",
+    "register": "Registering...",
+    "register1": "Register Waiter",
+    "clear": "Clear Form",
+    "message": "Waiter registered successfully!",
+    "message1": "Failed to register waiter. Please try again.",
+    "err": "Name is required",
+    "err1": "Name must be at least 2 characters long",
+    "err2": "Name cannot exceed 50 characters",
+    "err6": "Email is required",
+    "err7": "Please enter a valid email address",
+    "err8": "Password is required",
+    "err9": "Password must be at least 8 characters long",
+    "err10": "Password must contain at least one uppercase letter, one lowercase letter, and one number",
+    "err11": "Please confirm your password",
+    "err12": "Passwords do not match",
     "err13": "Phone number is required",
-    "err40": "Phone number must be at least 10 digits",
-    "err14":"Phone number must contain only digits",
-    "err15":"English address is required",
-    "err16":"English address must be at least 5 characters",
-    "err17":"English address must not exceed 200 characters",
-    "err18":"Spanish address is required",
-    "err19":"Spanish address must be at least 5 characters",
-    "err20":"Spanish address must not exceed 200 characters",
-    "err21":"English city is required",
-    "err22":"English city must be at least 2 characters",
-    "err23":"English city must not exceed 50 characters",
-    "err24":"Spanish city is required",
-    "err25":"Spanish city must be at least 2 characters",
-    "err26":"Spanish city must not exceed 50 characters",
-    "err27":"Date of birth is required",
-    "err28":"Waiter must be at least 18 years old",
-    "err29":"Age cannot exceed 65 years",
-    "err30":"Per day salary is required",
-    "err31":"Per day salary must be a valid positive number",
-    "err32":"Per day salary cannot exceed $10",
-    "err33":"OT per hour salary is required",
-    "err34":"OT per hour salary must be a valid positive number",
-    "err35":"OT per hour salary must be at least $5",
-    "err36":"Gender is required",
-    "err37":"Photo is required",
-    "err38":"Please select a valid image file (JPEG, PNG, WebP)",
-    "err39":"Image size must be less than 5MB",
-    "message":"Waiter registered successfully!",
-    "message1":"Failed to register waiter. Please try again.",
-    "title":"Register New Waiter",
-    "title1":"Waiter Information",
-    "dis":"Fill in the details to register a new waiter",
-    "label":"Name (English)",
-    "placeholder":"Enter name in English",
-    "label1":"Name (Spanish)",
-    "placeholder1":"Enter name in Spanish",
-    "label2":"Email",
-    "placeholder2":"Enter email address",
-    "label3":"Phone Number",
-    "placeholder3":"Enter phone number",
-    "label4":"Password",
-    "placeholder4":"Enter password",
-    "label5":"Confirm Password",
-    "placeholder5":"Confirm password",
-    "label6":"Address (English)",
-    "placeholder6":"Enter address in English",
-    "label7":"Address (Spanish)",
-    "placeholder7":"Enter address in Spanish",
-    "label8":"City (English)",
-    "placeholder8":"Enter city in English",
-    "label9":"City (Spanish)",
-    "placeholder9":"Enter city in Spanish",
-    "label10":"Date of Birth",
-    "label11":"Gender",
-    "option":"Select Gender",
-    "option1":"Male",
-    "option2":"Female",
-    "option3":"Other",
-    "label12":"Per Day Salary",
-    "placeholder12":"Enter per daily salary",
-    "label13":"OT Per Hour Salary",
-    "placeholder13":"Enter hourly OT rate",
-    "label14":"Photo",
-    "choose":"Choose Photo",
-    "img":"PNG, JPG, WebP up to 5MB", 
-    "register":"Registering...",
-    "register1":"Register Waiter",
-    "clear":"Clear Form"
-
+    "err14": "Phone number must contain only digits",
+    "err15": "English address is required",
+    "err16": "Address must be at least 5 characters long",
+    "err17": "Address cannot exceed 200 characters",
+    "err18": "Spanish address is required",
+    "err19": "Address must be at least 5 characters long",
+    "err20": "Address cannot exceed 200 characters",
+    "err21": "English city is required",
+    "err22": "City must be at least 2 characters long",
+    "err23": "City cannot exceed 50 characters",
+    "err24": "Spanish city is required",
+    "err25": "City must be at least 2 characters long",
+    "err26": "City cannot exceed 50 characters",
+    "err27": "Date of birth is required",
+    "err28": "Waiter must be at least 18 years old",
+    "err29": "Waiter cannot be older than 65 years",
+    "err36": "Gender selection is required",
+    "err37": "Profile photo is required",
+    "err38": "Please upload a valid image file (JPEG, JPG, PNG, or WebP)",
+    "err39": "Image file size must be less than 5MB",
+    "err40": "Phone number must be at least 10 digits long"
+  },
+      "viewwaiter": {
+      "title": "View Waiters",
+      "description": "Manage and view all registered waiters",
+      "search": "Search waiters by name, email, phone, address, city, or salary...",
+      "loading": "Loading waiters...",
+      "photo": "Photo",
+      "name": "Name",
+      "email": "Email",
+      "phone": "Phone",
+      "address": "Address",
+      "city": "City",
+      "gender": "Gender",
+      "dob": "Date of Birth",
+      "dailySalary": "Daily Salary",
+      "otSalary": "OT/Hour",
+      "edit": "Edit",
+      "delete": "Delete",
+      "noWaiters": "No waiters found",
+      "noWaitersDesc": "Try adjusting your search or add new waiters",
+      "deleteTitle": "Delete Waiter",
+      "deleteConfirm": "Are you sure you want to delete",
+      "deleteWarning": "This action cannot be undone.",
+      "deleteButton": "Delete Waiter",
+      "error": "An error occurred while processing your request.",
+      "success": "Operation completed successfully!"
+    }, "waitermodal": {
+    "title": {
+      "edit": "Edit Waiter",
+      "add": "Add New Waiter"
+    },
+    "description": {
+      "edit": "Update waiter information and profile details",
+      "add": "Enter waiter information to create a new profile"
+    },
+    "labels": {
+      "name": "Full Name",
+      "email": "Email Address",
+      "phone": "Phone Number",
+      "addressEn": "Address (English)",
+      "addressEs": "Address (Spanish)",
+      "cityEn": "City (English)",
+      "cityEs": "City (Spanish)",
+      "dob": "Date of Birth",
+      "gender": "Gender",
+      "password": "Password",
+      "passwordEdit": "New Password (Optional)",
+      "profilePhoto": "Profile Photo"
+    },
+    "placeholders": {
+      "name": "Enter full name",
+      "email": "Enter email address",
+      "phone": "Enter phone number",
+      "addressEn": "Enter address in English",
+      "addressEs": "Enter address in Spanish",
+      "cityEn": "Enter city in English",
+      "cityEs": "Enter city in Spanish",
+      "gender": "Select gender",
+      "password": "Enter password",
+      "passwordOptional": "Leave blank to keep current password"
+    },
+    "genderOptions": {
+      "male": "Male",
+      "female": "Female",
+      "other": "Other"
+    },
+    "validation": {
+      "nameRequired": "Name is required",
+      "emailRequired": "Email is required",
+      "emailInvalid": "Please enter a valid email address",
+      "phoneRequired": "Phone number is required",
+      "phoneMinLength": "Phone number must be at least 10 digits",
+      "addressEnRequired": "English address is required",
+      "addressEsRequired": "Spanish address is required",
+      "cityEnRequired": "English city is required",
+      "cityEsRequired": "Spanish city is required",
+      "dobRequired": "Date of birth is required",
+      "genderRequired": "Please select a gender",
+      "passwordRequired": "Password is required",
+      "imageInvalidType": "Please select a valid image file (JPEG, JPG, PNG, WEBP)",
+      "imageSize": "Image size must be less than 5MB"
+    },
+    "imageUpload": {
+      "choosePhoto": "Choose Photo",
+      "changePhoto": "Change Photo",
+      "preview": "Profile photo preview",
+      "fileTypes": "Supported formats: JPEG, JPG, PNG, WEBP (Max 5MB)"
+    }
+  },
+   "kitchenregistration": {
+      "title": "Kitchen Registration",
+      "formTitle": "Register New Kitchen",
+      "formDescription": "Fill out the form below to register a new kitchen in the system",
+      "successMessage": "Kitchen registered successfully! Redirecting to kitchen list...",
+      "errorMessage": "An error occurred while registering the kitchen. Please try again.",
+      "registering": "Registering...",
+      "registerKitchen": "Register Kitchen",
+      "clearForm": "Clear Form",
+      "uploadText": "Click to upload kitchen photo or drag and drop",
+      "chooseFile": "Choose File",
+      "fileRequirements": "JPEG, PNG, or WebP files up to 5MB",
+      
+      "labels": {
+        "name": "Kitchen Name",
+        "email": "Email Address",
+        "phone": "Phone Number",
+        "password": "Password",
+        "confirmPassword": "Confirm Password",
+        "addressEn": "Address (English)",
+        "addressEs": "Address (Spanish)",
+        "cityEn": "City (English)",
+        "cityEs": "City (Spanish)",
+        "dob": "Date of Birth",
+        "gender": "Gender",
+        "photo": "Kitchen Photo"
+      },
+      
+      "placeholders": {
+        "name": "Enter kitchen name",
+        "email": "Enter email address",
+        "phone": "Enter phone number",
+        "password": "Enter password",
+        "confirmPassword": "Confirm your password",
+        "addressEn": "Enter address in English",
+        "addressEs": "Enter address in Spanish",
+        "cityEn": "Enter city name in English",
+        "cityEs": "Enter city name in Spanish"
+      },
+      
+      "genderOptions": {
+        "select": "Select Gender",
+        "male": "Male",
+        "female": "Female",
+        "other": "Other"
+      },
+      
+      "errors": {
+        "nameRequired": "Kitchen name is required",
+        "nameMinLength": "Kitchen name must be at least 2 characters long",
+        "nameMaxLength": "Kitchen name cannot exceed 50 characters",
+        "emailRequired": "Email address is required",
+        "emailInvalid": "Please enter a valid email address",
+        "passwordRequired": "Password is required",
+        "passwordMinLength": "Password must be at least 8 characters long",
+        "passwordPattern": "Password must contain at least one uppercase letter, one lowercase letter, and one number",
+        "confirmPasswordRequired": "Please confirm your password",
+        "passwordMismatch": "Passwords do not match",
+        "phoneRequired": "Phone number is required",
+        "phoneMinLength": "Phone number must be at least 10 digits",
+        "phoneDigitsOnly": "Phone number must contain only digits",
+        "addressEnRequired": "English address is required",
+        "addressEnMinLength": "English address must be at least 5 characters long",
+        "addressEnMaxLength": "English address cannot exceed 200 characters",
+        "addressEsRequired": "Spanish address is required",
+        "addressEsMinLength": "Spanish address must be at least 5 characters long",
+        "addressEsMaxLength": "Spanish address cannot exceed 200 characters",
+        "cityEnRequired": "English city name is required",
+        "cityEnMinLength": "English city name must be at least 2 characters long",
+        "cityEnMaxLength": "English city name cannot exceed 50 characters",
+        "cityEsRequired": "Spanish city name is required",
+        "cityEsMinLength": "Spanish city name must be at least 2 characters long",
+        "cityEsMaxLength": "Spanish city name cannot exceed 50 characters",
+        "dobRequired": "Date of birth is required",
+        "dobMinAge": "Must be at least 18 years old",
+        "dobMaxAge": "Age cannot exceed 65 years",
+        "genderRequired": "Please select a gender",
+        "photoRequired": "Kitchen photo is required",
+        "photoInvalidType": "Please upload a valid image file (JPEG, PNG, or WebP)",
+        "photoTooLarge": "Image size must be less than 5MB"
+      }
+    },"viewkitchen": {
+      "title": "View Kitchen Staff",
+      "description": "Manage and view all registered kitchen staff",
+      "search": "Search kitchen staff by name, email, phone, address, city, or salary...",
+      "loading": "Loading kitchen staff...",
+      "photo": "Photo",
+      "name": "Name",
+      "email": "Email",
+      "phone": "Phone",
+      "address": "Address",
+      "city": "City",
+      "gender": "Gender",
+      "dailySalary": "Daily Salary",
+      "otSalary": "OT/Hour",
+      "edit": "Edit",
+      "delete": "Delete",
+      "noKitchens": "No kitchen staff found",
+      "noKitchensDesc": "Try adjusting your search or add new kitchen staff",
+      "deleteTitle": "Delete Kitchen Staff",
+      "deleteConfirm": "Are you sure you want to delete",
+      "deleteWarning": "This action cannot be undone.",
+      "deleteButton": "Delete Kitchen Staff",
+      "error": "An error occurred while processing your request.",
+      "success": "Operation completed successfully!"
+    },
+    "addkitchen": {
+      "title": "Add Kitchen Staff",
+      "description": "Register new kitchen staff member",
+      "form": {
+        "name": "Full Name",
+        "namePlaceholder": "Enter full name",
+        "email": "Email Address",
+        "emailPlaceholder": "Enter email address",
+        "phone": "Phone Number",
+        "phonePlaceholder": "Enter phone number",
+        "address": "Address",
+        "addressPlaceholder": "Enter address",
+        "city": "City",
+        "cityPlaceholder": "Enter city",
+        "gender": "Gender",
+        "selectGender": "Select gender",
+        "male": "Male",
+        "female": "Female",
+        "other": "Other",
+        "dailySalary": "Daily Salary",
+        "dailySalaryPlaceholder": "Enter daily salary",
+        "otSalary": "Overtime Salary (per hour)",
+        "otSalaryPlaceholder": "Enter overtime salary per hour",
+        "photo": "Photo",
+        "uploadPhoto": "Upload photo",
+        "submit": "Add Kitchen Staff",
+        "cancel": "Cancel",
+        "update": "Update Kitchen Staff"
+      },
+      "validation": {
+        "nameRequired": "Name is required",
+        "emailRequired": "Email is required",
+        "emailInvalid": "Please enter a valid email",
+        "phoneRequired": "Phone number is required",
+        "addressRequired": "Address is required",
+        "cityRequired": "City is required",
+        "genderRequired": "Gender is required",
+        "dailySalaryRequired": "Daily salary is required",
+        "dailySalaryInvalid": "Daily salary must be a number",
+        "otSalaryRequired": "Overtime salary is required",
+        "otSalaryInvalid": "Overtime salary must be a number"
+      },
+      "messages": {
+        "addSuccess": "Kitchen staff added successfully",
+        "updateSuccess": "Kitchen staff updated successfully",
+        "addError": "Failed to add kitchen staff",
+        "updateError": "Failed to update kitchen staff"
+      }
+    },
+  
+   "kitchenmodal": {
+      "title": {
+        "add": "Add Kitchen Staff",
+        "edit": "Edit Kitchen Staff"
+      },
+      "description": {
+        "add": "Add new kitchen staff member to the system",
+        "edit": "Update kitchen staff member information"
+      },
+      "labels": {
+        "name": "Full Name",
+        "email": "Email Address",
+        "phone": "Phone Number",
+        "addressEn": "Address (English)",
+        "addressEs": "Address (Spanish)",
+        "cityEn": "City (English)",
+        "cityEs": "City (Spanish)",
+        "dob": "Date of Birth",
+        "gender": "Gender",
+        "password": "Password",
+        "passwordEdit": "New Password (Optional)",
+        "profilePhoto": "Profile Photo"
+      },
+      "placeholders": {
+        "name": "Enter full name",
+        "email": "Enter email address",
+        "phone": "Enter phone number",
+        "addressEn": "Enter address in English",
+        "addressEs": "Enter address in Spanish",
+        "cityEn": "Enter city in English",
+        "cityEs": "Enter city in Spanish",
+        "gender": "Select gender",
+        "password": "Enter password",
+        "passwordOptional": "Leave blank to keep current password"
+      },
+      "genderOptions": {
+        "male": "Male",
+        "female": "Female",
+        "other": "Other"
+      },
+      "validation": {
+        "nameRequired": "Name is required",
+        "emailRequired": "Email is required",
+        "emailInvalid": "Please enter a valid email address",
+        "phoneRequired": "Phone number is required",
+        "phoneMinLength": "Phone number must be at least 10 digits",
+        "addressEnRequired": "English address is required",
+        "addressEsRequired": "Spanish address is required",
+        "cityEnRequired": "English city is required",
+        "cityEsRequired": "Spanish city is required",
+        "dobRequired": "Date of birth is required",
+        "genderRequired": "Gender is required",
+        "passwordRequired": "Password is required",
+        "imageInvalidType": "Please select a valid image file (JPEG, PNG, WebP)",
+        "imageSize": "Image size must be less than 5MB"
+      },
+      "imageUpload": {
+        "choosePhoto": "Choose Photo",
+        "changePhoto": "Change Photo",
+        "preview": "Photo Preview",
+        "fileTypes": "JPEG, PNG, WebP up to 5MB"
+      }
+    },
+     "takeOrder": {
+    "title": "Take Order - Table #{{tableNumber}}",
+    "description": "Select menu items to add to the order",
+    "submitting": "Submitting...",
+    "submitOrder": "Submit Order",
+    "searchPlaceholder": "Search menu...",
+    "allCategories": "All",
+    "noDishesFound": "No dishes found",
+    "unknownDish": "Unknown Dish",
+    "orderSummary": "Order Summary",
+    "itemCount": "{{count}} {{item}}",
+    "items": "items",
+    "item": "item",
+    "total": "Total"
+  },
+"orderdetails": {
+      "title": "Order Management",
+      "description": "View and manage all restaurant orders",
+      "search_placeholder": "Search by Order ID, Table, Waiter, Kitchen, or Status...",
+      "loading": "Loading orders...",
+      "order_id": "Order ID",
+      "table": "Table",
+      "waiter": "Waiter",
+      "kitchen": "Kitchen",
+      "status": "Status",
+      "total": "Total",
+      "date": "Order Date",
+      "actions": "Actions",
+      "view_details": "View Details",
+      "payment": "Payment",
+      "no_orders": "No orders found",
+      "no_orders_description": "No orders match your current filters",
+      "order_details": "Order Details",
+      "order_information": "Order Information",
+      "service_details": "Service Details",
+      "ordered_dishes": "Ordered Dishes",
+      "quantity": "Quantity",
+      "price": "Price",
+      "total_amount": "Total Amount",
+      "payment_details": "Payment Details",
+      "order_summary": "Order Summary",
+      "customer_name": "Customer Name",
+      "enter_customer_name": "Enter customer name",
+      "payment_method": "Payment Method",
+      "amount": "Amount",
+      "cancel": "Cancel",
+      "processing": "Processing...",
+      "process_payment": "Process Payment",
+      "error_message": "An error occurred while processing your request.",
+      "payment_error": "Payment processing failed. Please try again.",
+      "payment_success": "Payment processed successfully!",
+      "payment_not_available": "Payment functionality is not available",
+      "all_status": "All Status",
+      "pending": "Pending",
+      "preparing": "Preparing",
+      "ready": "Ready",
+      "served": "Served",
+      "completed": "Completed",
+      "cancelled": "Cancelled",
+      "cash": "Cash",
+      "card": "Card",
+      "upi": "UPI",
+      "digital_wallet": "Digital Wallet"
+    },
+    "waiterDashboard": {
+    "title": "Waiter Dashboard",
+    "welcome": {
+      "waiter": "Welcome! Manage your assigned tables and take orders",
+      "general": "Manage tables and orders efficiently"
+    },
+    "auth": {
+      "required": "Authentication Required",
+      "loginMessage": "Please log in to access the waiter dashboard"
+    },
+    "loading": {
+      "dashboard": "Loading dashboard..."
+    },
+    "error": {
+      "title": "Error Loading Dashboard",
+      "tryAgain": "Try Again"
+    },
+    "stats": {
+      "available": "Available",
+      "assigned": "Assigned",
+      "myTables": "My Tables",
+      "ordersToday": "Orders Today",
+      "total": "Total"
+    },
+    "table": {
+      "tableNumber": "Table {{number}}",
+      "capacity": "{{count}} seats",
+      "status": {
+        "available": "Available",
+        "assigned": "Assigned",
+        "free": "Free",
+        "busy": "Busy"
+      },
+      "waiter": {
+        "unknown": "Unknown Waiter",
+        "you": "(You)",
+        "mine": "Mine"
+      }
+    },
+    "order": {
+      "orders": "{{count}} Order",
+      "orders_plural": "{{count}} Orders",
+      "orderNumber": "#{{id}}",
+      "dishes": "{{count}} dish",
+      "dishes_plural": "{{count}} dishes",
+      "moreDishes": "+{{count}} more",
+      "moreOrders": "+{{count}} more order",
+      "moreOrders_plural": "+{{count}} more orders",
+      "unknownDish": "Unknown Dish",
+      "status": {
+        "order": "Order",
+        "pending": "Pending",
+        "preparing": "Preparing",
+        "prepared": "Ready",
+        "served": "Served",
+        "unknown": "Unknown"
+      },
+      "readyToServe": "Ready to Serve!"
+    },
+    "buttons": {
+      "assignToMe": "Assign to Me",
+      "takeOrder": "Take Order",
+      "manage": "Manage",
+      "serve": "Serve"
+    },
+    "emptyState": {
+      "noTables": "No Tables Found",
+      "noTablesMatch": "No tables match \"{{searchTerm}}\"",
+      "noTablesAvailable": "There are no {{filter}} tables {{role}}",
+      "roleContext": {
+        "waiter": "available to you",
+        "general": "at the moment"
+      },
+      "filterContext": {
+        "myTables": "your"
+      }
+    },
+    "time": {
+      "format": {
+        "hour": "2-digit",
+        "minute": "2-digit"
+      }
+    },
+    "currency": {
+      "format": "USD"
+    }
+    },"TakeOrderModal": {
+    "editOrder": "Edit Order",
+    "takeOrder": "Take Order",
+    "searchDishes": "Search dishes...",
+    "all": "All",
+    "loadingDishes": "Loading dishes...",
+    "noDishesFound": "No dishes found",
+    "addMore": "Add More",
+    "add": "Add",
+    "orderSummary": "Order Summary",
+    "noItemsInOrder": "No items in order",
+    "startAddingDishes": "Start adding dishes",
+    "preparing": "Preparing",
+    "total": "Total",
+    "updating": "Updating...",
+    "submitting": "Submitting...",
+    "updateOrder": "Update Order",
+    "submitOrder": "Submit Order",
+    "pleaseAddAtLeastOneItem": "Please add at least one item to the order",
+    "categories": {
+      "appetizers": "Appetizers",
+      "mainCourse": "Main Course",
+      "desserts": "Desserts",
+      "beverages": "Beverages",
+      "salads": "Salads",
+      "soups": "Soups",
+      "pasta": "Pasta",
+      "pizza": "Pizza",
+      "seafood": "Seafood",
+      "vegetarian": "Vegetarian",
+      "vegan": "Vegan",
+      "grilled": "Grilled"
+    }
+  },"kitchendashboard": {
+    "title": "Kitchen Dashboard",
+    "subtitle": "Manage individual dishes efficiently",
+    "stats": {
+      "newDishes": "New Dishes",
+      "inPreparation": "In Preparation",
+      "readyToServe": "Ready to Serve",
+      "totalDishes": "Total Dishes"
+    },
+    "search": {
+      "placeholder": "Search dishes, orders..."
+    },
+    "filters": {
+      "allDishes": "All Dishes",
+      "newOrders": "New Orders",
+      "inPreparation": "In Preparation",
+      "readyToServe": "Ready to Serve"
+    },
+    "dish": {
+      "unknownDish": "Unknown Dish",
+      "quantity": "Qty",
+      "order": "Order #",
+      "waiter": "Waiter #",
+      "unknownWaiter": "Unknown Waiter",
+      "table": "Table #",
+      "price": "Price"
+    },
+    "status": {
+      "order": "order",
+      "prepare": "prepare",
+      "prepared": "prepared"
+    },
+    "buttons": {
+      "startPreparing": "Start Preparing",
+      "markAsPrepared": "Mark as Prepared",
+      "readyToServe": "Ready to Serve"
+    },
+    "timer": {
+      "elapsed": "Time Elapsed"
+    },
+    "empty": {
+      "noDishesFound": "No dishes found",
+      "noMatchingDishes": "No dishes match",
+      "noDishesAtMoment": "dishes at the moment",
+      "there": "There are no"
+    },
+    "loading": {
+      "loadingDishes": "Loading dishes...",
+      "processing": "Processing..."
+    }
+  }, "kitchenchangepassword": {
+    "title": "Change Kitchen Password",
+    "subtitle": "Update your kitchen password to keep your account secure",
+    "fields": {
+      "currentPassword": {
+        "label": "Current Password",
+        "placeholder": "Enter your current password"
+      },
+      "newPassword": {
+        "label": "New Password",
+        "placeholder": "Enter your new password"
+      },
+      "confirmPassword": {
+        "label": "Confirm New Password",
+        "placeholder": "Confirm your new password"
+      }
+    },
+    "passwordStrength": {
+      "label": "Password Strength",
+      "weak": "Weak",
+      "medium": "Medium",
+      "strong": "Strong"
+    },
+    "validation": {
+      "currentPasswordRequired": "Current password is required",
+      "newPasswordRequired": "New password is required",
+      "newPasswordMinLength": "New password must be at least 8 characters long",
+      "newPasswordDifferent": "New password must be different from current password",
+      "confirmPasswordRequired": "Please confirm your new password",
+      "passwordsDoNotMatch": "Passwords do not match"
+    },
+    "alerts": {
+      "success": "Kitchen password changed successfully! You can now use your new password to sign in.",
+      "error": "An error occurred while changing your password. Please try again."
+    },
+    "securityGuidelines": {
+      "title": "Password Requirements",
+      "requirements": {
+        "minLength": "At least 8 characters long",
+        "upperLower": "Include uppercase and lowercase letters",
+        "number": "Include at least one number",
+        "special": "Include at least one special character",
+        "different": "Different from your current password"
+      }
+    },
+    "buttons": {
+      "updatePassword": "Update Password",
+      "updating": "Updating..."
+    }
+  },"kitchenProfile": {
+      "title": "Kitchen Profile",
+      "subtitle": "Manage your kitchen information and settings",
+      "loading": "Loading kitchen profile...",
+      "error": {
+        "failedToLoad": "Failed to load kitchen profile",
+        "tryAgainLater": "Please try again later",
+        "failedToUpdate": "Failed to update profile",
+        "retry": "Retry"
+      },
+      "success": {
+        "profileUpdated": "Profile updated successfully",
+        "noChanges": "No changes to update"
+      },
+      "form": {
+        "personalInfo": {
+          "fullName": "Full Name",
+          "fullNamePlaceholder": "Enter your full name",
+          "emailAddress": "Email Address",
+          "emailPlaceholder": "Enter your email address",
+          "phoneNumber": "Phone Number",
+          "phonePlaceholder": "Enter your phone number",
+          "gender": "Gender",
+          "selectGender": "Select Gender",
+          "male": "Male",
+          "female": "Female",
+          "other": "Other",
+          "dateOfBirth": "Date of Birth"
+        },
+        "address": {
+          "title": "Address Information",
+          "addressEnglish": "Address (English)",
+          "addressEnglishPlaceholder": "Enter address in English",
+          "addressSpanish": "Address (Spanish)",
+          "addressSpanishPlaceholder": "Enter address in Spanish"
+        },
+        "city": {
+          "title": "City Information",
+          "cityEnglish": "City (English)",
+          "cityEnglishPlaceholder": "Enter city in English",
+          "citySpanish": "City (Spanish)",
+          "citySpanishPlaceholder": "Enter city in Spanish"
+        },
+        "account": {
+          "title": "Account Information",
+          "kitchenId": "Kitchen ID",
+          "accountStatus": "Account Status",
+          "created": "Created",
+          "lastUpdated": "Last Updated",
+          "na": "N/A",
+          "active": "Active",
+          "inactive": "Inactive"
+        },
+        "buttons": {
+          "editProfile": "Edit Profile",
+          "saveChanges": "Save Changes",
+          "cancel": "Cancel",
+          "changePassword": "Change Password",
+          "updating": "Updating..."
+        }
+      },
+      "defaultValues": {
+        "kitchenUser": "Kitchen User"
+      }
+    },
+     "waiterchangepassword": {
+    "title": "Change Waiter Password",
+    "subtitle": "Update your waiter password to keep your account secure",
+    "labels": {
+      "currentPassword": "Current Password",
+      "newPassword": "New Password",
+      "confirmPassword": "Confirm New Password"
+    },
+    "placeholders": {
+      "currentPassword": "Enter your current password",
+      "newPassword": "Enter your new password",
+      "confirmPassword": "Confirm your new password"
+    },
+    "validation": {
+      "currentPasswordRequired": "Current password is required",
+      "newPasswordRequired": "New password is required",
+      "newPasswordMinLength": "New password must be at least 8 characters long",
+      "newPasswordDifferent": "New password must be different from current password",
+      "confirmPasswordRequired": "Please confirm your new password",
+      "passwordsDoNotMatch": "Passwords do not match"
+    },
+    "passwordStrength": {
+      "label": "Password Strength",
+      "weak": "Weak",
+      "medium": "Medium",
+      "strong": "Strong"
+    },
+    "requirements": {
+      "title": "Password Requirements",
+      "minLength": "At least 8 characters long",
+      "uppercase": "Include uppercase and lowercase letters",
+      "number": "Include at least one number",
+      "special": "Include at least one special character",
+      "different": "Different from your current password"
+    },
+    "buttons": {
+      "updatePassword": "Update Password",
+      "updating": "Updating..."
+    },
+    "messages": {
+      "success": "Waiter password changed successfully! You can now use your new password to sign in."
+    }
+  },
+  "waiterprofile": {
+    "title": "Waiter Profile",
+    "subtitle": "Manage your waiter information and settings",
+    "loading": "Loading waiter profile...",
+    "error": {
+      "failedToLoad": "Failed to load waiter profile",
+      "tryAgainLater": "Please try again later",
+      "failedToUpdate": "Failed to update profile"
+    },
+    "retry": "Retry",
+    "profilePicture": "Profile Picture",
+    "basicInformation": "Basic Information",
+    "fields": {
+      "fullName": "Full Name",
+      "fullNamePlaceholder": "Enter your full name",
+      "emailAddress": "Email Address",
+      "emailPlaceholder": "Enter your email address",
+      "phoneNumber": "Phone Number",
+      "phonePlaceholder": "Enter your phone number",
+      "gender": "Gender",
+      "selectGender": "Select Gender",
+      "male": "Male",
+      "female": "Female",
+      "other": "Other",
+      "dateOfBirth": "Date of Birth"
+    },
+    "address": {
+      "title": "Address Information",
+      "english": "Address (English)",
+      "spanish": "Address (Spanish)",
+      "englishPlaceholder": "Enter address in English",
+      "spanishPlaceholder": "Enter address in Spanish"
+    },
+    "city": {
+      "title": "City Information",
+      "english": "City (English)",
+      "spanish": "City (Spanish)",
+      "englishPlaceholder": "Enter city in English",
+      "spanishPlaceholder": "Enter city in Spanish"
+    },
+    "account": {
+      "title": "Account Information",
+      "waiterId": "Waiter ID",
+      "status": "Account Status",
+      "created": "Created",
+      "lastUpdated": "Last Updated",
+      "notAvailable": "N/A"
+    },
+    "buttons": {
+      "changePassword": "Change Password",
+      "editProfile": "Edit Profile",
+      "cancel": "Cancel",
+      "saveChanges": "Save Changes",
+      "updating": "Updating..."
+    },
+    "messages": {
+      "noChanges": "No changes to update",
+      "profileUpdated": "Profile updated successfully"
+    }
+  },
+  "adminchangepassword": {
+    "title": "Change Password",
+    "subtitle": "Update your password to keep your account secure",
+    "form": {
+      "currentPassword": {
+        "label": "Current Password",
+        "placeholder": "Enter your current password"
+      },
+      "newPassword": {
+        "label": "New Password",
+        "placeholder": "Enter your new password"
+      },
+      "confirmPassword": {
+        "label": "Confirm New Password",
+        "placeholder": "Confirm your new password"
+      }
+    },
+    "validation": {
+      "currentPasswordRequired": "Current password is required",
+      "newPasswordRequired": "New password is required",
+      "newPasswordLength": "New password must be at least 8 characters long",
+      "newPasswordDifferent": "New password must be different from current password",
+      "confirmPasswordRequired": "Please confirm your new password",
+      "passwordsNotMatch": "Passwords do not match"
+    },
+    "strength": {
+      "label": "Password Strength",
+      "weak": "Weak",
+      "medium": "Medium",
+      "strong": "Strong"
+    },
+    "requirements": {
+      "title": "Password Requirements",
+      "minLength": "At least 8 characters long",
+      "uppercase": "Include uppercase and lowercase letters",
+      "number": "Include at least one number",
+      "special": "Include at least one special character",
+      "different": "Different from your current password"
+    },
+    "buttons": {
+      "submit": "Update Password",
+      "submitting": "Updating..."
+    },
+    "messages": {
+      "success": "Password changed successfully! You can now use your new password to sign in.",
+      "error": "An error occurred while changing your password. Please try again."
+    }
+  },
+  "adminProfile": {
+    "title": "Admin Profile",
+    "subtitle": "Manage your account information",
+    "form": {
+      "fullName": {
+        "label": "Full Name",
+        "placeholder": "Enter your full name"
+      },
+      "email": {
+        "label": "Email Address",
+        "placeholder": "Enter your email address"
+      }
+    },
+    "accountInfo": {
+      "title": "Account Information",
+      "adminId": "Admin ID:",
+      "accountStatus": "Account Status:",
+      "created": "Created:",
+      "lastUpdated": "Last Updated:",
+      "statusActive": "Active"
+    },
+    "buttons": {
+      "editProfile": "Edit Profile",
+      "cancel": "Cancel",
+      "saveChanges": "Save Changes",
+      "updating": "Updating...",
+      "changePassword": "Change Password"
+    },
+    "messages": {
+      "noChanges": "No changes to update",
+      "loadingProfile": "Loading profile..."
+    },
+    "defaults": {
+      "adminUser": "Admin User",
+      "notAvailable": "N/A"
+    }
   }
 
 
-}
+    }
+  
+  
+
+
+
+

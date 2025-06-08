@@ -1,4 +1,4 @@
-// _nav.js - Navigation configuration file
+
 import {
   LayoutDashboard,
   FileText,
@@ -14,7 +14,7 @@ const Kitchen_nav = [
   {
     type: "item",
     title: "Dashboard",
-    path: "/dashboard",
+    path: "/kitchen",
     icon: <LayoutDashboard size={20} />,
     badge: { text: "NEW", variant: "info" }
   },

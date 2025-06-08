@@ -4,7 +4,8 @@ const Kitchen=require('../models/kitchen');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const {check,validationResult}= require('express-validator');
-const {verifyTokenAndAuthorize} = require('../middleware/auth')
+const dotenv= require("dotenv");
+dotenv.config();
 
 
 
@@ -50,10 +51,11 @@ module.exports.Login=[
                 process.env.JWT_SECRET_KEY, { expiresIn: '1h' });
 
                 res.cookie("auth_token", token, {
+                   httpOnly: true,
                    secure: process.env.NODE_ENV === 'production',
                    maxAge: 3600000 
                 });
-                res.json({ id:user._id,role:role });
+                res.json({ id:user._id,role:role, token:token });
             }
             catch(err){
                 console.error(err.message);
@@ -63,28 +65,29 @@ module.exports.Login=[
 ]
 
 module.exports.validateToken = async (req, res) => {
-  const token = req.cookies.auth_token;
+  const token = req.cookies?.auth_token;
 
   if (!token) {
-    return res.status(401).json({ msg: 'No token provided. Unauthorized' });
+    // Don't treat it as an error, just return null user
+    return res.status(200).json({ msg: 'No token, user not logged in', user: null });
   }
 
   try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY);
 
     res.status(200).json({
       msg: 'Token is valid',
       user: {
         id: decoded.id,
-        role: decoded.role
-      }
+        role: decoded.role,
+      },
     });
-
-  } catch (err) {
-    console.error(err);
-    res.status(403).json({ msg: 'Invalid or expired token' });
+  } catch (error) {
+    console.error("Token verification error:", error.message);
+    res.status(200).json({ msg: 'Invalid token', user: null });
   }
 };
+
 
 module.exports.Logout = async(req,res)=>{
     try{

@@ -46,7 +46,7 @@ const CustomInput = (props) => {
 // 2. CustomModal Component
 const CustomModal = (props) => {
   const { t } = useTranslation();
-  const { open, hideModal, performAction, title, description, children } = props;
+  const { open, hideModal, performAction, title, description, children, hideFooter = false  } = props;
   
   return (
     <Dialog open={open} onOpenChange={hideModal}>
@@ -59,10 +59,16 @@ const CustomModal = (props) => {
        
         {children}
         
-        <DialogFooter className="flex justify-between">
-          <Button variant="outline" onClick={hideModal}>{t("customesadmin.button1")}</Button>
-          <Button onClick={performAction}>{t("customesadmin.button2")}</Button>
-        </DialogFooter>
+        {!hideFooter && (
+          <DialogFooter className="flex justify-between">
+            <Button variant="outline" onClick={hideModal}>
+              {t("customesadmin.button1")}
+            </Button>
+            <Button onClick={performAction}>
+              {t("customesadmin.button2")}
+            </Button>
+          </DialogFooter>
+        )}
       </DialogContent>
     </Dialog>
   );

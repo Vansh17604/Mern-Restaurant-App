@@ -38,6 +38,13 @@ export const fetchAvailableTables = createAsyncThunk("table/fetchAvailable", asy
 });
 
 // Update Table
+export const updateTable = createAsyncThunk("table/update", async ({ id, data }, thunkAPI) => {
+  try {
+    return await tableService.updateTable(id, data);
+  } catch (error) {
+    return thunkAPI.rejectWithValue(error.response?.data?.message || "Update table failed");
+  }
+});
 
 // Delete Table
 export const deleteTable = createAsyncThunk("table/delete", async (id, thunkAPI) => {
@@ -45,6 +52,22 @@ export const deleteTable = createAsyncThunk("table/delete", async (id, thunkAPI)
     return await tableService.deleteTable(id);
   } catch (error) {
     return thunkAPI.rejectWithValue(error.response?.data?.message || "Delete table failed");
+  }
+});
+export const assignWaiter = createAsyncThunk("table/assignWaiter", async ({ tableId, data }, thunkAPI) => {
+  try {
+    return await tableService.assignWaiter(tableId, data);
+  } catch (error) {
+    return thunkAPI.rejectWithValue(error.response?.data?.message || "Assign waiter failed");
+  }
+});
+
+// Unassign Waiter
+export const unassignWaiter = createAsyncThunk("table/unassignWaiter", async ({ tableId, data }, thunkAPI) => {
+  try {
+    return await tableService.unassignWaiter(tableId, data);
+  } catch (error) {
+    return thunkAPI.rejectWithValue(error.response?.data?.message || "Unassign waiter failed");
   }
 });
 
@@ -110,7 +133,24 @@ const tableSlice = createSlice({
         toast.error(action.payload);
       })
 
-    
+      // Update
+      .addCase(updateTable.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(updateTable.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isSuccess = true;
+        state.tables = state.tables.map((table) =>
+          table._id === action.payload._id ? action.payload : table
+        );
+        toast.success("Table updated");
+      })
+      .addCase(updateTable.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.message = action.payload;
+        toast.error(action.payload);
+      })
 
       // Delete
       .addCase(deleteTable.pending, (state) => {
@@ -123,6 +163,43 @@ const tableSlice = createSlice({
         toast.success("Table deleted");
       })
       .addCase(deleteTable.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.message = action.payload;
+        toast.error(action.payload);
+      })
+            // Assign Waiter
+      .addCase(assignWaiter.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(assignWaiter.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isSuccess = true;
+        state.tables = state.tables.map((table) =>
+          table._id === action.payload._id ? action.payload : table
+        );
+        toast.success("Waiter assigned");
+      })
+      .addCase(assignWaiter.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.message = action.payload;
+        toast.error(action.payload);
+      })
+
+      // Unassign Waiter
+      .addCase(unassignWaiter.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(unassignWaiter.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isSuccess = true;
+        state.tables = state.tables.map((table) =>
+          table._id === action.payload._id ? action.payload : table
+        );
+        toast.success("Waiter unassigned");
+      })
+      .addCase(unassignWaiter.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = true;
         state.message = action.payload;

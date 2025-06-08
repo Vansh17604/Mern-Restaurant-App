@@ -236,6 +236,9 @@
     "Category": "Categoría",
     "SubCategory": "Subcategoría",
     "Dish": "Plato",
+    "Kitchen": "Cocina",
+  "Kitchen Registration": "Registro de Cocina",
+  "Kitchen Detail": "Detalle de Cocina",
     "View Dish": "Ver Plato",
     "Waiter": "Camarero",
     "Table": "Mesa",
@@ -559,6 +562,15 @@
   "people": "personas",
   "created": "Creado",
   "view": "Ver",
+  "edit": {
+  "title": "Editar Mesa",
+  "tablenumber": "Número de Mesa",
+  "capacity": "Capacidad de la Mesa",
+  "cancel": "Cancelar",
+  "save": "Guardar Cambios",
+  "updating": "Actualizando..."
+},
+
   "status": {
     "available": "Disponible",
     "occupied": "Ocupada",
@@ -576,89 +588,916 @@
   }
 },
 "waiterregistration": {
-  "err": "Se requiere el nombre en inglés",
-  "err1": "El nombre en inglés debe tener al menos 2 caracteres",
-  "err2": "El nombre en inglés no debe exceder los 50 caracteres",
-  "err3": "Se requiere el nombre en español",
-  "err4": "El nombre en español debe tener al menos 2 caracteres",
-  "err5": "El nombre en español no debe exceder los 50 caracteres",
-  "err6": "Se requiere el correo electrónico",
-  "err7": "Formato de correo electrónico inválido",
-  "err8": "Se requiere la contraseña",
-  "err9": "La contraseña debe tener al menos 8 caracteres",
-  "err10": "La contraseña debe contener al menos una letra mayúscula, una letra minúscula y un número",
-  "err11": "Por favor confirme su contraseña",
-  "err12": "Las contraseñas no coinciden",
-  "err13": "Se requiere el número de teléfono",
-  "err14": "El número de teléfono debe contener solo dígitos",
-  "err15": "Se requiere la dirección en inglés",
-  "err16": "La dirección en inglés debe tener al menos 5 caracteres",
-  "err17": "La dirección en inglés no debe exceder los 200 caracteres",
-  "err18": "Se requiere la dirección en español",
-  "err19": "La dirección en español debe tener al menos 5 caracteres",
-  "err20": "La dirección en español no debe exceder los 200 caracteres",
-  "err21": "Se requiere la ciudad en inglés",
-  "err22": "La ciudad en inglés debe tener al menos 2 caracteres",
-  "err23": "La ciudad en inglés no debe exceder los 50 caracteres",
-  "err24": "Se requiere la ciudad en español",
-  "err25": "La ciudad en español debe tener al menos 2 caracteres",
-  "err26": "La ciudad en español no debe exceder los 50 caracteres",
-  "err27": "Se requiere la fecha de nacimiento",
-  "err28": "El camarero debe tener al menos 18 años",
-  "err29": "La edad no puede exceder los 65 años",
-  "err30": "Se requiere el salario por día",
-  "err31": "El salario por día debe ser un número positivo válido",
-  "err32": "El salario por día no puede exceder los $10",
-  "err33": "Se requiere el salario por hora extra",
-  "err34": "El salario por hora extra debe ser un número positivo válido",
-  "err35": "El salario por hora extra debe ser al menos $5",
-  "err36": "Se requiere el género",
-  "err37": "Se requiere la foto",
-  "err38": "Por favor seleccione un archivo de imagen válido (JPEG, PNG, WebP)",
-  "err39": "El tamaño de la imagen debe ser menor de 5MB",
- "err40": "El número de teléfono debe tener al menos 10 dígitos",
-
-  "message": "¡Camarero registrado con éxito!",
-  "message1": "Error al registrar el camarero. Por favor, inténtelo de nuevo.",
-  "title": "Registrar Nuevo Camarero",
-  "title1": "Información del Camarero",
-  "dis": "Complete los detalles para registrar un nuevo camarero",
-  "label": "Nombre (Inglés)",
-  "placeholder": "Ingrese el nombre en inglés",
-  "label1": "Nombre (Español)",
-  "placeholder1": "Ingrese el nombre en español",
-  "label2": "Correo Electrónico",
-  "placeholder2": "Ingrese el correo electrónico",
+  "title": "Registro de Camarero",
+  "title1": "Registrar Nuevo Camarero",
+  "dis": "Rellena el formulario a continuación para registrar un nuevo camarero en el sistema",
+  "label": "Nombre Completo",
+  "placeholder": "Ingresa el nombre completo del camarero",
+  "label2": "Dirección de Correo Electrónico",
+  "placeholder2": "Ingresa la dirección de correo electrónico",
   "label3": "Número de Teléfono",
-  "placeholder3": "Ingrese el número de teléfono",
+  "placeholder3": "Ingresa el número de teléfono",
   "label4": "Contraseña",
-  "placeholder4": "Ingrese la contraseña",
+  "placeholder4": "Ingresa la contraseña",
   "label5": "Confirmar Contraseña",
-  "placeholder5": "Confirme la contraseña",
+  "placeholder5": "Confirma la contraseña",
   "label6": "Dirección (Inglés)",
-  "placeholder6": "Ingrese la dirección en inglés",
+  "placeholder6": "Ingresa la dirección en inglés",
   "label7": "Dirección (Español)",
-  "placeholder7": "Ingrese la dirección en español",
+  "placeholder7": "Ingresa la dirección en español",
   "label8": "Ciudad (Inglés)",
-  "placeholder8": "Ingrese la ciudad en inglés",
+  "placeholder8": "Ingresa la ciudad en inglés",
   "label9": "Ciudad (Español)",
-  "placeholder9": "Ingrese la ciudad en español",
+  "placeholder9": "Ingresa la ciudad en español",
   "label10": "Fecha de Nacimiento",
   "label11": "Género",
-  "option": "Seleccione Género",
+  "label14": "Foto de Perfil",
+  "option": "Selecciona el género",
   "option1": "Masculino",
   "option2": "Femenino",
   "option3": "Otro",
-  "label12": "Salario por Día",
-  "placeholder12": "Ingrese el salario diario",
-  "label13": "Salario por Hora Extra",
-  "placeholder13": "Ingrese la tarifa por hora extra",
-  "label14": "Foto",
-  "choose": "Seleccionar Foto",
-  "img": "PNG, JPG, WebP hasta 5MB",
+  "img": "Haz clic para subir una foto de perfil",
+  "choose": "Elegir Archivo",
   "register": "Registrando...",
   "register1": "Registrar Camarero",
-  "clear": "Limpiar Formulario"
+  "clear": "Limpiar Formulario",
+  "message": "¡Camarero registrado con éxito!",
+  "message1": "Error al registrar el camarero. Por favor, intenta nuevamente.",
+  "err": "El nombre es obligatorio",
+  "err1": "El nombre debe tener al menos 2 caracteres",
+  "err2": "El nombre no puede exceder los 50 caracteres",
+  "err6": "El correo electrónico es obligatorio",
+  "err7": "Por favor, introduce una dirección de correo electrónico válida",
+  "err8": "La contraseña es obligatoria",
+  "err9": "La contraseña debe tener al menos 8 caracteres",
+  "err10": "La contraseña debe contener al menos una letra mayúscula, una letra minúscula y un número",
+  "err11": "Por favor, confirma tu contraseña",
+  "err12": "Las contraseñas no coinciden",
+  "err13": "El número de teléfono es obligatorio",
+  "err14": "El número de teléfono debe contener solo dígitos",
+  "err15": "La dirección en inglés es obligatoria",
+  "err16": "La dirección debe tener al menos 5 caracteres",
+  "err17": "La dirección no puede exceder los 200 caracteres",
+  "err18": "La dirección en español es obligatoria",
+  "err19": "La dirección debe tener al menos 5 caracteres",
+  "err20": "La dirección no puede exceder los 200 caracteres",
+  "err21": "La ciudad en inglés es obligatoria",
+  "err22": "La ciudad debe tener al menos 2 caracteres",
+  "err23": "La ciudad no puede exceder los 50 caracteres",
+  "err24": "La ciudad en español es obligatoria",
+  "err25": "La ciudad debe tener al menos 2 caracteres",
+  "err26": "La ciudad no puede exceder los 50 caracteres",
+  "err27": "La fecha de nacimiento es obligatoria",
+  "err28": "El camarero debe tener al menos 18 años",
+  "err29": "El camarero no puede tener más de 65 años",
+  "err36": "La selección de género es obligatoria",
+  "err37": "La foto de perfil es obligatoria",
+  "err38": "Por favor, sube un archivo de imagen válido (JPEG, JPG, PNG o WebP)",
+  "err39": "El tamaño del archivo de imagen debe ser menor a 5MB",
+  "err40": "El número de teléfono debe tener al menos 10 dígitos"
+}
+,
+    "viewwaiter": {
+      "title": "Ver Meseros",
+      "description": "Gestionar y ver todos los meseros registrados",
+      "search": "Buscar meseros por nombre, email, teléfono, dirección, ciudad o salario...",
+      "loading": "Cargando meseros...",
+      "photo": "Foto",
+      "name": "Nombre",
+      "email": "Correo Electrónico",
+      "phone": "Teléfono",
+      "address": "Dirección",
+      "city": "Ciudad",
+      "gender": "Género",
+      "dob": "Fecha de Nacimiento",
+      "dailySalary": "Salario Diario",
+      "otSalary": "HE/Hora",
+      "edit": "Editar",
+      "delete": "Eliminar",
+      "noWaiters": "No se encontraron meseros",
+      "noWaitersDesc": "Intenta ajustar tu búsqueda o agregar nuevos meseros",
+      "deleteTitle": "Eliminar Mesero",
+      "deleteConfirm": "¿Estás seguro de que quieres eliminar a",
+      "deleteWarning": "Esta acción no se puede deshacer.",
+      "deleteButton": "Eliminar Mesero",
+      "error": "Ocurrió un error al procesar tu solicitud.",
+      "success": "¡Operación completada exitosamente!"
+    },   
+    "waitermodal": {
+  "title": {
+    "edit": "Editar Camarero",
+    "add": "Agregar Nuevo Camarero"
+  },
+  "description": {
+    "edit": "Actualizar la información y detalles del perfil del camarero",
+    "add": "Ingresa la información del camarero para crear un nuevo perfil"
+  },
+  "labels": {
+    "name": "Nombre Completo",
+    "email": "Dirección de Correo Electrónico",
+    "phone": "Número de Teléfono",
+    "addressEn": "Dirección (Inglés)",
+    "addressEs": "Dirección (Español)",
+    "cityEn": "Ciudad (Inglés)",
+    "cityEs": "Ciudad (Español)",
+    "dob": "Fecha de Nacimiento",
+    "gender": "Género",
+    "password": "Contraseña",
+    "passwordEdit": "Nueva Contraseña (Opcional)",
+    "profilePhoto": "Foto de Perfil"
+  },
+  "placeholders": {
+    "name": "Ingresa el nombre completo",
+    "email": "Ingresa la dirección de correo",
+    "phone": "Ingresa el número de teléfono",
+    "addressEn": "Ingresa la dirección en inglés",
+    "addressEs": "Ingresa la dirección en español",
+    "cityEn": "Ingresa la ciudad en inglés",
+    "cityEs": "Ingresa la ciudad en español",
+    "gender": "Selecciona el género",
+    "password": "Ingresa la contraseña",
+    "passwordOptional": "Déjalo en blanco para mantener la contraseña actual"
+  },
+  "genderOptions": {
+    "male": "Masculino",
+    "female": "Femenino",
+    "other": "Otro"
+  },
+  "validation": {
+    "nameRequired": "El nombre es obligatorio",
+    "emailRequired": "El correo electrónico es obligatorio",
+    "emailInvalid": "Por favor, ingresa un correo electrónico válido",
+    "phoneRequired": "El número de teléfono es obligatorio",
+    "phoneMinLength": "El número de teléfono debe tener al menos 10 dígitos",
+    "addressEnRequired": "La dirección en inglés es obligatoria",
+    "addressEsRequired": "La dirección en español es obligatoria",
+    "cityEnRequired": "La ciudad en inglés es obligatoria",
+    "cityEsRequired": "La ciudad en español es obligatoria",
+    "dobRequired": "La fecha de nacimiento es obligatoria",
+    "genderRequired": "Por favor, selecciona un género",
+    "passwordRequired": "La contraseña es obligatoria",
+    "imageInvalidType": "Selecciona un archivo de imagen válido (JPEG, JPG, PNG, WEBP)",
+    "imageSize": "El tamaño de la imagen debe ser menor a 5MB"
+  },
+  "imageUpload": {
+    "choosePhoto": "Elegir Foto",
+    "changePhoto": "Cambiar Foto",
+    "preview": "Vista previa de la foto de perfil",
+    "fileTypes": "Formatos soportados: JPEG, JPG, PNG, WEBP (Máximo 5MB)"
+  }
+},   "kitchenregistration": {
+      "title": "Registro de Cocina",
+      "formTitle": "Registrar Nueva Cocina",
+      "formDescription": "Complete el formulario a continuación para registrar una nueva cocina en el sistema",
+      "successMessage": "¡Cocina registrada exitosamente! Redirigiendo a la lista de cocinas...",
+      "errorMessage": "Ocurrió un error al registrar la cocina. Por favor, inténtelo de nuevo.",
+      "registering": "Registrando...",
+      "registerKitchen": "Registrar Cocina",
+      "clearForm": "Limpiar Formulario",
+      "uploadText": "Haga clic para subir la foto de la cocina o arrastre y suelte",
+      "chooseFile": "Elegir Archivo",
+      "fileRequirements": "Archivos JPEG, PNG o WebP de hasta 5MB",
+      
+      "labels": {
+        "name": "Nombre de la Cocina",
+        "email": "Dirección de Correo Electrónico",
+        "phone": "Número de Teléfono",
+        "password": "Contraseña",
+        "confirmPassword": "Confirmar Contraseña",
+        "addressEn": "Dirección (Inglés)",
+        "addressEs": "Dirección (Español)",
+        "cityEn": "Ciudad (Inglés)",
+        "cityEs": "Ciudad (Español)",
+        "dob": "Fecha de Nacimiento",
+        "gender": "Género",
+        "photo": "Foto de la Cocina"
+      },
+      
+      "placeholders": {
+        "name": "Ingrese el nombre de la cocina",
+        "email": "Ingrese la dirección de correo electrónico",
+        "phone": "Ingrese el número de teléfono",
+        "password": "Ingrese la contraseña",
+        "confirmPassword": "Confirme su contraseña",
+        "addressEn": "Ingrese la dirección en inglés",
+        "addressEs": "Ingrese la dirección en español",
+        "cityEn": "Ingrese el nombre de la ciudad en inglés",
+        "cityEs": "Ingrese el nombre de la ciudad en español"
+      },
+      
+      "genderOptions": {
+        "select": "Seleccionar Género",
+        "male": "Masculino",
+        "female": "Femenino",
+        "other": "Otro"
+      },
+      
+      "errors": {
+        "nameRequired": "El nombre de la cocina es obligatorio",
+        "nameMinLength": "El nombre de la cocina debe tener al menos 2 caracteres",
+        "nameMaxLength": "El nombre de la cocina no puede exceder los 50 caracteres",
+        "emailRequired": "La dirección de correo electrónico es obligatoria",
+        "emailInvalid": "Por favor, ingrese una dirección de correo electrónico válida",
+        "passwordRequired": "La contraseña es obligatoria",
+        "passwordMinLength": "La contraseña debe tener al menos 8 caracteres",
+        "passwordPattern": "La contraseña debe contener al menos una letra mayúscula, una minúscula y un número",
+        "confirmPasswordRequired": "Por favor, confirme su contraseña",
+        "passwordMismatch": "Las contraseñas no coinciden",
+        "phoneRequired": "El número de teléfono es obligatorio",
+        "phoneMinLength": "El número de teléfono debe tener al menos 10 dígitos",
+        "phoneDigitsOnly": "El número de teléfono debe contener solo dígitos",
+        "addressEnRequired": "La dirección en inglés es obligatoria",
+        "addressEnMinLength": "La dirección en inglés debe tener al menos 5 caracteres",
+        "addressEnMaxLength": "La dirección en inglés no puede exceder los 200 caracteres",
+        "addressEsRequired": "La dirección en español es obligatoria",
+        "addressEsMinLength": "La dirección en español debe tener al menos 5 caracteres",
+        "addressEsMaxLength": "La dirección en español no puede exceder los 200 caracteres",
+        "cityEnRequired": "El nombre de la ciudad en inglés es obligatorio",
+        "cityEnMinLength": "El nombre de la ciudad en inglés debe tener al menos 2 caracteres",
+        "cityEnMaxLength": "El nombre de la ciudad en inglés no puede exceder los 50 caracteres",
+        "cityEsRequired": "El nombre de la ciudad en español es obligatorio",
+        "cityEsMinLength": "El nombre de la ciudad en español debe tener al menos 2 caracteres",
+        "cityEsMaxLength": "El nombre de la ciudad en español no puede exceder los 50 caracteres",
+        "dobRequired": "La fecha de nacimiento es obligatoria",
+        "dobMinAge": "Debe tener al menos 18 años",
+        "dobMaxAge": "La edad no puede exceder los 65 años",
+        "genderRequired": "Por favor, seleccione un género",
+        "photoRequired": "La foto de la cocina es obligatoria",
+        "photoInvalidType": "Por favor, suba un archivo de imagen válido (JPEG, PNG o WebP)",
+        "photoTooLarge": "El tamaño de la imagen debe ser menor a 5MB"
+      }
+    },
+    "viewkitchen": {
+      "title": "Ver Personal de Cocina",
+      "description": "Administrar y ver todo el personal de cocina registrado",
+      "search": "Buscar personal de cocina por nombre, email, teléfono, dirección, ciudad o salario...",
+      "loading": "Cargando personal de cocina...",
+      "photo": "Foto",
+      "name": "Nombre",
+      "email": "Correo Electrónico",
+      "phone": "Teléfono",
+      "address": "Dirección",
+      "city": "Ciudad",
+      "gender": "Género",
+      "dailySalary": "Salario Diario",
+      "otSalary": "Horas Extra/Hora",
+      "edit": "Editar",
+      "delete": "Eliminar",
+      "noKitchens": "No se encontró personal de cocina",
+      "noKitchensDesc": "Intenta ajustar tu búsqueda o agregar nuevo personal de cocina",
+      "deleteTitle": "Eliminar Personal de Cocina",
+      "deleteConfirm": "¿Estás seguro de que quieres eliminar a",
+      "deleteWarning": "Esta acción no se puede deshacer.",
+      "deleteButton": "Eliminar Personal de Cocina",
+      "error": "Ocurrió un error al procesar tu solicitud.",
+      "success": "¡Operación completada exitosamente!"
+    },
+    "addkitchen": {
+      "title": "Agregar Personal de Cocina",
+      "description": "Registrar nuevo miembro del personal de cocina",
+      "form": {
+        "name": "Nombre Completo",
+        "namePlaceholder": "Ingresa el nombre completo",
+        "email": "Correo Electrónico",
+        "emailPlaceholder": "Ingresa el correo electrónico",
+        "phone": "Número de Teléfono",
+        "phonePlaceholder": "Ingresa el número de teléfono",
+        "address": "Dirección",
+        "addressPlaceholder": "Ingresa la dirección",
+        "city": "Ciudad",
+        "cityPlaceholder": "Ingresa la ciudad",
+        "gender": "Género",
+        "selectGender": "Selecciona el género",
+        "male": "Masculino",
+        "female": "Femenino",
+        "other": "Otro",
+        "dailySalary": "Salario Diario",
+        "dailySalaryPlaceholder": "Ingresa el salario diario",
+        "otSalary": "Salario por Horas Extra (por hora)",
+        "otSalaryPlaceholder": "Ingresa el salario por hora extra",
+        "photo": "Foto",
+        "uploadPhoto": "Subir foto",
+        "submit": "Agregar Personal de Cocina",
+        "cancel": "Cancelar",
+        "update": "Actualizar Personal de Cocina"
+      },
+      "validation": {
+        "nameRequired": "El nombre es requerido",
+        "emailRequired": "El correo electrónico es requerido",
+        "emailInvalid": "Por favor ingresa un correo electrónico válido",
+        "phoneRequired": "El número de teléfono es requerido",
+        "addressRequired": "La dirección es requerida",
+        "cityRequired": "La ciudad es requerida",
+        "genderRequired": "El género es requerido",
+        "dailySalaryRequired": "El salario diario es requerido",
+        "dailySalaryInvalid": "El salario diario debe ser un número",
+        "otSalaryRequired": "El salario por horas extra es requerido",
+        "otSalaryInvalid": "El salario por horas extra debe ser un número"
+      },
+      "messages": {
+        "addSuccess": "Personal de cocina agregado exitosamente",
+        "updateSuccess": "Personal de cocina actualizado exitosamente",
+        "addError": "Error al agregar personal de cocina",
+        "updateError": "Error al actualizar personal de cocina"
+      }
+
+    },
+     "kitchenmodal": {
+      "title": {
+        "add": "Agregar Personal de Cocina",
+        "edit": "Editar Personal de Cocina"
+      },
+      "description": {
+        "add": "Agregar nuevo miembro del personal de cocina al sistema",
+        "edit": "Actualizar información del personal de cocina"
+      },
+      "labels": {
+        "name": "Nombre Completo",
+        "email": "Dirección de Correo",
+        "phone": "Número de Teléfono",
+        "addressEn": "Dirección (Inglés)",
+        "addressEs": "Dirección (Español)",
+        "cityEn": "Ciudad (Inglés)",
+        "cityEs": "Ciudad (Español)",
+        "dob": "Fecha de Nacimiento",
+        "gender": "Género",
+        "password": "Contraseña",
+        "passwordEdit": "Nueva Contraseña (Opcional)",
+        "profilePhoto": "Foto de Perfil"
+      },
+      "placeholders": {
+        "name": "Ingrese el nombre completo",
+        "email": "Ingrese la dirección de correo",
+        "phone": "Ingrese el número de teléfono",
+        "addressEn": "Ingrese la dirección en inglés",
+        "addressEs": "Ingrese la dirección en español",
+        "cityEn": "Ingrese la ciudad en inglés",
+        "cityEs": "Ingrese la ciudad en español",
+        "gender": "Seleccione el género",
+        "password": "Ingrese la contraseña",
+        "passwordOptional": "Deje en blanco para mantener la contraseña actual"
+      },
+      "genderOptions": {
+        "male": "Masculino",
+        "female": "Femenino",
+        "other": "Otro"
+      },
+      "validation": {
+        "nameRequired": "El nombre es requerido",
+        "emailRequired": "El correo electrónico es requerido",
+        "emailInvalid": "Por favor ingrese una dirección de correo válida",
+        "phoneRequired": "El número de teléfono es requerido",
+        "phoneMinLength": "El número de teléfono debe tener al menos 10 dígitos",
+        "addressEnRequired": "La dirección en inglés es requerida",
+        "addressEsRequired": "La dirección en español es requerida",
+        "cityEnRequired": "La ciudad en inglés es requerida",
+        "cityEsRequired": "La ciudad en español es requerida",
+        "dobRequired": "La fecha de nacimiento es requerida",
+        "genderRequired": "El género es requerido",
+        "passwordRequired": "La contraseña es requerida",
+        "imageInvalidType": "Por favor seleccione un archivo de imagen válido (JPEG, PNG, WebP)",
+        "imageSize": "El tamaño de la imagen debe ser menor a 5MB"
+      },
+      "imageUpload": {
+        "choosePhoto": "Elegir Foto",
+        "changePhoto": "Cambiar Foto",
+        "preview": "Vista Previa de Foto",
+        "fileTypes": "JPEG, PNG, WebP hasta 5MB"
+      }
+    },
+    "takeOrder": {
+    "title": "Tomar pedido - Mesa #{{tableNumber}}",
+    "description": "Selecciona los platos del menú para añadir al pedido",
+    "submitting": "Enviando...",
+    "submitOrder": "Enviar pedido",
+    "searchPlaceholder": "Buscar en el menú...",
+    "allCategories": "Todas",
+    "noDishesFound": "No se encontraron platos",
+    "unknownDish": "Plato desconocido",
+    "orderSummary": "Resumen del pedido",
+    "itemCount": "{{count}} {{item}}",
+    "items": "platos",
+    "item": "plato",
+    "total": "Total"
+  },"orderdetails": {
+      "title": "Gestión de Pedidos",
+      "description": "Ver y gestionar todos los pedidos del restaurante",
+      "search_placeholder": "Buscar por ID de Pedido, Mesa, Camarero, Cocina o Estado...",
+      "loading": "Cargando pedidos...",
+      "order_id": "ID del Pedido",
+      "table": "Mesa",
+      "waiter": "Camarero",
+      "kitchen": "Cocina",
+      "status": "Estado",
+      "total": "Total",
+      "date": "Fecha del Pedido",
+      "actions": "Acciones",
+      "view_details": "Ver Detalles",
+      "payment": "Pago",
+      "no_orders": "No se encontraron pedidos",
+      "no_orders_description": "Ningún pedido coincide con sus filtros actuales",
+      "order_details": "Detalles del Pedido",
+      "order_information": "Información del Pedido",
+      "service_details": "Detalles del Servicio",
+      "ordered_dishes": "Platos Pedidos",
+      "quantity": "Cantidad",
+      "price": "Precio",
+      "total_amount": "Monto Total",
+      "payment_details": "Detalles del Pago",
+      "order_summary": "Resumen del Pedido",
+      "customer_name": "Nombre del Cliente",
+      "enter_customer_name": "Ingrese el nombre del cliente",
+      "payment_method": "Método de Pago",
+      "amount": "Monto",
+      "cancel": "Cancelar",
+      "processing": "Procesando...",
+      "process_payment": "Procesar Pago",
+      "error_message": "Ocurrió un error al procesar su solicitud.",
+      "payment_error": "El procesamiento del pago falló. Por favor, inténtelo de nuevo.",
+      "payment_success": "¡Pago procesado exitosamente!",
+      "payment_not_available": "La funcionalidad de pago no está disponible",
+      "all_status": "Todos los Estados",
+      "pending": "Pendiente",
+      "preparing": "Preparando",
+      "ready": "Listo",
+      "served": "Servido",
+      "completed": "Completado",
+      "cancelled": "Cancelado",
+      "cash": "Efectivo",
+      "card": "Tarjeta",
+      "upi": "UPI",
+      "digital_wallet": "Billetera Digital"
+    },
+    
+  "waiterDashboard": {
+    "title": "Panel del Camarero",
+    "welcome": {
+      "waiter": "¡Bienvenido! Administra tus mesas asignadas y toma pedidos",
+      "general": "Administra mesas y pedidos eficientemente"
+    },
+    "auth": {
+      "required": "Autenticación Requerida",
+      "loginMessage": "Por favor inicia sesión para acceder al panel del camarero"
+    },
+    "loading": {
+      "dashboard": "Cargando panel..."
+    },
+    "error": {
+      "title": "Error al Cargar el Panel",
+      "tryAgain": "Intentar de Nuevo"
+    },
+    "stats": {
+      "available": "Disponible",
+      "assigned": "Asignado",
+      "myTables": "Mis Mesas",
+      "ordersToday": "Pedidos Hoy",
+      "total": "Total"
+    },
+    "table": {
+      "tableNumber": "Mesa {{number}}",
+      "capacity": "{{count}} asientos",
+      "status": {
+        "available": "Disponible",
+        "assigned": "Asignado",
+        "free": "Libre",
+        "busy": "Ocupado"
+      },
+      "waiter": {
+        "unknown": "Camarero Desconocido",
+        "you": "(Tú)",
+        "mine": "Mía"
+      }
+    },
+    "order": {
+      "orders": "{{count}} Pedido",
+      "orders_plural": "{{count}} Pedidos",
+      "orderNumber": "#{{id}}",
+      "dishes": "{{count}} plato",
+      "dishes_plural": "{{count}} platos",
+      "moreDishes": "+{{count}} más",
+      "moreOrders": "+{{count}} pedido más",
+      "moreOrders_plural": "+{{count}} pedidos más",
+      "unknownDish": "Plato Desconocido",
+      "status": {
+        "order": "Pedido",
+        "pending": "Pendiente",
+        "preparing": "Preparando",
+        "prepared": "Listo",
+        "served": "Servido",
+        "unknown": "Desconocido"
+      },
+      "readyToServe": "¡Listo para Servir!"
+    },
+    "buttons": {
+      "assignToMe": "Asignar a Mí",
+      "takeOrder": "Tomar Pedido",
+      "manage": "Gestionar",
+      "serve": "Servir"
+    },
+    "emptyState": {
+      "noTables": "No se Encontraron Mesas",
+      "noTablesMatch": "Ninguna mesa coincide con \"{{searchTerm}}\"",
+      "noTablesAvailable": "No hay mesas {{filter}} {{role}}",
+      "roleContext": {
+        "waiter": "disponibles para ti",
+        "general": "por el momento"
+      },
+      "filterContext": {
+        "myTables": "tus"
+      }
+    },
+    "time": {
+      "format": {
+        "hour": "2-digit",
+        "minute": "2-digit"
+      }
+    },
+    "currency": {
+      "format": "USD"
+    }
+  },"TakeOrderModal": {
+  "editOrder": "Editar Pedido",
+  "takeOrder": "Tomar Pedido",
+  "searchDishes": "Buscar platos...",
+  "all": "Todos",
+  "loadingDishes": "Cargando platos...",
+  "noDishesFound": "No se encontraron platos",
+  "addMore": "Agregar Más",
+  "add": "Agregar",
+  "orderSummary": "Resumen del Pedido",
+  "noItemsInOrder": "No hay artículos en el pedido",
+  "startAddingDishes": "Comienza a agregar platos",
+  "preparing": "Preparando",
+  "total": "Total",
+  "updating": "Actualizando...",
+  "submitting": "Enviando...",
+  "updateOrder": "Actualizar Pedido",
+  "submitOrder": "Enviar Pedido",
+  "pleaseAddAtLeastOneItem": "Por favor agrega al menos un artículo al pedido",
+  "categories": {
+    "appetizers": "Entrantes",
+    "mainCourse": "Plato Principal",
+    "desserts": "Postres",
+    "beverages": "Bebidas",
+    "salads": "Ensaladas",
+    "soups": "Sopas",
+    "pasta": "Pasta",
+    "pizza": "Pizza",
+    "seafood": "Mariscos",
+    "vegetarian": "Vegetariano",
+    "vegan": "Vegano",
+    "grilled": "A la Parrilla"
+  }
+},"kitchendashboard": {
+  "title": "Panel de Cocina",
+  "subtitle": "Gestiona platos individuales de forma eficiente",
+  "stats": {
+    "newDishes": "Platos Nuevos",
+    "inPreparation": "En Preparación",
+    "readyToServe": "Listos para Servir",
+    "totalDishes": "Total de Platos"
+  },
+  "search": {
+    "placeholder": "Buscar platos, pedidos..."
+  },
+  "filters": {
+    "allDishes": "Todos los Platos",
+    "newOrders": "Pedidos Nuevos",
+    "inPreparation": "En Preparación",
+    "readyToServe": "Listos para Servir"
+  },
+  "dish": {
+    "unknownDish": "Plato Desconocido",
+    "quantity": "Cant.",
+    "order": "Pedido #",
+    "waiter": "Mesero #",
+    "unknownWaiter": "Mesero Desconocido",
+    "table": "Mesa #",
+    "price": "Precio"
+  },
+  "status": {
+    "order": "pedido",
+    "prepare": "preparar",
+    "prepared": "preparado"
+  },
+  "buttons": {
+    "startPreparing": "Comenzar Preparación",
+    "markAsPrepared": "Marcar como Preparado",
+    "readyToServe": "Listo para Servir"
+  },
+  "timer": {
+    "elapsed": "Tiempo Transcurrido"
+  },
+  "empty": {
+    "noDishesFound": "No se encontraron platos",
+    "noMatchingDishes": "No hay platos que coincidan",
+    "noDishesAtMoment": "platos en este momento",
+    "there": "No hay"
+  },
+  "loading": {
+    "loadingDishes": "Cargando platos...",
+    "processing": "Procesando..."
+  }
+}, "kitchenchangepassword": {
+    "title": "Cambiar Contraseña de Cocina",
+    "subtitle": "Actualiza tu contraseña de cocina para mantener segura tu cuenta",
+    "fields": {
+      "currentPassword": {
+        "label": "Contraseña Actual",
+        "placeholder": "Ingresa tu contraseña actual"
+      },
+      "newPassword": {
+        "label": "Nueva Contraseña",
+        "placeholder": "Ingresa tu nueva contraseña"
+      },
+      "confirmPassword": {
+        "label": "Confirmar Nueva Contraseña",
+        "placeholder": "Confirma tu nueva contraseña"
+      }
+    },
+    "passwordStrength": {
+      "label": "Fortaleza de la Contraseña",
+      "weak": "Débil",
+      "medium": "Media",
+      "strong": "Fuerte"
+    },
+    "validation": {
+      "currentPasswordRequired": "La contraseña actual es obligatoria",
+      "newPasswordRequired": "La nueva contraseña es obligatoria",
+      "newPasswordMinLength": "La nueva contraseña debe tener al menos 8 caracteres",
+      "newPasswordDifferent": "La nueva contraseña debe ser diferente a la actual",
+      "confirmPasswordRequired": "Por favor confirma tu nueva contraseña",
+      "passwordsDoNotMatch": "Las contraseñas no coinciden"
+    },
+    "alerts": {
+      "success": "¡Contraseña de cocina cambiada con éxito! Ahora puedes iniciar sesión con tu nueva contraseña.",
+      "error": "Ocurrió un error al cambiar la contraseña. Por favor, intenta de nuevo."
+    },
+    "securityGuidelines": {
+      "title": "Requisitos de la Contraseña",
+      "requirements": {
+        "minLength": "Al menos 8 caracteres",
+        "upperLower": "Incluye letras mayúsculas y minúsculas",
+        "number": "Incluye al menos un número",
+        "special": "Incluye al menos un carácter especial",
+        "different": "Diferente de tu contraseña actual"
+      }
+    },
+    "buttons": {
+      "updatePassword": "Actualizar Contraseña",
+      "updating": "Actualizando..."
+    }
+  },"kitchenProfile": {
+  "title": "Perfil de Cocina",
+  "subtitle": "Gestiona la información y configuraciones de tu cocina",
+  "loading": "Cargando perfil de cocina...",
+  "error": {
+    "failedToLoad": "Error al cargar el perfil de cocina",
+    "tryAgainLater": "Por favor, intenta de nuevo más tarde",
+    "failedToUpdate": "Error al actualizar el perfil",
+    "retry": "Reintentar"
+  },
+  "success": {
+    "profileUpdated": "Perfil actualizado exitosamente",
+    "noChanges": "No hay cambios para actualizar"
+  },
+  "form": {
+    "personalInfo": {
+      "fullName": "Nombre Completo",
+      "fullNamePlaceholder": "Ingresa tu nombre completo",
+      "emailAddress": "Correo Electrónico",
+      "emailPlaceholder": "Ingresa tu correo electrónico",
+      "phoneNumber": "Número de Teléfono",
+      "phonePlaceholder": "Ingresa tu número de teléfono",
+      "gender": "Género",
+      "selectGender": "Selecciona el género",
+      "male": "Masculino",
+      "female": "Femenino",
+      "other": "Otro",
+      "dateOfBirth": "Fecha de Nacimiento"
+    },
+    "address": {
+      "title": "Información de Dirección",
+      "addressEnglish": "Dirección (Inglés)",
+      "addressEnglishPlaceholder": "Ingresa la dirección en inglés",
+      "addressSpanish": "Dirección (Español)",
+      "addressSpanishPlaceholder": "Ingresa la dirección en español"
+    },
+    "city": {
+      "title": "Información de Ciudad",
+      "cityEnglish": "Ciudad (Inglés)",
+      "cityEnglishPlaceholder": "Ingresa la ciudad en inglés",
+      "citySpanish": "Ciudad (Español)",
+      "citySpanishPlaceholder": "Ingresa la ciudad en español"
+    },
+    "account": {
+      "title": "Información de Cuenta",
+      "kitchenId": "ID de Cocina",
+      "accountStatus": "Estado de la Cuenta",
+      "created": "Creado",
+      "lastUpdated": "Última Actualización",
+      "na": "N/D",
+      "active": "Activo",
+      "inactive": "Inactivo"
+    },
+    "buttons": {
+      "editProfile": "Editar Perfil",
+      "saveChanges": "Guardar Cambios",
+      "cancel": "Cancelar",
+      "changePassword": "Cambiar Contraseña",
+      "updating": "Actualizando..."
+    }
+  },
+  "defaultValues": {
+    "kitchenUser": "Usuario de Cocina"
+  }
+},"waiterchangepassword": {
+  "title": "Cambiar Contraseña del Mesero",
+  "subtitle": "Actualiza tu contraseña para mantener tu cuenta segura",
+  "labels": {
+    "currentPassword": "Contraseña Actual",
+    "newPassword": "Nueva Contraseña",
+    "confirmPassword": "Confirmar Nueva Contraseña"
+  },
+  "placeholders": {
+    "currentPassword": "Ingresa tu contraseña actual",
+    "newPassword": "Ingresa tu nueva contraseña",
+    "confirmPassword": "Confirma tu nueva contraseña"
+  },
+  "validation": {
+    "currentPasswordRequired": "La contraseña actual es obligatoria",
+    "newPasswordRequired": "La nueva contraseña es obligatoria",
+    "newPasswordMinLength": "La nueva contraseña debe tener al menos 8 caracteres",
+    "newPasswordDifferent": "La nueva contraseña debe ser diferente a la actual",
+    "confirmPasswordRequired": "Por favor confirma tu nueva contraseña",
+    "passwordsDoNotMatch": "Las contraseñas no coinciden"
+  },
+  "passwordStrength": {
+    "label": "Fortaleza de la Contraseña",
+    "weak": "Débil",
+    "medium": "Media",
+    "strong": "Fuerte"
+  },
+  "requirements": {
+    "title": "Requisitos de la Contraseña",
+    "minLength": "Al menos 8 caracteres",
+    "uppercase": "Incluir letras mayúsculas y minúsculas",
+    "number": "Incluir al menos un número",
+    "special": "Incluir al menos un carácter especial",
+    "different": "Diferente de tu contraseña actual"
+  },
+  "buttons": {
+    "updatePassword": "Actualizar Contraseña",
+    "updating": "Actualizando..."
+  },
+  "messages": {
+    "success": "¡Contraseña del mesero cambiada exitosamente! Ahora puedes iniciar sesión con tu nueva contraseña."
+  }
+},
+"waiterprofile": {
+  "title": "Perfil del Mesero",
+  "subtitle": "Administra tu información y configuración de mesero",
+  "loading": "Cargando perfil del mesero...",
+  "error": {
+    "failedToLoad": "Error al cargar el perfil del mesero",
+    "tryAgainLater": "Por favor, intenta nuevamente más tarde",
+    "failedToUpdate": "Error al actualizar el perfil"
+  },
+  "retry": "Reintentar",
+  "profilePicture": "Foto de Perfil",
+  "basicInformation": "Información Básica",
+  "fields": {
+    "fullName": "Nombre Completo",
+    "fullNamePlaceholder": "Ingresa tu nombre completo",
+    "emailAddress": "Correo Electrónico",
+    "emailPlaceholder": "Ingresa tu correo electrónico",
+    "phoneNumber": "Número de Teléfono",
+    "phonePlaceholder": "Ingresa tu número de teléfono",
+    "gender": "Género",
+    "selectGender": "Selecciona Género",
+    "male": "Masculino",
+    "female": "Femenino",
+    "other": "Otro",
+    "dateOfBirth": "Fecha de Nacimiento"
+  },
+  "address": {
+    "title": "Información de Dirección",
+    "english": "Dirección (Inglés)",
+    "spanish": "Dirección (Español)",
+    "englishPlaceholder": "Ingresa la dirección en inglés",
+    "spanishPlaceholder": "Ingresa la dirección en español"
+  },
+  "city": {
+    "title": "Información de la Ciudad",
+    "english": "Ciudad (Inglés)",
+    "spanish": "Ciudad (Español)",
+    "englishPlaceholder": "Ingresa la ciudad en inglés",
+    "spanishPlaceholder": "Ingresa la ciudad en español"
+  },
+  "account": {
+    "title": "Información de la Cuenta",
+    "waiterId": "ID del Mesero",
+    "status": "Estado de la Cuenta",
+    "created": "Creado",
+    "lastUpdated": "Última Actualización",
+    "notAvailable": "N/D"
+  },
+  "buttons": {
+    "changePassword": "Cambiar Contraseña",
+    "editProfile": "Editar Perfil",
+    "cancel": "Cancelar",
+    "saveChanges": "Guardar Cambios",
+    "updating": "Actualizando..."
+  },
+  "messages": {
+    "noChanges": "No hay cambios para actualizar",
+    "profileUpdated": "Perfil actualizado exitosamente"
+  }
+},
+"adminchangepassword": {
+  "title": "Cambiar Contraseña",
+  "subtitle": "Actualiza tu contraseña para mantener tu cuenta segura",
+  "form": {
+    "currentPassword": {
+      "label": "Contraseña Actual",
+      "placeholder": "Ingresa tu contraseña actual"
+    },
+    "newPassword": {
+      "label": "Nueva Contraseña",
+      "placeholder": "Ingresa tu nueva contraseña"
+    },
+    "confirmPassword": {
+      "label": "Confirmar Nueva Contraseña",
+      "placeholder": "Confirma tu nueva contraseña"
+    }
+  },
+  "validation": {
+    "currentPasswordRequired": "Se requiere la contraseña actual",
+    "newPasswordRequired": "Se requiere una nueva contraseña",
+    "newPasswordLength": "La nueva contraseña debe tener al menos 8 caracteres",
+    "newPasswordDifferent": "La nueva contraseña debe ser diferente a la actual",
+    "confirmPasswordRequired": "Por favor confirma tu nueva contraseña",
+    "passwordsNotMatch": "Las contraseñas no coinciden"
+  },
+  "strength": {
+    "label": "Fortaleza de la Contraseña",
+    "weak": "Débil",
+    "medium": "Media",
+    "strong": "Fuerte"
+  },
+  "requirements": {
+    "title": "Requisitos de la Contraseña",
+    "minLength": "Al menos 8 caracteres",
+    "uppercase": "Incluir letras mayúsculas y minúsculas",
+    "number": "Incluir al menos un número",
+    "special": "Incluir al menos un carácter especial",
+    "different": "Diferente de tu contraseña actual"
+  },
+  "buttons": {
+    "submit": "Actualizar Contraseña",
+    "submitting": "Actualizando..."
+  },
+  "messages": {
+    "success": "¡Contraseña cambiada exitosamente! Ahora puedes iniciar sesión con tu nueva contraseña.",
+    "error": "Ocurrió un error al cambiar tu contraseña. Por favor, intenta de nuevo."
+  }
+},
+"adminProfile": {
+  "title": "Perfil de Administrador",
+  "subtitle": "Gestiona la información de tu cuenta",
+  "form": {
+    "fullName": {
+      "label": "Nombre Completo",
+      "placeholder": "Ingresa tu nombre completo"
+    },
+    "email": {
+      "label": "Dirección de Correo Electrónico",
+      "placeholder": "Ingresa tu dirección de correo electrónico"
+    }
+  },
+  "accountInfo": {
+    "title": "Información de la Cuenta",
+    "adminId": "ID de Administrador:",
+    "accountStatus": "Estado de la Cuenta:",
+    "created": "Creado:",
+    "lastUpdated": "Última Actualización:",
+    "statusActive": "Activo"
+  },
+  "buttons": {
+    "editProfile": "Editar Perfil",
+    "cancel": "Cancelar",
+    "saveChanges": "Guardar Cambios",
+    "updating": "Actualizando...",
+    "changePassword": "Cambiar Contraseña"
+  },
+  "messages": {
+    "noChanges": "No hay cambios para actualizar",
+    "loadingProfile": "Cargando perfil..."
+  },
+  "defaults": {
+    "adminUser": "Usuario Administrador",
+    "notAvailable": "N/D"
+  }
 }
 
 
@@ -667,6 +1506,8 @@
 
 
 
+    }
+  
 
 
 
@@ -679,5 +1520,3 @@
 
 
 
-
-}

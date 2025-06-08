@@ -5,10 +5,11 @@ const kitchenSchema = new Schema({
     name: {
         type: String,
         required: true
-    },
+       },
     phone: {
         type: String,
         required: true
+
     },
     email: {
         type: String,
@@ -19,8 +20,14 @@ const kitchenSchema = new Schema({
         required: true
     },
     address: {
-        type: String,
-        required: true
+        en: {
+            type: String,
+            required: true
+        },
+        es: {
+            type: String,
+            required: true
+        }
     },
     gender:{
         type:String,
@@ -31,43 +38,22 @@ const kitchenSchema = new Schema({
         required: true
     },
     city:{
+        en: {
+            type: String,
+            required: true
+        },
+        es: {
+            type: String,
+            required: true
+        }
+    },
+  
+
+    photo: {
         type: String,
         required: true
     },
-     attendance:[
-        {
-            date: {
-                type: Date,
-                required: true
-            },
-            status:{
-                type: String,
-                enum: ['Present', 'Absent'],
-                required: true
-                }
-        }
-    ],
-    perdaySalery:{
-        type: Number,
-        required: true
-
-    },
-    Salery:[
-        {
-            month: {
-                type: String,
-                required: true
-            },
-            year: {
-                type: Number,
-                required: true
-            },
-            amount: {
-                type: Number,
-                required: true
-            }
-        }
-    ],
+  
     token:{
         type: String,
     },
@@ -82,9 +68,6 @@ const kitchenSchema = new Schema({
     ref: 'Order'
   }
 ]
-
-    
-   
 
 },{
     timestamps: true

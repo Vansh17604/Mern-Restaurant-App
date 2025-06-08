@@ -219,7 +219,7 @@ module.exports.FetchDishes = [
   }
 ];
 
-// Fetch Only Dishes where categoryid.status and subcategoryid.status are both Active
+
 module.exports.FetchActiveDishes = [
   async (req, res) => {
     try {

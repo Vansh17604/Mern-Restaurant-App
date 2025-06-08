@@ -13,6 +13,11 @@ const tableSchema = new Schema({
         type: Number,
         required: true
     },
+    waiter_id:{
+        type: Schema.Types.ObjectId,
+        ref: 'Waiter',
+        default:null
+    }
 
 },
 { timestamps: true }

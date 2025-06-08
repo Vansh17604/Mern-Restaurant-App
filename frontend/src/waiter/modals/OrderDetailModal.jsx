@@ -6,66 +6,6 @@ const OrderDetailsModal = ({ open, onClose, order, table, onUpdateStatus, darkMo
 
   if (!order) return null;
 
-  const initialTables = [
-  {
-    id: 1,
-    status: 'available', // available, occupied, reserved
-    capacity: 4,
-    orders: []
-  },
-  {
-    id: 2,
-    status: 'occupied',
-    capacity: 2,
-    orders: [
-      {
-        id: 'ORD-101',
-        dishes: [
-          { name: 'Margherita Pizza', quantity: 1, status: 'pending', price: 12.99 },
-          { name: 'Caesar Salad', quantity: 1, status: 'ready', price: 8.99 }
-        ],
-        time: '11:30 AM',
-        total: 21.98
-      }
-    ]
-  },
-  {
-    id: 3,
-    status: 'reserved',
-    capacity: 6,
-    reservationName: 'Johnson Family',
-    reservationTime: '12:30 PM',
-    orders: []
-  },
-  {
-    id: 4,
-    status: 'occupied',
-    capacity: 4,
-    orders: [
-      {
-        id: 'ORD-102',
-        dishes: [
-          { name: 'Mushroom Risotto', quantity: 2, status: 'delivered', price: 14.99 },
-          { name: 'Tiramisu', quantity: 2, status: 'pending', price: 6.99 }
-        ],
-        time: '11:15 AM',
-        total: 43.96
-      }
-    ]
-  },
-  {
-    id: 5,
-    status: 'available',
-    capacity: 2,
-    orders: []
-  },
-  {
-    id: 6,
-    status: 'available',
-    capacity: 8,
-    orders: []
-  }
-];
   
   const getStatusBadge = (status) => {
     const statusColors = {

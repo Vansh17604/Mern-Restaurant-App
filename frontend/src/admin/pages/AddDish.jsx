@@ -30,8 +30,10 @@ export default function AddDish() {
   const [errors, setErrors] = useState({});
   const [filteredSubcategories, setFilteredSubcategories] = useState([]);
   const navigate = useNavigate();
-  const {t} = useTranslation();
-  
+  const {t,i18n} = useTranslation();
+      
+  const currentLanguage = i18n.language;
+
   const dispatch = useDispatch();
   const { isLoading, isError, isSuccess, message } = useSelector(
     (state) => state.dish
@@ -40,7 +42,6 @@ export default function AddDish() {
   const { subcategories } = useSelector((state) => state.subcategory);
 
   useEffect(() => {
-    // Fetch categories and subcategories when component mounts
     dispatch(fetchactiveCategories());
     dispatch(fetchActiveSubcategory());
   }, [dispatch]);
@@ -63,14 +64,25 @@ export default function AddDish() {
       setSelectedImage(null);
       setImagePreview(null);
       setErrors({});
-      
-      const timer = setTimeout(() => {
-        dispatch(resetDishState());
-      }, 3000);
-
-      return () => clearTimeout(timer); 
+       
+      const navigationTimer = setTimeout(() => {
+             navigate("/admin/viewdish");
+           }, 2000);
+           
+       
+           const resetTimer = setTimeout(() => {
+             dispatch(resetDishState());
+           }, 2500);
+     
+           return () => {
+             clearTimeout(navigationTimer);
+             clearTimeout(resetTimer);
+           };
     }
-  }, [isSuccess, dispatch]);
+  }, [isSuccess, dispatch,navigate]);
+   useEffect(() => {
+      dispatch(resetDishState());
+    }, [dispatch]);
 
   // Filter subcategories based on selected category - FIXED
   useEffect(() => {
@@ -162,6 +174,32 @@ export default function AddDish() {
     
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
+  };
+
+   // Helper function to display category name based on current language
+  const getCategoryDisplayName = (category) => {
+    
+    
+    if (!category || !category.categoryName) return 'N/A';
+
+    if (currentLanguage === 'es') {
+      return category.categoryName.es || category.categoryName.en || 'N/A';
+    } else {
+      return category.categoryName.en || category.categoryName.es || 'N/A';
+    }
+  };
+
+ 
+  const getSubcategoryDisplayName = (subcategory) => {
+    
+    
+    if (!subcategory || !subcategory.subcategoryname) return 'N/A';
+
+    if (currentLanguage === 'es') {
+      return subcategory.subcategoryname.es || subcategory.subcategoryname.en || 'N/A';
+    } else {
+      return subcategory.subcategoryname.en || subcategory.subcategoryname.es || 'N/A';
+    }
   };
 
   const handleChange = (e) => {
@@ -317,7 +355,7 @@ export default function AddDish() {
                 <option value="">{t('adddish.label1')}</option>
                 {categories?.map((category) => (
                   <option key={category._id} value={category._id}>
-                    {category.categoryName?.en || category.categoryName}
+                    {getCategoryDisplayName(category)}
                   </option>
                 ))}
               </select>
@@ -341,7 +379,7 @@ export default function AddDish() {
                 <option value="">{t('adddish.label3')}</option>
                 {filteredSubcategories?.map((subcategory) => (
                   <option key={subcategory._id} value={subcategory._id}>
-                    {subcategory.subcategoryname?.en || subcategory.subcategoryname}
+                    {getSubcategoryDisplayName(subcategory)}
                   </option>
                 ))}
               </select>

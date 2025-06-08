@@ -9,6 +9,10 @@ const createTable = async (tableData) => {
 };
 
 // Update Table
+const updateTable = async (id,tableData) =>{
+  const response = await axios.put(`${base_url}/updatetable/${id}`, tableData, config);
+  return response.data
+}
 
 
 // Delete Table
@@ -28,13 +32,25 @@ const fetchAvailableTables = async () => {
   const response = await axios.get(`${base_url}/gettableavailable`, config);
   return response.data;
 };
+const assignWaiter = async (tableId, data) => {
+  const response = await axios.post(`${base_url}/assignwaiter/${tableId}`, data, config);
+  return response.data;
+};
+
+const unassignWaiter = async(tableId,data)=>{
+  const response = await axios.post(`${base_url}/unassignwaiter/${tableId}`, data,config);
+  return response.data;
+}
 
 const tableService = {
   createTable,
-
+updateTable,
   deleteTable,
   fetchAllTables,
-  fetchAvailableTables
+  fetchAvailableTables,
+  assignWaiter,
+  unassignWaiter
+  
 };
 
 export default tableService;

@@ -1,4 +1,3 @@
-
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import authService from './authService';
 import { toast } from 'sonner';
@@ -13,7 +12,7 @@ const initialState = {
 };
 
 export const login = createAsyncThunk(
-  "auth/login", 
+  "auth/login",
   async (userData, thunkAPI) => {
     try {
       return await authService.Login(userData);
@@ -24,7 +23,7 @@ export const login = createAsyncThunk(
 );
 
 export const validateToken = createAsyncThunk(
-  "auth/validateToken", 
+  "auth/validateToken",
   async (_, thunkAPI) => {
     try {
       return await authService.validateToken();
@@ -35,7 +34,7 @@ export const validateToken = createAsyncThunk(
 );
 
 export const logout = createAsyncThunk(
-  "auth/logout", 
+  "auth/logout",
   async (_, thunkAPI) => {
     try {
       return await authService.Logout();
@@ -54,24 +53,37 @@ export const authSlice = createSlice({
       state.isLoading = false;
       state.isSuccess = false;
       state.message = "";
+    },
+    clearAuth: (state) => {
+      state.user = null;
+      state.role = null;
+      state.isError = false;
+      state.isLoading = false;
+      state.isSuccess = false;
+      state.message = "";
     }
   },
   extraReducers: (builder) => {
     builder
       .addCase(login.pending, (state) => {
         state.isLoading = true;
+        state.isError = false;
+        state.message = "";
       })
       .addCase(login.fulfilled, (state, action) => {
         state.isLoading = false;
         state.isSuccess = true;
-        state.user = action.payload.id;
-        state.role = action.payload.role;
+        state.user = action.payload;
+        // Extract role from the payload - adjust this based on your API response structure
+        state.role = action.payload?.role || action.payload?.user?.role;
         toast.success("Login successful");
       })
       .addCase(login.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = true;
         state.message = action.payload;
+        state.user = null;
+        state.role = null;
         toast.error(action.payload);
       })
       .addCase(validateToken.pending, (state) => {
@@ -80,8 +92,8 @@ export const authSlice = createSlice({
       .addCase(validateToken.fulfilled, (state, action) => {
         state.isLoading = false;
         state.isSuccess = true;
-        state.user = action.payload.id;
-        state.role = action.payload.role;
+        state.user = action.payload.user;
+        state.role = action.payload.user.role;
       })
       .addCase(validateToken.rejected, (state, action) => {
         state.isLoading = false;
@@ -91,17 +103,22 @@ export const authSlice = createSlice({
         state.role = null;
         toast.error("Session expired. Please login again.");
       })
+      .addCase(logout.pending, (state) => {
+        state.isLoading = true;
+      })
       .addCase(logout.fulfilled, (state) => {
         state.user = null;
         state.role = null;
         state.isSuccess = false;
+        state.isLoading = false;
         toast.success("Logged out successfully");
       })
       .addCase(logout.rejected, (state, action) => {
+        state.isLoading = false;
         toast.error(action.payload || "Logout failed");
       });
   },
 });
 
-export const { reset } = authSlice.actions;
+export const { reset, clearAuth } = authSlice.actions;
 export default authSlice.reducer;

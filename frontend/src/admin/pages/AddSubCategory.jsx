@@ -19,7 +19,7 @@ export default function AddSubcategory() {
   });
   
   const [errors, setErrors] = useState({});
-  const {t} = useTranslation();
+  const {t,i18n} = useTranslation();
   
   const dispatch = useDispatch();
   const { isLoading, isError, isSuccess, message } = useSelector(
@@ -77,6 +77,20 @@ export default function AddSubcategory() {
     
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
+  };
+
+   const getCategoryDisplayName = (category) => {
+    if (typeof category.categoryName === 'object') {
+      const currentLang = i18n.language;
+      if (currentLang === 'es' && category.categoryName.es) {
+        return category.categoryName.es;
+      } else if (currentLang === 'en' && category.categoryName.en) {
+        return category.categoryName.en;
+      }
+      
+      return `${category.categoryName.en} / ${category.categoryName.es}`;
+    }
+    return category.categoryName || '';
   };
 
   const handleChange = (e) => {
@@ -169,7 +183,7 @@ export default function AddSubcategory() {
                 <option value="">{t("addsubcategory.label1")}</option>
                 {categories?.map((category) => (
                   <option key={category._id} value={category._id}>
-                    {category.categoryName?.en || category.categoryName}
+                    {getCategoryDisplayName(category)}
                   </option>
                 ))}
               </select>

@@ -17,7 +17,7 @@ const useNav = () => {
     {
       type: "item",
       title: t("adminnav.Dashboard"),
-      path: "/dashboard",
+      path: "/admin",
       icon: <LayoutDashboard size={20} />,
       badge: { text: t("adminnav.NEW"), variant: "info" }
     },
@@ -72,15 +72,32 @@ const useNav = () => {
         {
           type: "item",
           title: t("adminnav.Waiter Detail"),
-          path: "/Agentview",
+          path: "/admin/viewwaiter",
+        }
+      ]
+    },{
+      type: "group",
+      title: t("adminnav.Kitchen"),
+      icon: <FileText size={20} />,
+      path: "",
+      items: [
+        {
+          type: "item",
+          title: t("adminnav.Kitchen Registration"),
+          path: "/admin/kitchen-register",
+          },
+        {
+          type: "item",
+          title: t("adminnav.Kitchen Detail"),
+          path: "/admin/viewkitchen",
         }
       ]
     },
     {
       type: "item",
-      title: t("adminnav.Customer Detail"),
+      title: "Order Details",
       icon: <Calculator size={20} />,
-      path: "/Customerview",
+      path: "/admin/orderdetail",
       badge: { text: "", variant: "info" }
     }
   ];

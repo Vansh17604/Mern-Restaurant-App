@@ -28,6 +28,8 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "../../
 import { Separator } from "../../components/ui/separator";
 import { Badge } from "../../components/ui/badge";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "../../components/ui/collapsible";
+import { fetchKitchenHeader } from '../../features/admin/kitchen/kitchenSlice';
+import { useDispatch, useSelector } from "react-redux";
 
 // Import navigation configuration - will define later
 import _kitchen_nav from "../../Kitchen_nav";
@@ -38,6 +40,10 @@ const AppSlidebar = () => {
   const [activePath, setActivePath] = useState("/kitchen/dashboard");
     const [showScrollTop, setShowScrollTop] = useState(false);
   const [openGroups, setOpenGroups] = useState({});
+    const { user } = useSelector((state) => state.auth);
+  const { kitchenHeader } = useSelector((state) => state.kitchen);
+  const kitchenId = user?.id;
+  const base_url = import.meta.env.VITE_BASE_URL;
 
   const navigate = useNavigate();
 
@@ -79,10 +85,10 @@ const AppSlidebar = () => {
      };
    }, []);
     
-  const chef = {
-    name: "Marco Rivera",
-    role: "Head Chef",
-    avatar: "/api/placeholder/32/32"
+ const chef = {
+    name: kitchenHeader?.name || "bhavesh",
+    role: "Kitchen",
+    avatar: kitchenHeader?.photo
   };
 
   // Toggle nav group open/closed state
@@ -301,7 +307,7 @@ const AppSlidebar = () => {
           <Tooltip>
             <TooltipTrigger asChild>
               <Avatar className="h-10 w-10 cursor-pointer border-2 border-amber-400">
-                <AvatarImage src={chef.avatar} alt={chef.name} />
+                 <AvatarImage src={chef.avatar ? `${base_url}${chef.avatar}` : undefined} alt={chef.name} />
                 <AvatarFallback className={darkMode ? "bg-amber-600 text-white" : "bg-amber-100 text-amber-900"}>MR</AvatarFallback>
               </Avatar>
             </TooltipTrigger>
