@@ -76,7 +76,7 @@ router.get("/generatebill",PaymentController.GenerateBill);
 
 router.post("/createpayment",PaymentController.CreatePayment);
 router.get("/getpayment",PaymentController.FetchAllPayments);
-router.get("/getpaymentbyorderid", PaymentController.FetchPaymentByOrderId);
+router.get("/getpaymentbyorder", PaymentController.FetchPaymentByOrderId);
 
 
 router.get('/getdashboard',CountController.getDashboardStats);

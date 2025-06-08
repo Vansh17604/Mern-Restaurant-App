@@ -41,7 +41,7 @@ const generateBill = async (paymentId) => {
 };
 
 const fetchPaymentByOrderId = async (orderId) => {
-  const response = await axios.get(`${base_url}/getpaymentbyorderid?orderId=${orderId}`, config);
+  const response = await axios.get(`${base_url}/getpaymentbyorder?orderId=${orderId}`, config);
   return response.data;
 };
 
