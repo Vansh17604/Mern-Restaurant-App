@@ -71,7 +71,7 @@ router.get('/getallorders', OrderController.FetchallTheOrder);
 router.post('/assignkitchen', OrderController.AssignKitchen);
 router.post('/markprepared', OrderController.MarkDishPrepared);
 router.post('/markasserved',OrderController.MarkAsServed);
-router.get("/getordertableidwaiterid/:tableId/:id",OrderController.FetchOrderbyWaiterIdandTableId);
+
 router.get("/generatebill",PaymentController.GenerateBill);
 
 router.post("/createpayment",PaymentController.CreatePayment);
