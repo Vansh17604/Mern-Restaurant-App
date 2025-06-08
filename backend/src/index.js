@@ -17,18 +17,11 @@ app.use(cors({
 app.use(express.json());
 app.use(cookieParser())
 app.use(express.urlencoded({ extended: true }));
-
+app.use("/", Routes);
 app.use(express.static(path.join(__dirname, '../../frontend/dist')));
-
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, '../../frontend/dist/index.html'));
 });
-try {
-  app.use("/", Routes);
-} catch (error) {
-  console.error("Route loading error:", error);
-}
-
 app.use('/uploads', express.static(path.resolve(__dirname, '../public/uploads')));
 
 
