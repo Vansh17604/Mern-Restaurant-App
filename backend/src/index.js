@@ -18,6 +18,7 @@ app.use(express.json());
 app.use(cookieParser())
 app.use(express.urlencoded({ extended: true }));
 app.use('/', Routes);
+app.use(express.static(path.join(__dirname, '../../frontend/dist')));
 app.use('/uploads', express.static(path.resolve(__dirname, '../public/uploads')));
 
 
