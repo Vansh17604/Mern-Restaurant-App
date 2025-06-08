@@ -7,7 +7,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { CustomInput } from "../componets/Customes";
 import { createSubcategory, resetSubcategoryState } from "../../features/admin/subcategory/subcategorySlice";
 import { fetchactiveCategories } from "../../features/admin/category/categorySlice";
-import ViewSubcategory from "./ViewSubCategory";
+import ViewSubCategory from "./ViewSubCategory";
 
 export default function AddSubcategory() {
   const [formData, setFormData] = useState({
@@ -250,7 +250,7 @@ export default function AddSubcategory() {
             </Button>
           </div>
         </div>
-        <ViewSubcategory/>
+        <ViewSubCategory/>
       </div>
     </div>
   );
