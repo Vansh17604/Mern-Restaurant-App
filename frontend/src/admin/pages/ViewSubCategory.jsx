@@ -17,7 +17,7 @@ import {
 } from "../../features/admin/subcategory/subcategorySlice";
 import { fetchactiveCategories } from "../../features/admin/category/categorySlice";
 
-export default function ViewSubcategory() {
+export default function ViewSubCategory() {
   const { t, i18n } = useTranslation();
   const currentLanguage = i18n.language; // Get current language (en or es)
   
