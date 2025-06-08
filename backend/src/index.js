@@ -22,7 +22,9 @@ app.use(express.static(path.join(__dirname, '../../frontend/dist')));
 
 app.use('/uploads', express.static(path.resolve(__dirname, '../public/uploads')));
 
-
+app.get('/*', (req, res) => {
+  res.sendFile(path.resolve(__dirname, '../../frontend/dist/index.html'));
+});
 
 mongoose.connect(process.env.MONGODB_URL)
   .then(() => {
