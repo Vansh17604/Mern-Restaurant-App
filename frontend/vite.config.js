@@ -8,7 +8,10 @@ export default defineConfig({
     outDir: 'dist', 
     emptyOutDir: true, 
   },
-  base:"/"
+  base:"/",
+  "rewrites": [
+    { "source": "/(.*)", "destination": "/index.html" }
+  ]
 
   
 })
