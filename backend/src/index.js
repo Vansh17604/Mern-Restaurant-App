@@ -20,10 +20,6 @@ app.use(express.urlencoded({ extended: true }));
 app.use('/', Routes);
 app.use(express.static(path.join(__dirname, '../frontend/dist')));
 
-app.get('/*', (req, res) => {
-  res.sendFile(path.resolve(__dirname, '../frontend/dist', 'index.html'));
-});
-
 app.use('/uploads', express.static(path.resolve(__dirname, '../public/uploads')));
 
 
