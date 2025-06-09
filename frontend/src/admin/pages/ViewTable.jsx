@@ -28,38 +28,38 @@ const TableCard = ({ table, onDelete, onView, onEdit, isDeleting }) => {
     switch (status.toLowerCase()) {
       case 'available':
         return {
-          border: 'border-green-200',
-          bg: 'bg-green-50',
-          text: 'text-green-800',
-          icon: 'text-green-600'
+          border: 'border-green-200 dark:border-green-700',
+          bg: 'bg-green-50 dark:bg-green-900/30',
+          text: 'text-green-800 dark:text-green-300',
+          icon: 'text-green-600 dark:text-green-400'
         };
       case 'occupied':
         return {
-          border: 'border-amber-200',
-          bg: 'bg-amber-50',
-          text: 'text-amber-800',
-          icon: 'text-amber-600'
+          border: 'border-amber-200 dark:border-amber-700',
+          bg: 'bg-amber-50 dark:bg-amber-900/30',
+          text: 'text-amber-800 dark:text-amber-300',
+          icon: 'text-amber-600 dark:text-amber-400'
         };
       case 'reserved':
         return {
-          border: 'border-blue-200',
-          bg: 'bg-blue-50',
-          text: 'text-blue-800',
-          icon: 'text-blue-600'
+          border: 'border-blue-200 dark:border-blue-700',
+          bg: 'bg-blue-50 dark:bg-blue-900/30',
+          text: 'text-blue-800 dark:text-blue-300',
+          icon: 'text-blue-600 dark:text-blue-400'
         };
       case 'maintenance':
         return {
-          border: 'border-red-200',
-          bg: 'bg-red-50',
-          text: 'text-red-800',
-          icon: 'text-red-600'
+          border: 'border-red-200 dark:border-red-700',
+          bg: 'bg-red-50 dark:bg-red-900/30',
+          text: 'text-red-800 dark:text-red-300',
+          icon: 'text-red-600 dark:text-red-400'
         };
       default:
         return {
-          border: 'border-gray-200',
-          bg: 'bg-gray-50',
-          text: 'text-gray-800',
-          icon: 'text-gray-600'
+          border: 'border-gray-200 dark:border-gray-700',
+          bg: 'bg-gray-50 dark:bg-gray-800/30',
+          text: 'text-gray-800 dark:text-gray-300',
+          icon: 'text-gray-600 dark:text-gray-400'
         };
     }
   };
@@ -83,9 +83,9 @@ const TableCard = ({ table, onDelete, onView, onEdit, isDeleting }) => {
   const StatusIcon = getStatusIcon(table.tablestatus);
 
   return (
-    <div className={`bg-white rounded-lg border-2 ${colors.border} overflow-hidden hover:shadow-lg transition-all duration-300 group`}>
+    <div className={`bg-white dark:bg-gray-800 rounded-lg border-2 ${colors.border} overflow-hidden hover:shadow-lg dark:hover:shadow-gray-900/50 transition-all duration-300 group`}>
       {/* Table Image */}
-      <div className="relative h-32 bg-gray-100 overflow-hidden">
+      <div className="relative h-32 bg-gray-100 dark:bg-gray-700 overflow-hidden">
         <img 
           src="/assets/—Pngtree—round daining table top view_8929444.png" 
           alt="Table"
@@ -95,8 +95,8 @@ const TableCard = ({ table, onDelete, onView, onEdit, isDeleting }) => {
             e.target.nextSibling.style.display = 'flex';
           }}
         />
-        <div className="absolute inset-0 bg-gradient-to-br from-amber-100 to-amber-200 items-center justify-center hidden">
-          <svg width="80" height="80" viewBox="0 0 100 100" className="text-amber-700">
+        <div className="absolute inset-0 bg-gradient-to-br from-amber-100 to-amber-200 dark:from-amber-800 dark:to-amber-900 items-center justify-center hidden">
+          <svg width="80" height="80" viewBox="0 0 100 100" className="text-amber-700 dark:text-amber-300">
             <circle cx="50" cy="50" r="45" fill="currentColor" opacity="0.3" />
             <circle cx="50" cy="50" r="35" fill="currentColor" opacity="0.5" />
             <circle cx="50" cy="50" r="25" fill="currentColor" opacity="0.7" />
@@ -110,15 +110,15 @@ const TableCard = ({ table, onDelete, onView, onEdit, isDeleting }) => {
       <div className="p-4">
         <div className="flex items-center space-x-2 mb-3">
           <StatusIcon className={`w-5 h-5 ${colors.icon}`} />
-          <h3 className="font-semibold text-gray-900">{table.tablenumber}</h3>
+          <h3 className="font-semibold text-gray-900 dark:text-white">{table.tablenumber}</h3>
         </div>
         
         <div className="space-y-2 mb-4">
-          <div className="flex items-center text-sm text-gray-600">
+          <div className="flex items-center text-sm text-gray-600 dark:text-gray-300">
             <Users className="w-4 h-4 mr-2" />
             <span>{t("tablemanagement.capacity")}: {table.tablecapacity} {t("tablemanagement.people")}</span>
           </div>
-          <div className="text-xs text-gray-500">
+          <div className="text-xs text-gray-500 dark:text-gray-400">
             {t("tablemanagement.created")}: {new Date(table.createdAt).toLocaleDateString()}
           </div>
         </div>
@@ -126,21 +126,21 @@ const TableCard = ({ table, onDelete, onView, onEdit, isDeleting }) => {
         <div className="flex space-x-2">
           <button
             onClick={() => onView(table)}
-            className="flex-1 flex items-center justify-center px-3 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 text-sm group-hover:scale-105 transition-transform"
+            className="flex-1 flex items-center justify-center px-3 py-2 bg-blue-600 dark:bg-blue-700 text-white rounded-md hover:bg-blue-700 dark:hover:bg-blue-600 text-sm group-hover:scale-105 transition-transform"
           >
             <Eye className="w-4 h-4 mr-1" />
             {t("tablemanagement.view")}
           </button>
           <button
             onClick={() => onEdit(table)}
-            className="flex items-center justify-center px-3 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors text-sm"
+            className="flex items-center justify-center px-3 py-2 bg-green-600 dark:bg-green-700 text-white rounded-md hover:bg-green-700 dark:hover:bg-green-600 transition-colors text-sm"
           >
             <Edit className="w-4 h-4" />
           </button>
           <button
             onClick={() => onDelete(table._id)}
             disabled={isDeleting}
-            className="flex items-center justify-center px-3 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors text-sm disabled:opacity-50 disabled:cursor-not-allowed"
+            className="flex items-center justify-center px-3 py-2 bg-red-600 dark:bg-red-700 text-white rounded-md hover:bg-red-700 dark:hover:bg-red-600 transition-colors text-sm disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {isDeleting ? (
               <Loader2 className="w-4 h-4 animate-spin" />
@@ -160,14 +160,14 @@ const ViewTableModal = ({ isOpen, onClose, table }) => {
   if (!isOpen || !table) return null;
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-lg w-full max-w-md mx-4 max-h-[90vh] overflow-y-auto">
-        <div className="sticky top-0 bg-white border-b border-gray-200 px-6 py-4">
+    <div className="fixed inset-0 bg-black bg-opacity-50 dark:bg-black dark:bg-opacity-70 flex items-center justify-center z-50 p-4">
+      <div className="bg-white dark:bg-gray-800 rounded-lg w-full max-w-md mx-4 max-h-[90vh] overflow-y-auto">
+        <div className="sticky top-0 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 px-6 py-4">
           <div className="flex justify-between items-center">
-            <h2 className="text-xl font-bold text-gray-900">{t("tablemanagement.modal.title")}</h2>
+            <h2 className="text-xl font-bold text-gray-900 dark:text-white">{t("tablemanagement.modal.title")}</h2>
             <button
               onClick={onClose}
-              className="text-gray-400 hover:text-gray-600 text-2xl"
+              className="text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 text-2xl"
             >
               ×
             </button>
@@ -176,7 +176,7 @@ const ViewTableModal = ({ isOpen, onClose, table }) => {
         
         <div className="p-6">
           {/* Table Image */}
-          <div className="mb-6 h-32 bg-gray-100 rounded-lg overflow-hidden">
+          <div className="mb-6 h-32 bg-gray-100 dark:bg-gray-700 rounded-lg overflow-hidden">
             <img 
               src="/assets/—Pngtree—round daining table top view_8929444.png" 
               alt="Table"
@@ -186,8 +186,8 @@ const ViewTableModal = ({ isOpen, onClose, table }) => {
                 e.target.nextSibling.style.display = 'flex';
               }}
             />
-            <div className="h-full bg-gradient-to-br from-amber-100 to-amber-200 items-center justify-center hidden">
-              <svg width="80" height="80" viewBox="0 0 100 100" className="text-amber-700">
+            <div className="h-full bg-gradient-to-br from-amber-100 to-amber-200 dark:from-amber-800 dark:to-amber-900 items-center justify-center hidden">
+              <svg width="80" height="80" viewBox="0 0 100 100" className="text-amber-700 dark:text-amber-300">
                 <circle cx="50" cy="50" r="45" fill="currentColor" opacity="0.3" />
                 <circle cx="50" cy="50" r="35" fill="currentColor" opacity="0.5" />
                 <circle cx="50" cy="50" r="25" fill="currentColor" opacity="0.7" />
@@ -198,26 +198,26 @@ const ViewTableModal = ({ isOpen, onClose, table }) => {
           <div className="space-y-4">
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">{t("tablemanagement.modal.tablenumber")}</label>
-                <p className="text-gray-900 font-semibold">{table.tablenumber}</p>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{t("tablemanagement.modal.tablenumber")}</label>
+                <p className="text-gray-900 dark:text-white font-semibold">{table.tablenumber}</p>
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">{t("tablemanagement.modal.status")}</label>
-                <p className="text-gray-900 capitalize">{t(`tablemanagement.status.${table.tablestatus.toLowerCase()}`)}</p>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{t("tablemanagement.modal.status")}</label>
+                <p className="text-gray-900 dark:text-white capitalize">{t(`tablemanagement.status.${table.tablestatus.toLowerCase()}`)}</p>
               </div>
             </div>
             
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">{t("tablemanagement.modal.capacity")}</label>
-              <p className="text-gray-900">{table.tablecapacity} {t("tablemanagement.people")}</p>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{t("tablemanagement.modal.capacity")}</label>
+              <p className="text-gray-900 dark:text-white">{table.tablecapacity} {t("tablemanagement.people")}</p>
             </div>
           </div>
         </div>
         
-        <div className="sticky bottom-0 bg-white border-t border-gray-200 px-6 py-4">
+        <div className="sticky bottom-0 bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 px-6 py-4">
           <button
             onClick={onClose}
-            className="w-full px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700 transition-colors"
+            className="w-full px-4 py-2 bg-gray-600 dark:bg-gray-700 text-white rounded-md hover:bg-gray-700 dark:hover:bg-gray-600 transition-colors"
           >
             {t("tablemanagement.modal.close")}
           </button>
@@ -290,14 +290,14 @@ const EditTableModal = ({ isOpen, onClose, table, onSave, isUpdating }) => {
   if (!isOpen || !table) return null;
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-lg w-full max-w-md mx-4">
-        <div className="border-b border-gray-200 px-6 py-4">
+    <div className="fixed inset-0 bg-black bg-opacity-50 dark:bg-black dark:bg-opacity-70 flex items-center justify-center z-50 p-4">
+      <div className="bg-white dark:bg-gray-800 rounded-lg w-full max-w-md mx-4">
+        <div className="border-b border-gray-200 dark:border-gray-700 px-6 py-4">
           <div className="flex justify-between items-center">
-            <h2 className="text-xl font-bold text-gray-900">{t("tablemanagement.edit.title") || "Edit Table"}</h2>
+            <h2 className="text-xl font-bold text-gray-900 dark:text-white">{t("tablemanagement.edit.title") || "Edit Table"}</h2>
             <button
               onClick={onClose}
-              className="text-gray-400 hover:text-gray-600 text-2xl"
+              className="text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 text-2xl"
               disabled={isUpdating}
             >
               ×
@@ -308,7 +308,7 @@ const EditTableModal = ({ isOpen, onClose, table, onSave, isUpdating }) => {
         <form onSubmit={handleSubmit} className="p-6">
           <div className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                 {t("tablemanagement.edit.tablenumber") || "Table Number"}
               </label>
               <input
@@ -316,19 +316,19 @@ const EditTableModal = ({ isOpen, onClose, table, onSave, isUpdating }) => {
                 name="tablenumber"
                 value={formData.tablenumber}
                 onChange={handleInputChange}
-                className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-                  errors.tablenumber ? 'border-red-500' : 'border-gray-300'
+                className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 bg-white dark:bg-gray-700 text-gray-900 dark:text-white ${
+                  errors.tablenumber ? 'border-red-500 dark:border-red-400' : 'border-gray-300 dark:border-gray-600'
                 }`}
                 placeholder="Enter table number"
                 disabled={isUpdating}
               />
               {errors.tablenumber && (
-                <p className="text-red-500 text-sm mt-1">{errors.tablenumber}</p>
+                <p className="text-red-500 dark:text-red-400 text-sm mt-1">{errors.tablenumber}</p>
               )}
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                 {t("tablemanagement.edit.capacity") || "Table Capacity"}
               </label>
               <input
@@ -336,15 +336,15 @@ const EditTableModal = ({ isOpen, onClose, table, onSave, isUpdating }) => {
                 name="tablecapacity"
                 value={formData.tablecapacity}
                 onChange={handleInputChange}
-                className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-                  errors.tablecapacity ? 'border-red-500' : 'border-gray-300'
+                className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 bg-white dark:bg-gray-700 text-gray-900 dark:text-white ${
+                  errors.tablecapacity ? 'border-red-500 dark:border-red-400' : 'border-gray-300 dark:border-gray-600'
                 }`}
                 placeholder="Enter table capacity"
                 min="1"
                 disabled={isUpdating}
               />
               {errors.tablecapacity && (
-                <p className="text-red-500 text-sm mt-1">{errors.tablecapacity}</p>
+                <p className="text-red-500 dark:text-red-400 text-sm mt-1">{errors.tablecapacity}</p>
               )}
             </div>
           </div>
@@ -353,7 +353,7 @@ const EditTableModal = ({ isOpen, onClose, table, onSave, isUpdating }) => {
             <button
               type="button"
               onClick={onClose}
-              className="flex-1 px-4 py-2 bg-gray-300 text-gray-700 rounded-md hover:bg-gray-400 transition-colors"
+              className="flex-1 px-4 py-2 bg-gray-300 dark:bg-gray-600 text-gray-700 dark:text-gray-200 rounded-md hover:bg-gray-400 dark:hover:bg-gray-500 transition-colors"
               disabled={isUpdating}
             >
               {t("tablemanagement.edit.cancel") || "Cancel"}
@@ -361,7 +361,7 @@ const EditTableModal = ({ isOpen, onClose, table, onSave, isUpdating }) => {
             <button
               type="submit"
               disabled={isUpdating}
-              className="flex-1 px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
+              className="flex-1 px-4 py-2 bg-green-600 dark:bg-green-700 text-white rounded-md hover:bg-green-700 dark:hover:bg-green-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
             >
               {isUpdating ? (
                 <>
@@ -438,13 +438,13 @@ const ViewTable = () => {
   };
 
   return (
-    <div className="mt-8 bg-white rounded-lg border border-gray-200 shadow-sm p-6">
+    <div className="mt-8 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm p-6">
       <div className="mb-6">
         <div className="flex items-center space-x-3">           
-          <Table className="w-8 h-8 text-black" strokeWidth={1.5} />
-          <h1 className="text-2xl font-bold text-gray-800">{t("tablemanagement.title")}</h1>
+          <Table className="w-8 h-8 text-black dark:text-white" strokeWidth={1.5} />
+          <h1 className="text-2xl font-bold text-gray-800 dark:text-white">{t("tablemanagement.title")}</h1>
         </div>
-        <div className="text-sm text-gray-600">
+        <div className="text-sm text-gray-600 dark:text-gray-300">
           {t("tablemanagement.totaltables")}: {tables?.length || 0}
         </div>
       </div>
@@ -452,7 +452,7 @@ const ViewTable = () => {
       <div className="flex-1 px-6 py-6 max-w-7xl w-full mx-auto">
         {/* Error Alert */}
         {isError && (
-          <Alert className="bg-red-50 text-red-800 border border-red-200 mb-6">
+          <Alert className="bg-red-50 dark:bg-red-900/30 text-red-800 dark:text-red-300 border border-red-200 dark:border-red-700 mb-6">
             <AlertDescription>
               {message}
             </AlertDescription>
@@ -462,8 +462,8 @@ const ViewTable = () => {
         {/* Loading State */}
         {isLoading && (
           <div className="flex justify-center items-center py-12">
-            <Loader2 className="w-8 h-8 animate-spin text-blue-600" />
-            <span className="ml-2 text-gray-600">{t("tablemanagement.loadingtables")}</span>
+            <Loader2 className="w-8 h-8 animate-spin text-blue-600 dark:text-blue-400" />
+            <span className="ml-2 text-gray-600 dark:text-gray-300">{t("tablemanagement.loadingtables")}</span>
           </div>
         )}
 
@@ -486,9 +486,9 @@ const ViewTable = () => {
         {/* Empty State */}
         {!isLoading && (!tables || tables.length === 0) && (
           <div className="text-center py-12">
-            <Utensils className="w-12 h-12 text-gray-300 mx-auto mb-4" />
-            <h3 className="text-lg font-medium text-gray-900 mb-2">{t("tablemanagement.notablesfound")}</h3>
-            <p className="text-gray-500">{t("tablemanagement.notablescreated")}</p>
+            <Utensils className="w-12 h-12 text-gray-300 dark:text-gray-600 mx-auto mb-4" />
+            <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">{t("tablemanagement.notablesfound")}</h3>
+            <p className="text-gray-500 dark:text-gray-400">{t("tablemanagement.notablescreated")}</p>
           </div>
         )}
       </div>

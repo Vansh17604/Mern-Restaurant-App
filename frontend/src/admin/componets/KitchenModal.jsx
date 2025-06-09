@@ -255,7 +255,7 @@ const KitchenModal = ({
 
   // Error message component
   const ErrorMessage = ({ error }) => {
-    return error ? <p className="text-red-500 text-xs mt-1">{error}</p> : null;
+    return error ? <p className="text-red-500 dark:text-red-400 text-xs mt-1">{error}</p> : null;
   };
 
   return (
@@ -266,7 +266,7 @@ const KitchenModal = ({
       title={selectedKitchen ? t("kitchenmodal.title.edit") : t("kitchenmodal.title.add")}
       description={selectedKitchen ? t("kitchenmodal.description.edit") : t("kitchenmodal.description.add")}
     >
-      <div className="p-5 max-h-96 overflow-y-auto">
+      <div className="p-5 max-h-96 overflow-y-auto dark:bg-gray-800">
         <div className="space-y-4">
           {/* Name Field */}
           <div>
@@ -274,7 +274,7 @@ const KitchenModal = ({
               type="text"
               label={t("kitchenmodal.labels.name")}
               name="name"
-              className={errors.name ? "border-red-500" : ""}
+              className={errors.name ? "border-red-500 dark:border-red-400" : "dark:bg-gray-700 dark:border-gray-600 dark:text-white"}
               value={formData.name}
               onChange={handleChange}
               placeholder={t("kitchenmodal.placeholders.name")}
@@ -289,7 +289,7 @@ const KitchenModal = ({
                 type="email"
                 label={t("kitchenmodal.labels.email")}
                 name="email"
-                className={errors.email ? "border-red-500" : ""}
+                className={errors.email ? "border-red-500 dark:border-red-400" : "dark:bg-gray-700 dark:border-gray-600 dark:text-white"}
                 value={formData.email}
                 onChange={handleChange}
                 placeholder={t("kitchenmodal.placeholders.email")}
@@ -302,7 +302,7 @@ const KitchenModal = ({
                 type="tel"
                 label={t("kitchenmodal.labels.phone")}
                 name="phone"
-                className={errors.phone ? "border-red-500" : ""}
+                className={errors.phone ? "border-red-500 dark:border-red-400" : "dark:bg-gray-700 dark:border-gray-600 dark:text-white"}
                 value={formData.phone}
                 onChange={handleChange}
                 placeholder={t("kitchenmodal.placeholders.phone")}
@@ -318,7 +318,7 @@ const KitchenModal = ({
                 type="text"
                 label={t("kitchenmodal.labels.addressEn")}
                 name="address.en"
-                className={errors.addressEn ? "border-red-500" : ""}
+                className={errors.addressEn ? "border-red-500 dark:border-red-400" : "dark:bg-gray-700 dark:border-gray-600 dark:text-white"}
                 value={formData.address.en}
                 onChange={handleChange}
                 placeholder={t("kitchenmodal.placeholders.addressEn")}
@@ -331,7 +331,7 @@ const KitchenModal = ({
                 type="text"
                 label={t("kitchenmodal.labels.addressEs")}
                 name="address.es"
-                className={errors.addressEs ? "border-red-500" : ""}
+                className={errors.addressEs ? "border-red-500 dark:border-red-400" : "dark:bg-gray-700 dark:border-gray-600 dark:text-white"}
                 value={formData.address.es}
                 onChange={handleChange}
                 placeholder={t("kitchenmodal.placeholders.addressEs")}
@@ -347,7 +347,7 @@ const KitchenModal = ({
                 type="text"
                 label={t("kitchenmodal.labels.cityEn")}
                 name="city.en"
-                className={errors.cityEn ? "border-red-500" : ""}
+                className={errors.cityEn ? "border-red-500 dark:border-red-400" : "dark:bg-gray-700 dark:border-gray-600 dark:text-white"}
                 value={formData.city.en}
                 onChange={handleChange}
                 placeholder={t("kitchenmodal.placeholders.cityEn")}
@@ -360,7 +360,7 @@ const KitchenModal = ({
                 type="text"
                 label={t("kitchenmodal.labels.cityEs")}
                 name="city.es"
-                className={errors.cityEs ? "border-red-500" : ""}
+                className={errors.cityEs ? "border-red-500 dark:border-red-400" : "dark:bg-gray-700 dark:border-gray-600 dark:text-white"}
                 value={formData.city.es}
                 onChange={handleChange}
                 placeholder={t("kitchenmodal.placeholders.cityEs")}
@@ -376,7 +376,7 @@ const KitchenModal = ({
                 type="date"
                 label={t("kitchenmodal.labels.dob")}
                 name="dob"
-                className={errors.dob ? "border-red-500" : ""}
+                className={errors.dob ? "border-red-500 dark:border-red-400" : "dark:bg-gray-700 dark:border-gray-600 dark:text-white"}
                 value={formData.dob}
                 onChange={handleChange}
               />
@@ -384,17 +384,17 @@ const KitchenModal = ({
             </div>
             
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                 {t("kitchenmodal.labels.gender")}
               </label>
               <Select onValueChange={handleGenderChange} value={formData.gender}>
-                <SelectTrigger className={`w-full ${errors.gender ? "border-red-500" : ""}`}>
+                <SelectTrigger className={`w-full ${errors.gender ? "border-red-500 dark:border-red-400" : "dark:bg-gray-700 dark:border-gray-600 dark:text-white"}`}>
                   <SelectValue placeholder={t("kitchenmodal.placeholders.gender")} />
                 </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="male">{t("kitchenmodal.genderOptions.male")}</SelectItem>
-                  <SelectItem value="female">{t("kitchenmodal.genderOptions.female")}</SelectItem>
-                  <SelectItem value="other">{t("kitchenmodal.genderOptions.other")}</SelectItem>
+                <SelectContent className="dark:bg-gray-700 dark:border-gray-600">
+                  <SelectItem value="male" className="dark:text-white dark:hover:bg-gray-600">{t("kitchenmodal.genderOptions.male")}</SelectItem>
+                  <SelectItem value="female" className="dark:text-white dark:hover:bg-gray-600">{t("kitchenmodal.genderOptions.female")}</SelectItem>
+                  <SelectItem value="other" className="dark:text-white dark:hover:bg-gray-600">{t("kitchenmodal.genderOptions.other")}</SelectItem>
                 </SelectContent>
               </Select>
               <ErrorMessage error={errors.gender} />
@@ -407,7 +407,7 @@ const KitchenModal = ({
               type="password"
               label={selectedKitchen ? t("kitchenmodal.labels.passwordEdit") : t("kitchenmodal.labels.password")}
               name="password"
-              className={errors.password ? "border-red-500" : ""}
+              className={errors.password ? "border-red-500 dark:border-red-400" : "dark:bg-gray-700 dark:border-gray-600 dark:text-white"}
               value={formData.password}
               onChange={handleChange}
               placeholder={selectedKitchen ? t("kitchenmodal.placeholders.passwordOptional") : t("kitchenmodal.placeholders.password")}
@@ -417,17 +417,17 @@ const KitchenModal = ({
 
           {/* Image Upload */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
               {t("kitchenmodal.labels.profilePhoto")}
             </label>
             
             {!imagePreview ? (
-              <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center hover:border-gray-400 transition-colors">
-                <Upload className="mx-auto h-8 w-8 text-gray-400" />
+              <div className="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg p-4 text-center hover:border-gray-400 dark:hover:border-gray-500 transition-colors dark:bg-gray-700">
+                <Upload className="mx-auto h-8 w-8 text-gray-400 dark:text-gray-500" />
                 <div className="mt-2">
                   <label
                     htmlFor="kitchenImageInput"
-                    className="cursor-pointer inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors"
+                    className="cursor-pointer inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 dark:focus:ring-offset-gray-800 transition-colors"
                   >
                     {t("kitchenmodal.imageUpload.choosePhoto")}
                   </label>
@@ -439,7 +439,7 @@ const KitchenModal = ({
                     className="hidden"
                   />
                 </div>
-                <p className="text-xs text-gray-500 mt-1">
+                <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
                   {t("kitchenmodal.imageUpload.fileTypes")}
                 </p>
               </div>
@@ -448,18 +448,18 @@ const KitchenModal = ({
                  <img
                   src={getImageUrl(imagePreview)}
                    alt={t("kitchenmodal.imageUpload.preview")}
-                   className="w-full h-32 object-cover rounded-lg border border-gray-200"
+                   className="w-full h-32 object-cover rounded-lg border border-gray-200 dark:border-gray-600"
                 />
                  <button
                    type="button"
                    onClick={removeImage}
-                   className="absolute top-2 right-2 p-1 bg-red-600 text-white rounded-full hover:bg-red-700 transition-colors"
+                   className="absolute top-2 right-2 p-1 bg-red-600 text-white rounded-full hover:bg-red-700 dark:bg-red-500 dark:hover:bg-red-600 transition-colors"
                  >
                    <X size={16} />
                  </button>
                  <label
                    htmlFor="kitchenImageInput"
-                   className="absolute bottom-2 left-2 cursor-pointer inline-flex items-center px-2 py-1 text-xs bg-black bg-opacity-50 text-white rounded hover:bg-opacity-70 transition-all"
+                   className="absolute bottom-2 left-2 cursor-pointer inline-flex items-center px-2 py-1 text-xs bg-black bg-opacity-50 dark:bg-gray-900 dark:bg-opacity-70 text-white rounded hover:bg-opacity-70 dark:hover:bg-opacity-80 transition-all"
                  >
                      {t("kitchenmodal.imageUpload.changePhoto")}
                  </label>

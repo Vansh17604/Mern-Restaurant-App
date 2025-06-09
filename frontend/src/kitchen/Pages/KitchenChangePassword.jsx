@@ -157,12 +157,15 @@ const PasswordStrengthIndicator = ({ password, darkMode = false }) => {
   );
 };
 
-const KitchenChangePassword = ({ darkMode = false }) => {
+const KitchenChangePassword = () => {
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.auth || {});
   const kitchenId = user?.id;
   const { isLoading, isError, isSuccess, message } = useSelector((state) => state.kitchen);
+  
+  // Add dark mode detection logic (same as KitchenDashboard)
+  const [darkMode, setDarkMode] = useState(false);
   
   const [formData, setFormData] = useState({
     currentPassword: '',
@@ -178,6 +181,30 @@ const KitchenChangePassword = ({ darkMode = false }) => {
   
   const [errors, setErrors] = useState({});
   const [touched, setTouched] = useState({});
+
+  // Dark mode detection effect
+  useEffect(() => {
+    const checkDarkMode = () => {
+      if (document) {
+        setDarkMode(document.body.classList.contains('dark'));
+      }
+    };
+    
+    checkDarkMode();
+    
+    const observer = new MutationObserver(checkDarkMode);
+    
+    if (document) {
+      observer.observe(document.body, { 
+        attributes: true, 
+        attributeFilter: ['class'] 
+      });
+    }
+    
+    return () => {
+      observer.disconnect();
+    };
+  }, []);
 
   // Validation rules
   const validateField = (name, value) => {

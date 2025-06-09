@@ -2,6 +2,68 @@ const Order=require('../models/order');
 const Payment =require('../models/payment');
 const Table =require('../models/table');
 const Dish = require('../models/dish');
+const Kitchen = require('../models/kitchen');
+const Waiter = require('../models/waiter');
+
+const kitchenFooterLangTitles = {
+  en: {
+    activeOrders: 'Active Orders',
+    completedToday: 'Completed Today',
+    staffOnDuty: 'Staff On Duty'
+  },
+  es: {
+    activeOrders: 'Pedidos Activos',
+    completedToday: 'Completados Hoy',
+    staffOnDuty: 'Personal en Turno'
+  }
+};
+
+module.exports.getKitchenFooterStats = async (req, res) => {
+  try {
+    const lang = req.query.lang === 'es' ? 'es' : 'en';
+
+    // Get active orders (orders that are being prepared or pending)
+    const activeOrders = await Order.countDocuments({
+      orderstatus: { $in: ['order', 'prepare', 'prepared'] }
+    });
+
+    // Get completed orders today
+    const startOfToday = new Date();
+    startOfToday.setHours(0, 0, 0, 0);
+    const endOfToday = new Date();
+    endOfToday.setHours(23, 59, 59, 999);
+
+    const completedToday = await Order.countDocuments({
+      orderstatus: 'Completed',
+      updatedAt: { $gte: startOfToday, $lte: endOfToday }
+    });
+
+    // Get total staff on duty (Kitchen + Waiter)
+    const kitchenStaffCount = await Kitchen.countDocuments();
+    const waiterStaffCount = await Waiter.countDocuments();
+    const staffOnDuty = kitchenStaffCount + waiterStaffCount;
+
+    const kitchenStats = [
+      {
+        label: kitchenFooterLangTitles[lang].activeOrders,
+        value: activeOrders.toString()
+      },
+      {
+        label: kitchenFooterLangTitles[lang].completedToday,
+        value: completedToday.toString()
+      },
+      {
+        label: kitchenFooterLangTitles[lang].staffOnDuty,
+        value: staffOnDuty.toString()
+      }
+    ];
+
+    return res.json(kitchenStats);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Failed to load kitchen footer stats' });
+  }
+};
 
 
 const calculateChange = (current, previous) => {
@@ -242,6 +304,67 @@ module.exports.getMenuPopularity = async (req, res) => {
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Failed to get menu popularity data' });
+  }
+};
+
+const footerLangTitles = {
+  en: {
+    uptime: 'Uptime',
+    ordersToday: 'Orders Today',
+    activeTables: 'Active Tables'
+  },
+  es: {
+    uptime: 'Tiempo Activo',
+    ordersToday: 'Pedidos Hoy',
+    activeTables: 'Mesas Activas'
+  }
+};
+
+module.exports.getAdminFooterStats = async (req, res) => {
+  try {
+    const lang = req.query.lang === 'es' ? 'es' : 'en';
+
+    // Calculate uptime (assuming server started today for demo)
+    const serverStartTime = new Date();
+    serverStartTime.setHours(0, 0, 0, 0); // Start of today
+    const now = new Date();
+    const uptimeHours = Math.floor((now - serverStartTime) / (1000 * 60 * 60));
+    const uptimePercent = Math.min(((uptimeHours / 24) * 100), 99.9).toFixed(1);
+
+    // Get today's orders
+    const startOfToday = new Date();
+    startOfToday.setHours(0, 0, 0, 0);
+    const endOfToday = new Date();
+    endOfToday.setHours(23, 59, 59, 999);
+
+    const ordersToday = await Order.countDocuments({
+      createdAt: { $gte: startOfToday, $lte: endOfToday }
+    });
+
+    // Get active tables (occupied or reserved)
+    const activeTables = await Table.countDocuments({
+      tablestatus: { $in: ['Avliable'] }
+    });
+
+    const footerStats = [
+      {
+        label: footerLangTitles[lang].uptime,
+        value: `${uptimePercent}%`
+      },
+      {
+        label: footerLangTitles[lang].ordersToday,
+        value: ordersToday.toString()
+      },
+      {
+        label: footerLangTitles[lang].activeTables,
+        value: activeTables.toString()
+      }
+    ];
+
+    return res.json(footerStats);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Failed to load admin footer stats' });
   }
 };
 

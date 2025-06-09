@@ -209,7 +209,7 @@ export default function ViewSubCategory() {
 
   // Render error message component
   const ErrorMessage = ({ error }) => {
-    return error ? <p className="text-red-500 text-xs mt-1">{error}</p> : null;
+    return error ? <p className="text-red-500 dark:text-red-400 text-xs mt-1">{error}</p> : null;
   };
 
   // Helper function to display subcategory name based on current language
@@ -242,20 +242,20 @@ export default function ViewSubCategory() {
   };
 
   return (
-    <div className="mt-8 bg-white rounded-lg border border-gray-200 shadow-sm p-6">
+    <div className="mt-8 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm p-6">
       <div className="mb-6">
-        <h2 className="text-lg font-medium text-gray-800 mb-1">{t("viewsubcategory.title")}</h2>
-        <p className="text-gray-500 text-sm">{t("viewsubcategory.dis")}</p>
+        <h2 className="text-lg font-medium text-gray-800 dark:text-gray-200 mb-1">{t("viewsubcategory.title")}</h2>
+        <p className="text-gray-500 dark:text-gray-400 text-sm">{t("viewsubcategory.dis")}</p>
       </div>
       
       {/* Search Bar */}
       <div className="mb-6">
         <div className="relative">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 dark:text-gray-500" size={20} />
           <Input
             type="text"
             placeholder={t("viewsubcategory.search")}
-            className="pl-10 border-gray-300 focus:border-indigo-500 focus:ring-indigo-500"
+            className="pl-10 border-gray-300 dark:border-gray-600 focus:border-indigo-500 focus:ring-indigo-500 dark:bg-gray-700 dark:text-gray-200 dark:placeholder-gray-400"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
@@ -263,36 +263,36 @@ export default function ViewSubCategory() {
       </div>
       
       {/* Subcategory Table */}
-      <div className="border rounded-lg overflow-hidden">
+      <div className="border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden">
         {isLoading ? (
-          <div className="flex justify-center items-center py-16">
+          <div className="flex justify-center items-center py-16 bg-white dark:bg-gray-800">
             <img
               src={gif}
               alt="Loading..."
               className="h-16 w-16"
             />
-            <span className="ml-3 text-gray-600">{t("viewsubcategory.load")}</span>
+            <span className="ml-3 text-gray-600 dark:text-gray-400">{t("viewsubcategory.load")}</span>
           </div>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full">
               <thead>
-                <tr className="bg-gray-50 border-b border-gray-200">
-                  <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{t("viewsubcategory.table")}</th>
-                  <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{t("viewsubcategory.table1")}</th>
-                  <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{t("viewsubcategory.table2")}</th>
-                  <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{t("viewsubcategory.table3")}</th>
-                  <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{t("viewsubcategory.table4")}</th>
+                <tr className="bg-gray-50 dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700">
+                  <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">{t("viewsubcategory.table")}</th>
+                  <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">{t("viewsubcategory.table1")}</th>
+                  <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">{t("viewsubcategory.table2")}</th>
+                  <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">{t("viewsubcategory.table3")}</th>
+                  <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">{t("viewsubcategory.table4")}</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-200">
+              <tbody className="divide-y divide-gray-200 dark:divide-gray-700 bg-white dark:bg-gray-800">
                 {filteredSubcategories.length > 0 ? (
                   filteredSubcategories.map((subcategory) => (
-                    <tr key={subcategory._id} className="hover:bg-gray-50 transition-colors">
-                      <td className="px-6 py-4 whitespace-nowrap text-gray-800 font-medium">
+                    <tr key={subcategory._id} className="hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+                      <td className="px-6 py-4 whitespace-nowrap text-gray-800 dark:text-gray-200 font-medium">
                         {getSubcategoryDisplayName(subcategory)}
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-gray-600">
+                      <td className="px-6 py-4 whitespace-nowrap text-gray-600 dark:text-gray-300">
                         {getCategoryDisplayName(subcategory.categoryid)}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
@@ -301,8 +301,8 @@ export default function ViewSubCategory() {
                           size="sm"
                           className={`flex items-center px-3 py-1.5 border transition-all duration-200 rounded-md ${
                             subcategory.status === "Active" 
-                              ? "text-green-600 border-green-300 hover:bg-red-50 hover:text-red-600" 
-                              : "text-red-600 border-red-300 hover:bg-green-50 hover:text-green-600"
+                              ? "text-green-600 dark:text-green-400 border-green-300 dark:border-green-500 hover:bg-red-50 dark:hover:bg-red-900/20 hover:text-red-600 dark:hover:text-red-400" 
+                              : "text-red-600 dark:text-red-400 border-red-300 dark:border-red-500 hover:bg-green-50 dark:hover:bg-green-900/20 hover:text-green-600 dark:hover:text-green-400"
                           }`}
                           onClick={() => handleToggleStatus(subcategory)}
                         >
@@ -323,7 +323,7 @@ export default function ViewSubCategory() {
                         <Button
                           variant="outline"
                           size="sm"
-                          className="flex items-center px-3 py-1.5 bg-blue-600 text-white border border-blue-600 hover:bg-blue-500 hover:border-blue-500 hover:text-white transition-all duration-200 rounded-md"
+                          className="flex items-center px-3 py-1.5 bg-blue-600 dark:bg-blue-700 text-white border border-blue-600 dark:border-blue-700 hover:bg-blue-500 dark:hover:bg-blue-600 hover:border-blue-500 dark:hover:border-blue-600 hover:text-white transition-all duration-200 rounded-md"
                           onClick={() => handleEdit(subcategory)}
                         >
                           <Pencil size={16} className="mr-1.5" />
@@ -334,7 +334,7 @@ export default function ViewSubCategory() {
                         <Button
                           variant="outline"
                           size="sm"
-                          className="flex items-center px-3 py-1.5 text-red-600 border border-red-300 hover:text-white hover:bg-red-600 hover:border-red-600 transition-all duration-200 rounded-md"
+                          className="flex items-center px-3 py-1.5 text-red-600 dark:text-red-400 border border-red-300 dark:border-red-500 hover:text-white hover:bg-red-600 dark:hover:bg-red-700 hover:border-red-600 dark:hover:border-red-700 transition-all duration-200 rounded-md"
                           onClick={() => handleDelete(subcategory)}
                         >
                           <Trash2 size={16} className="mr-1.5" />
@@ -345,11 +345,11 @@ export default function ViewSubCategory() {
                   ))
                 ) : (
                   <tr>
-                    <td colSpan="5" className="px-6 py-10 text-center text-gray-500">
+                    <td colSpan="5" className="px-6 py-10 text-center text-gray-500 dark:text-gray-400 bg-white dark:bg-gray-800">
                       <div className="flex flex-col items-center">
-                        <Tag className="w-10 h-10 text-gray-400 mb-2" strokeWidth={1.5} />
+                        <Tag className="w-10 h-10 text-gray-400 dark:text-gray-500 mb-2" strokeWidth={1.5} />
                         <p className="text-lg font-medium">{t("viewsubcategory.label")}</p>
-                        <p className="text-sm text-gray-400 mt-1">{t("viewsubcategory.dis1")}</p>
+                        <p className="text-sm text-gray-400 dark:text-gray-500 mt-1">{t("viewsubcategory.dis1")}</p>
                       </div>
                     </td>
                   </tr>
@@ -368,14 +368,14 @@ export default function ViewSubCategory() {
         title={`${t("viewsubcategory.title1")} "${getSelectedSubcategoryName()}"`}
         description={t("viewsubcategory.dis2")}
       >
-        <div className="p-5">
+        <div className="p-5 bg-white dark:bg-gray-800">
           <div className="mb-5">
             <CustomInput
               type="text"
               label={t("viewsubcategory.label2")}
               id="subcategoryname.en"
               name="subcategoryname.en"
-              className={errors.en ? "border-red-500" : ""}
+              className={`dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200 ${errors.en ? "border-red-500 dark:border-red-400" : ""}`}
               value={formData.subcategoryname.en}
               onChange={handleChange}
               placeholder={t("viewsubcategory.placeholder")}
@@ -389,7 +389,7 @@ export default function ViewSubCategory() {
               label={t("viewsubcategory.label3")}
               id="subcategoryname.es"
               name="subcategoryname.es"
-              className={errors.es ? "border-red-500" : ""}
+              className={`dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200 ${errors.es ? "border-red-500 dark:border-red-400" : ""}`}
               value={formData.subcategoryname.es}
               onChange={handleChange}
               placeholder={t("viewsubcategory.placeholder1")}
@@ -398,20 +398,20 @@ export default function ViewSubCategory() {
           </div>
 
           <div className="mb-5">
-            <label htmlFor="categoryid" className="block text-sm font-medium text-gray-700 mb-2">{t("viewsubcategory.label4")}</label>
+            <label htmlFor="categoryid" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">{t("viewsubcategory.label4")}</label>
             <Select 
               onValueChange={handleCategoryChange}
               value={formData.categoryid}
             >
               <SelectTrigger 
                 id="categoryid"
-                className={`w-full ${errors.categoryid ? "border-red-500" : ""}`}
+                className={`w-full dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200 ${errors.categoryid ? "border-red-500 dark:border-red-400" : ""}`}
               >
                 <SelectValue placeholder={t("viewsubcategory.placeholder2")} />
               </SelectTrigger>
-              <SelectContent>
+              <SelectContent className="dark:bg-gray-700 dark:border-gray-600">
                 {categories?.map((category) => (
-                  <SelectItem key={category._id} value={category._id}>
+                  <SelectItem key={category._id} value={category._id} className="dark:text-gray-200 dark:hover:bg-gray-600">
                     {category.categoryName?.[currentLanguage] || 
                      category.categoryName?.en || 
                      category.categoryName?.es || 
@@ -424,20 +424,20 @@ export default function ViewSubCategory() {
           </div>
           
           <div className="space-y-2">
-            <label htmlFor="status" className="block text-sm font-medium text-gray-700">{t("viewsubcategory.label5")}</label>
+            <label htmlFor="status" className="block text-sm font-medium text-gray-700 dark:text-gray-300">{t("viewsubcategory.label5")}</label>
             <Select 
               onValueChange={handleStatusChange}
               value={formData.status}
             >
               <SelectTrigger 
                 id="status"
-                className={`w-full ${errors.status ? "border-red-500" : ""}`}
+                className={`w-full dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200 ${errors.status ? "border-red-500 dark:border-red-400" : ""}`}
               >
                 <SelectValue placeholder={t("viewsubcategory.placeholder2")} />
               </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="Active">{t("viewsubcategory.button")}</SelectItem>
-                <SelectItem value="Deactive">{t("viewsubcategory.button1")}</SelectItem>
+              <SelectContent className="dark:bg-gray-700 dark:border-gray-600">
+                <SelectItem value="Active" className="dark:text-gray-200 dark:hover:bg-gray-600">{t("viewsubcategory.button")}</SelectItem>
+                <SelectItem value="Deactive" className="dark:text-gray-200 dark:hover:bg-gray-600">{t("viewsubcategory.button1")}</SelectItem>
               </SelectContent>
             </Select>
             <ErrorMessage error={errors.status} />
@@ -463,8 +463,8 @@ export default function ViewSubCategory() {
         description={`${t("viewsubcategory.dis4")} ${selectedSubcategory?.status === "Active" ? "deactivate" : "activate"} ${t("viewsubcategory.dis5")}`}
       >
         <div className="p-5">
-          <Alert className={selectedSubcategory?.status === "Active" ? "bg-red-50 border-red-200" : "bg-green-50 border-green-200"}>
-            <AlertDescription>
+          <Alert className={`${selectedSubcategory?.status === "Active" ? "bg-red-50 dark:bg-red-900/20 border-red-200 dark:border-red-800" : "bg-green-50 dark:bg-green-900/20 border-green-200 dark:border-green-800"}`}>
+            <AlertDescription className="dark:text-gray-200">
               {selectedSubcategory?.status === "Active" 
                 ? t("viewsubcategory.dis6")
                 : t("viewsubcategory.dis7")

@@ -57,6 +57,8 @@ router.get("/getalltheorderadmin",OrderController.FetchAllOrderForAdmin);
 router.post("/table",verifyTokenAndAuthorize('Admin'),TableController.createTable);
 router.put("/updatetable/:id",verifyTokenAndAuthorize('Admin'),TableController.Edittable);
 router.delete("/deletetable/:id",verifyTokenAndAuthorize('Admin'),TableController.Deletetable);
+router.get('/adminfooter',verifyTokenAndAuthorize('Admin'),CountController.getAdminFooterStats);
+router.get('/kitchenfooter',verifyTokenAndAuthorize('Kitchen'),CountController.getKitchenFooterStats);
 router.get("/gettable",TableController.getAllTables);
 router.get("/getactivetable",TableController.gettableAvlible);
 router.post("/assignwaiter/:id",TableController.AssignWaiter);

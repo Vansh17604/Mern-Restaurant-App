@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { ChefHat, Pencil, Trash2, Search, User } from "lucide-react";
+import { ChefHat, Pencil, Trash2, Search, DollarSign, Settings } from "lucide-react";
 import { Button } from "../../components/ui/button";
 import { Input } from "../../components/ui/input";
 import { Alert, AlertDescription } from "../../components/ui/alert";
@@ -8,256 +8,347 @@ import { CustomModal } from "../componets/Customes";
 import gif from '/assets/Animation - 1747722366024.gif';
 import { useTranslation } from "react-i18next";
 import { 
-  fetchAllKitchens, 
-  editKitchen, 
-  deleteKitchen,
-  resetKitchenState
-} from "../../features/admin/kitchen/kitchenSlice";
-import KitchenModal from "../componets/KitchenModal";
+  fetchDishes, 
+  updateDish, 
+  deleteDish,
+  updateDishPriceAndCurrency,
+  resetDishState
+} from "../../features/admin/dish/dishSlice";
+import { fetchactiveCategories } from "../../features/admin/category/categorySlice";
+import { fetchActiveSubcategory } from "../../features/admin/subcategory/subcategorySlice";
+import DishModal from "../componets/DishModal";
 
-const ViewKitchen = () => {
+const ViewDish = () => {
   const { t, i18n } = useTranslation();
   const [searchTerm, setSearchTerm] = useState("");
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-  const [selectedKitchen, setSelectedKitchen] = useState(null);
+  const [isCurrencyConvertModalOpen, setIsCurrencyConvertModalOpen] = useState(false);
+  const [selectedDish, setSelectedDish] = useState(null);
+  const [currencyConvertFormData, setCurrencyConvertFormData] = useState({
+    currency: 'USD'
+  });
   
   const base_url = import.meta.env.VITE_BASE_URL;
   
+  // Get current language from i18next
   const currentLanguage = i18n.language || 'en';
   
   const dispatch = useDispatch();
-  const { kitchens, isLoading, isError, isSuccess, message } = useSelector(
-    (state) => state.kitchen
+  const { dishes, isLoading, isError, isSuccess, message } = useSelector(
+    (state) => state.dish
   );
+  const { categories } = useSelector((state) => state.category);
+  const { subcategories } = useSelector((state) => state.subcategory);
 
+  const getCurrencySymbol = (currencyCode) => {
+    const currencies = t('viewdish.currencies', { returnObjects: true });
+    const currency = currencies[currencyCode];
+    return currency ? currency.symbol : currencyCode;
+  };
 
-  const kitchensArray = Array.isArray(kitchens) ? kitchens : (kitchens?.kitchens || []);
+  const getCurrentCurrency = () => {
+    if (dishes.length > 0) {
+      return dishes[0].currency || 'USD';
+    }
+    return 'USD';
+  };
 
   useEffect(() => {
-    dispatch(fetchAllKitchens()).unwrap().catch(err => {
-      console.error("Failed to fetch kitchens:", err);
-    });
-
+    dispatch(fetchDishes());
+    dispatch(fetchactiveCategories());
+    dispatch(fetchActiveSubcategory());
+    
     return () => {
-      dispatch(resetKitchenState());
+      dispatch(resetDishState());
     };
   }, [dispatch]);
 
-  // Helper function to get kitchen display name based on current language
-  const getKitchenDisplayName = (kitchen) => {
-    if (!kitchen || !kitchen.name) return '';
-    
-    
-    return kitchen.name || '';
-  };
-
-  // Helper function to get kitchen display address based on current language
-  const getKitchenDisplayAddress = (kitchen) => {
-    if (!kitchen || !kitchen.address) return '';
-    
-    if (typeof kitchen.address === 'object') {
-      if (currentLanguage === 'es') {
-        return kitchen.address.es || kitchen.address.en || '';
-      } else {
-        return kitchen.address.en || kitchen.address.es || '';
-      }
+  // Helper functions to handle different data structures
+  const findCategoryById = (categoryData) => {
+    if (typeof categoryData === 'object' && categoryData !== null && categoryData.categoryName) {
+      return categoryData;
     }
-    return kitchen.address || '';
-  };
-
-  // Helper function to get kitchen display city based on current language
-  const getKitchenDisplayCity = (kitchen) => {
-    if (!kitchen || !kitchen.city) return '';
     
-    if (typeof kitchen.city === 'object') {
-      if (currentLanguage === 'es') {
-        return kitchen.city.es || kitchen.city.en || '';
-      } else {
-        return kitchen.city.en || kitchen.city.es || '';
-      }
+    if (typeof categoryData === 'string') {
+      return categories?.find(cat => cat._id === categoryData) || null;
     }
-    return kitchen.city || '';
+    
+    return null;
   };
 
-  // Filter kitchens based on search term - use the extracted array
-  const filteredKitchens = kitchensArray.filter(kitchen => {
-
-    const matchesKitchenName = kitchen.name?.includes(searchTerm.toLowerCase());
+  const findSubcategoryById = (subcategoryData) => {
+    if (typeof subcategoryData === 'object' && subcategoryData !== null && subcategoryData.subcategoryname) {
+      return subcategoryData;
+    }
     
-    const matchesEmail = kitchen.email?.toLowerCase().includes(searchTerm.toLowerCase()) || false;
-    const matchesPhone = kitchen.phone?.includes(searchTerm) || false;
+    if (typeof subcategoryData === 'string') {
+      return subcategories?.find(sub => sub._id === subcategoryData) || null;
+    }
     
-    const addressEn = kitchen.address?.en?.toLowerCase() || "";
-    const addressEs = kitchen.address?.es?.toLowerCase() || "";
-    const matchesAddress = addressEn.includes(searchTerm.toLowerCase()) || 
-                          addressEs.includes(searchTerm.toLowerCase());
+    return null;
+  };
 
-    const cityEn = kitchen.city?.en?.toLowerCase() || "";
-    const cityEs = kitchen.city?.es?.toLowerCase() || "";
-    const matchesCity = cityEn.includes(searchTerm.toLowerCase()) || 
-                       cityEs.includes(searchTerm.toLowerCase());
+  // Filter dishes based on search term
+  const filteredDishes = dishes.filter(dish => {
+    const dishNameEn = dish.dishName?.en?.toLowerCase() || "";
+    const dishNameEs = dish.dishName?.es?.toLowerCase() || "";
+    const matchesDishName = dishNameEn.includes(searchTerm.toLowerCase()) || 
+                           dishNameEs.includes(searchTerm.toLowerCase());
+    
+    const category = findCategoryById(dish.categoryid);
+    const matchesCategoryName = category ? (
+      (category.categoryName?.en?.toLowerCase() || "").includes(searchTerm.toLowerCase()) ||
+      (category.categoryName?.es?.toLowerCase() || "").includes(searchTerm.toLowerCase())
+    ) : false;
 
-    return matchesKitchenName || matchesEmail || matchesPhone || matchesAddress || matchesCity;
+    const subcategory = findSubcategoryById(dish.subcategoryid);
+    const matchesSubcategoryName = subcategory ? (
+      (subcategory.subcategoryname?.en?.toLowerCase() || "").includes(searchTerm.toLowerCase()) ||
+      (subcategory.subcategoryname?.es?.toLowerCase() || "").includes(searchTerm.toLowerCase())
+    ) : false;
+
+    const matchesPrice = dish.price?.toString().includes(searchTerm);
+
+    return matchesDishName || matchesCategoryName || matchesSubcategoryName || matchesPrice;
   });
 
-  const handleEdit = (kitchen) => {
-    setSelectedKitchen(kitchen);
+  const handleEdit = (dish) => {
+    setSelectedDish(dish);
     setIsEditModalOpen(true);
   };
 
-  const handleDelete = (kitchen) => {
-    setSelectedKitchen(kitchen);
+  const handleDelete = (dish) => {
+    setSelectedDish(dish);
     setIsDeleteModalOpen(true);
   };
 
-  const handleUpdateKitchen = (formData) => {
-    dispatch(editKitchen({ 
-      id: selectedKitchen._id, 
-      kitchenData: formData 
+  const handleCurrencyConvert = () => {
+    const currentCurrency = getCurrentCurrency();
+    setCurrencyConvertFormData({
+      currency: currentCurrency === 'USD' ? 'EUR' : 'USD'
+    });
+    setIsCurrencyConvertModalOpen(true);
+  };
+
+  const handleUpdateDish = (formData) => {
+    dispatch(updateDish({ 
+      id: selectedDish._id, 
+      data: formData 
     }));
   };
 
-  const handleDeleteKitchen = () => {
-    dispatch(deleteKitchen(selectedKitchen._id));
+  const handleConvertAllCurrency = async () => {
+    try {
+      const dataToSend = {
+        currency: currencyConvertFormData.currency
+      };
+
+      await dispatch(updateDishPriceAndCurrency(dataToSend));
+      
+      setIsCurrencyConvertModalOpen(false);
+      setCurrencyConvertFormData({
+        currency: 'USD'
+      });
+      
+      await dispatch(fetchDishes());
+    } catch (error) {
+      console.error(t('viewdish.err'), error);
+    }
+  };
+
+  const handleDeleteDish = () => {
+    dispatch(deleteDish(selectedDish._id));
     setIsDeleteModalOpen(false);
   };
 
   const closeEditModal = () => {
     setIsEditModalOpen(false);
-    setSelectedKitchen(null);
+    setSelectedDish(null);
   };
 
   const closeDeleteModal = () => {
     setIsDeleteModalOpen(false);
-    setSelectedKitchen(null);
+    setSelectedDish(null);
   };
 
-  // Format date for display
-  const formatDate = (dateString) => {
-    if (!dateString) return 'N/A';
-    return new Date(dateString).toLocaleDateString();
+  const closeCurrencyConvertModal = () => {
+    setIsCurrencyConvertModalOpen(false);
+    setCurrencyConvertFormData({
+      currency: 'USD'
+    });
+  };
+
+  const getDishDisplayName = (dish) => {
+    if (!dish) return '';
+    
+    if (typeof dish.dishName === 'object') {
+      if (currentLanguage === 'es') {
+        return dish.dishName.es || dish.dishName.en || '';
+      } else {
+        return dish.dishName.en || dish.dishName.es || '';
+      }
+    }
+    return dish.dishName || '';
+  };
+
+  // Helper function to display category name based on current language
+  const getCategoryDisplayName = (categoryData) => {
+    const category = findCategoryById(categoryData);
+    
+    if (!category || !category.categoryName) return 'N/A';
+
+    if (currentLanguage === 'es') {
+      return category.categoryName.es || category.categoryName.en || 'N/A';
+    } else {
+      return category.categoryName.en || category.categoryName.es || 'N/A';
+    }
+  };
+
+  // Helper function to display subcategory name based on current language
+  const getSubcategoryDisplayName = (subcategoryData) => {
+    const subcategory = findSubcategoryById(subcategoryData);
+    
+    if (!subcategory || !subcategory.subcategoryname) return 'N/A';
+
+    if (currentLanguage === 'es') {
+      return subcategory.subcategoryname.es || subcategory.subcategoryname.en || 'N/A';
+    } else {
+      return subcategory.subcategoryname.en || subcategory.subcategoryname.es || 'N/A';
+    }
   };
 
   return (
-    <div className="mt-8 bg-white rounded-lg border border-gray-200 shadow-sm p-6">
+    <div className="mt-8 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm dark:shadow-gray-900/10 p-6">
       <div className="mb-6">
         <div className="flex items-center space-x-3">
           <ChefHat className="w-8 h-8 text-black dark:text-white" strokeWidth={1.5} />
-          <h1 className="text-2xl font-bold text-gray-800 mb-1">{t('viewkitchen.title', 'View Kitchen Staff')}</h1>
+          <h1 className="text-2xl font-bold text-gray-800 dark:text-gray-100 mb-1">{t('viewdish.title')}</h1>
         </div>
-        <p className="text-gray-500 text-sm">{t('viewkitchen.description', 'Manage and view all registered kitchen staff')}</p>
+        <p className="text-gray-500 dark:text-gray-400 text-sm">{t('viewdish.dis')}</p>
+      </div>
+      
+      <div className="mb-6">
+        <div className="flex items-center justify-between">
+          <Button
+            onClick={handleCurrencyConvert}
+            className="flex items-center px-4 py-2 bg-purple-600 dark:bg-purple-700 text-white border border-purple-600 dark:border-purple-700 hover:bg-purple-700 dark:hover:bg-purple-800 hover:border-purple-700 dark:hover:border-purple-800 transition-all duration-200 rounded-md shadow-sm dark:shadow-gray-900/20"
+          >
+            <Settings size={16} className="mr-2" />
+            {t('viewdish.convert')}
+          </Button>
+          
+          {dishes.length > 0 && (
+            <div className="text-sm text-gray-600 dark:text-gray-300 bg-gray-50 dark:bg-gray-700 px-3 py-1 rounded-md border border-gray-200 dark:border-gray-600">
+              {t('viewdish.current')} <span className="font-medium text-gray-800 dark:text-gray-100">{getCurrentCurrency()}</span>
+            </div>
+          )}
+        </div>
       </div>
       
       {/* Search Bar */}
       <div className="mb-6">
         <div className="relative">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 dark:text-gray-500" size={20} />
           <Input
             type="text"
-            placeholder={t('viewkitchen.search', 'Search kitchen staff by name, email, phone, address, city, or salary...')}
-            className="pl-10 border-gray-300 focus:border-indigo-500 focus:ring-indigo-500"
+            placeholder={t('viewdish.search')}
+            className="pl-10 border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 dark:placeholder-gray-400 focus:border-indigo-500 dark:focus:border-indigo-400 focus:ring-indigo-500 dark:focus:ring-indigo-400 shadow-sm dark:shadow-gray-900/10"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
         </div>
       </div>
       
-      {/* Kitchen Staff Table */}
-      <div className="border rounded-lg overflow-hidden">
+      {/* Dishes Table */}
+      <div className="border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden shadow-sm dark:shadow-gray-900/10">
         {isLoading ? (
-          <div className="flex justify-center items-center py-16">
+          <div className="flex justify-center items-center py-16 bg-white dark:bg-gray-800">
             <img
               src={gif}
               alt="Loading..."
-              className="h-16 w-16"
+              className="h-16 w-16 opacity-80 dark:opacity-90"
             />
-            <span className="ml-3 text-gray-600">{t('viewkitchen.loading', 'Loading kitchen staff...')}</span>
+            <span className="ml-3 text-gray-600 dark:text-gray-300">{t('viewdish.load')}</span>
           </div>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full">
               <thead>
-                <tr className="bg-gray-50 border-b border-gray-200">
-                  <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{t('viewkitchen.photo', 'Photo')}</th>
-                  <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{t('viewkitchen.name', 'Name')}</th>
-                  <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{t('viewkitchen.email', 'Email')}</th>
-                  <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{t('viewkitchen.phone', 'Phone')}</th>
-                  <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{t('viewkitchen.address', 'Address')}</th>
-                  <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{t('viewkitchen.city', 'City')}</th>
-                  <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{t('viewkitchen.gender', 'Gender')}</th>
-               
-                  <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{t('viewkitchen.edit', 'Edit')}</th>
-                  <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{t('viewkitchen.delete', 'Delete')}</th>
+                <tr className="bg-gray-50 dark:bg-gray-700 border-b border-gray-200 dark:border-gray-600">
+                  <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">{t('viewdish.label')}</th>
+                  <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">{t('viewdish.label1')}</th>
+                  <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">{t('viewdish.label2')}</th>
+                  <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">{t('viewdish.label3')}</th>
+                  <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">{t('viewdish.label4')}</th>
+                  <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">{t('viewdish.label5')}</th>
+                  <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">{t('viewdish.label6')}</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-200">
-                {filteredKitchens.length > 0 ? (
-                  filteredKitchens.map((kitchen) => (
-                    <tr key={kitchen._id} className="hover:bg-gray-50 transition-colors">
+              <tbody className="divide-y divide-gray-200 dark:divide-gray-600 bg-white dark:bg-gray-800">
+                {filteredDishes.length > 0 ? (
+                  filteredDishes.map((dish) => (
+                    <tr key={dish._id} className="hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-150">
                       <td className="px-6 py-4 whitespace-nowrap">
-                        {kitchen.photo ? (
+                        {dish.imageUrl ? (
                           <img 
-                            src={`${base_url}${kitchen.photo}`} 
-                            alt={getKitchenDisplayName(kitchen)}
-                            className="w-12 h-12 object-cover rounded-full border border-gray-200"
+                            src={`${base_url}${dish.imageUrl}`} 
+                            alt={getDishDisplayName(dish)}
+                            className="w-12 h-12 object-cover rounded-lg border border-gray-200 dark:border-gray-600 shadow-sm dark:shadow-gray-900/20"
                           />
                         ) : (
-                          <div className="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center border border-gray-200">
-                            <User className="w-6 h-6 text-gray-400" />
+                          <div className="w-12 h-12 bg-gray-100 dark:bg-gray-600 rounded-lg flex items-center justify-center border border-gray-200 dark:border-gray-600 shadow-sm dark:shadow-gray-900/20">
+                            <ChefHat className="w-6 h-6 text-gray-400 dark:text-gray-500" />
                           </div>
                         )}
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-gray-800 font-medium">
-                        {getKitchenDisplayName(kitchen)}
+                      <td className="px-6 py-4 whitespace-nowrap text-gray-800 dark:text-gray-200 font-medium">
+                        {getDishDisplayName(dish)}
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-gray-600">
-                        {kitchen.email}
+                      <td className="px-6 py-4 whitespace-nowrap text-gray-600 dark:text-gray-300">
+                        {getCategoryDisplayName(dish.categoryid)}
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-gray-600">
-                        {kitchen.phone}
+                      <td className="px-6 py-4 whitespace-nowrap text-gray-600 dark:text-gray-300">
+                        {getSubcategoryDisplayName(dish.subcategoryid)}
                       </td>
-                      <td className="px-6 py-4 text-gray-600 max-w-xs truncate">
-                        {getKitchenDisplayAddress(kitchen)}
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <div className="text-gray-800 dark:text-gray-200 font-medium bg-gray-50 dark:bg-gray-700 px-2 py-1 rounded-md border border-gray-200 dark:border-gray-600">
+                          {getCurrencySymbol(dish.currency || 'USD')}{dish.price}
+                        </div>
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-gray-600">
-                        {getKitchenDisplayCity(kitchen)}
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-gray-600 capitalize">
-                        {kitchen.gender}
-                      </td>
-
                       <td className="px-6 py-4 whitespace-nowrap">
                         <Button
                           variant="outline"
                           size="sm"
-                          className="flex items-center px-2 py-1 bg-blue-600 text-white border border-blue-600 hover:bg-blue-500 hover:border-blue-500 hover:text-white transition-all duration-200 rounded-md text-xs"
-                          onClick={() => handleEdit(kitchen)}
+                          className="flex items-center px-2 py-1 bg-blue-600 dark:bg-blue-700 text-white border border-blue-600 dark:border-blue-700 hover:bg-blue-500 dark:hover:bg-blue-600 hover:border-blue-500 dark:hover:border-blue-600 hover:text-white transition-all duration-200 rounded-md text-xs shadow-sm dark:shadow-gray-900/20"
+                          onClick={() => handleEdit(dish)}
                         >
                           <Pencil size={12} className="mr-1" />
-                          {t('viewkitchen.edit', 'Edit')}
+                          {t('viewdish.label5')}
                         </Button>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
                         <Button
                           variant="outline"
                           size="sm"
-                          className="flex items-center px-2 py-1 text-red-600 border border-red-300 hover:text-white hover:bg-red-600 hover:border-red-600 transition-all duration-200 rounded-md text-xs"
-                          onClick={() => handleDelete(kitchen)}
+                          className="flex items-center px-2 py-1 text-red-600 dark:text-red-400 border border-red-300 dark:border-red-600 hover:text-white hover:bg-red-600 dark:hover:bg-red-700 hover:border-red-600 dark:hover:border-red-700 transition-all duration-200 rounded-md text-xs shadow-sm dark:shadow-gray-900/20 bg-white dark:bg-gray-800"
+                          onClick={() => handleDelete(dish)}
                         >
                           <Trash2 size={12} className="mr-1" />
-                          {t('viewkitchen.delete', 'Delete')}
+                          {t('viewdish.label6')}
                         </Button>
                       </td>
                     </tr>
                   ))
                 ) : (
                   <tr>
-                    <td colSpan="11" className="px-6 py-10 text-center text-gray-500">
+                    <td colSpan="7" className="px-6 py-10 text-center text-gray-500 dark:text-gray-400">
                       <div className="flex flex-col items-center">
-                        <ChefHat className="w-10 h-10 text-gray-400 mb-2" strokeWidth={1.5} />
-                        <p className="text-lg font-medium">{t('viewkitchen.noKitchens', 'No kitchen staff found')}</p>
-                        <p className="text-sm text-gray-400 mt-1">{t('viewkitchen.noKitchensDesc', 'Try adjusting your search or add new kitchen staff')}</p>
+                        <div className="w-16 h-16 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center mb-4 border border-gray-200 dark:border-gray-600">
+                          <ChefHat className="w-10 h-10 text-gray-400 dark:text-gray-500" strokeWidth={1.5} />
+                        </div>
+                        <p className="text-lg font-medium text-gray-700 dark:text-gray-200">{t('viewdish.dis1')}</p>
+                        <p className="text-sm text-gray-400 dark:text-gray-500 mt-1">{t('viewdish.dis2')}</p>
                       </div>
                     </td>
                   </tr>
@@ -269,38 +360,101 @@ const ViewKitchen = () => {
       </div>
 
       {/* Edit Modal */}
-      <KitchenModal
+      <DishModal
         isOpen={isEditModalOpen}
         onClose={closeEditModal}
-        onSubmit={handleUpdateKitchen}
-        selectedKitchen={selectedKitchen}
+        onSubmit={handleUpdateDish}
+        selectedDish={selectedDish}
+        categories={categories}
+        subcategories={subcategories}
         isLoading={isLoading}
       />
+
+      {/* Currency Conversion Modal */}
+      <CustomModal
+        open={isCurrencyConvertModalOpen}
+        hideModal={closeCurrencyConvertModal}
+        performAction={handleConvertAllCurrency}
+        title={t('viewdish.convert1')}
+        actionButtonText={t('viewdish.convert2')}
+        actionButtonClass="bg-purple-600 hover:bg-purple-700 dark:bg-purple-700 dark:hover:bg-purple-800 text-white border border-purple-600 dark:border-purple-700 shadow-sm dark:shadow-gray-900/20"
+      >
+        <div className="space-y-4">
+          <div className="p-4 bg-blue-50 dark:bg-blue-900/30 rounded-lg border border-blue-200 dark:border-blue-700">
+            <div className="text-sm text-blue-800 dark:text-blue-200">
+              <strong>{t('viewdish.convert3')}</strong> {t('viewdish.convert4')}
+            </div>
+          </div>
+          
+          <div className="p-3 bg-gray-50 dark:bg-gray-700 rounded-lg border border-gray-200 dark:border-gray-600">
+            <div className="text-sm text-gray-700 dark:text-gray-300">
+              <strong>{t('viewdish.convert5')}</strong> <span className="font-medium text-gray-800 dark:text-gray-100">{getCurrentCurrency()}</span>
+            </div>
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              {t('viewdish.convert6')}
+            </label>
+            <select
+              value={currencyConvertFormData.currency}
+              onChange={(e) => setCurrencyConvertFormData(prev => ({
+                ...prev,
+                currency: e.target.value
+              }))}
+              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded-md focus:outline-none focus:ring-purple-500 dark:focus:ring-purple-400 focus:border-purple-500 dark:focus:border-purple-400 shadow-sm dark:shadow-gray-900/10"
+              required
+            >
+              {Object.entries(t('viewdish.currencies', { returnObjects: true }))
+                .filter(([code]) => code !== getCurrentCurrency())
+                .map(([code, currency]) => (
+                <option key={code} value={code} className="bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100">
+                  {currency.symbol} {code} - {currency.name}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          {currencyConvertFormData.currency !== getCurrentCurrency() && (
+            <div className="p-3 bg-green-50 dark:bg-green-900/30 rounded-lg border border-green-200 dark:border-green-700">
+              <div className="text-sm text-green-700 dark:text-green-200">
+                <strong>{t('viewdish.convert7')}</strong> {getCurrentCurrency()} → {currencyConvertFormData.currency}
+                <br />
+                <span className="text-xs text-green-600 dark:text-green-300">{t('viewdish.convert8')}</span>
+              </div>
+            </div>
+          )}
+
+          <div className="text-xs text-gray-500 dark:text-gray-400 bg-gray-50 dark:bg-gray-700 p-3 rounded-md border border-gray-200 dark:border-gray-600">
+            <strong>{t('viewdish.convert9')}</strong> {t('viewdish.convert10')} <span className="font-medium text-gray-700 dark:text-gray-300">{dishes.length}</span>
+          </div>
+        </div>
+      </CustomModal>
 
       {/* Delete Confirmation Modal */}
       <CustomModal
         open={isDeleteModalOpen}
         hideModal={closeDeleteModal}
-        performAction={handleDeleteKitchen}
-        title={t('viewkitchen.deleteTitle', 'Delete Kitchen Staff')}
-        description={`${t('viewkitchen.deleteConfirm', 'Are you sure you want to delete')} "${getKitchenDisplayName(selectedKitchen)}"? ${t('viewkitchen.deleteWarning', 'This action cannot be undone.')}`}
-        actionButtonText={t('viewkitchen.deleteButton', 'Delete Kitchen Staff')}
-        actionButtonClass="bg-red-600 hover:bg-red-700 text-white"
+        performAction={handleDeleteDish}
+        title={t('viewdish.delete')}
+        description={`${t('viewdish.delete1')} "${getDishDisplayName(selectedDish)}"? ${t('viewdish.delete2')}`}
+        actionButtonText={t('viewdish.delete3')}
+        actionButtonClass="bg-red-600 hover:bg-red-700 dark:bg-red-700 dark:hover:bg-red-800 text-white border border-red-600 dark:border-red-700 shadow-sm dark:shadow-gray-900/20"
       />
 
       {/* Success/Error Messages */}
       {isError && (
-        <Alert className="mt-4 border-red-200 bg-red-50">
-          <AlertDescription className="text-red-800">
-            {message || t('viewkitchen.error', 'An error occurred while processing your request.')}
+        <Alert className="mt-4 border-red-200 dark:border-red-700 bg-red-50 dark:bg-red-900/30 shadow-sm dark:shadow-gray-900/10">
+          <AlertDescription className="text-red-800 dark:text-red-200">
+            {message || "An error occurred while processing your request."}
           </AlertDescription>
         </Alert>
       )}
 
       {isSuccess && (
-        <Alert className="mt-4 border-green-200 bg-green-50">
-          <AlertDescription className="text-green-800">
-            {t('viewkitchen.success', 'Operation completed successfully!')}
+        <Alert className="mt-4 border-green-200 dark:border-green-700 bg-green-50 dark:bg-green-900/30 shadow-sm dark:shadow-gray-900/10">
+          <AlertDescription className="text-green-800 dark:text-green-200">
+            {t('viewdish.alert')}
           </AlertDescription>
         </Alert>
       )}
@@ -308,4 +462,4 @@ const ViewKitchen = () => {
   );
 };
 
-export default ViewKitchen;
+export default ViewDish;

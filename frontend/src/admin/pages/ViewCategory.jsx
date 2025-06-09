@@ -166,7 +166,7 @@ export default function ViewCategory() {
 
   // Render error message component
   const ErrorMessage = ({ error }) => {
-    return error ? <p className="text-red-500 text-xs mt-1">{error}</p> : null;
+    return error ? <p className="text-red-500 dark:text-red-400 text-xs mt-1">{error}</p> : null;
   };
 
   // Helper function to display category name in the table based on current language
@@ -200,20 +200,20 @@ export default function ViewCategory() {
   };
 
   return (
-    <div className="mt-8 bg-white rounded-lg border border-gray-200 shadow-sm p-6">
+    <div className="mt-8 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm p-6">
       <div className="mb-6">
-        <h2 className="text-lg font-medium text-gray-800 mb-1">{t("viewcategory.title")}</h2>
-        <p className="text-gray-500 text-sm">{t("viewcategory.dis")}</p>
+        <h2 className="text-lg font-medium text-gray-800 dark:text-gray-200 mb-1">{t("viewcategory.title")}</h2>
+        <p className="text-gray-500 dark:text-gray-400 text-sm">{t("viewcategory.dis")}</p>
       </div>
       
       {/* Search Bar */}
       <div className="mb-6">
         <div className="relative">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 dark:text-gray-500" size={20} />
           <Input
             type="text"
             placeholder={t("viewcategory.serchlab")}
-            className="pl-10 border-gray-300 focus:border-indigo-500 focus:ring-indigo-500"
+            className="pl-10 border-gray-300 dark:border-gray-600 focus:border-indigo-500 focus:ring-indigo-500 dark:bg-gray-700 dark:text-gray-200 dark:placeholder-gray-400"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
@@ -221,32 +221,32 @@ export default function ViewCategory() {
       </div>
       
       {/* Category Table */}
-      <div className="border rounded-lg overflow-hidden">
+      <div className="border rounded-lg overflow-hidden border-gray-200 dark:border-gray-700">
         {isLoading ? (
-          <div className="flex justify-center items-center py-16">
+          <div className="flex justify-center items-center py-16 bg-white dark:bg-gray-800">
             <img
               src={gif}
               alt="Loading..."
               className="h-16 w-16"
             />
-            <span className="ml-3 text-gray-600">{t("viewcategory.load")}</span>
+            <span className="ml-3 text-gray-600 dark:text-gray-300">{t("viewcategory.load")}</span>
           </div>
         ) : (
           <div className="overflow-x-auto">
-            <table className="w-full">
+            <table className="w-full bg-white dark:bg-gray-800">
               <thead>
-                <tr className="bg-gray-50 border-b border-gray-200">
-                  <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{t("viewcategory.table1")}</th>
-                  <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{t("viewcategory.table2")}</th>
-                  <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{t("viewcategory.table3")}</th>
-                  <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{t("viewcategory.table4")}</th>
+                <tr className="bg-gray-50 dark:bg-gray-700 border-b border-gray-200 dark:border-gray-600">
+                  <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">{t("viewcategory.table1")}</th>
+                  <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">{t("viewcategory.table2")}</th>
+                  <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">{t("viewcategory.table3")}</th>
+                  <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">{t("viewcategory.table4")}</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-200">
+              <tbody className="divide-y divide-gray-200 dark:divide-gray-600">
                 {filteredCategories.length > 0 ? (
                   filteredCategories.map((category) => (
-                    <tr key={category._id} className="hover:bg-gray-50 transition-colors">
-                      <td className="px-6 py-4 whitespace-nowrap text-gray-800 font-medium">
+                    <tr key={category._id} className="hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+                      <td className="px-6 py-4 whitespace-nowrap text-gray-800 dark:text-gray-200 font-medium">
                         {getCategoryDisplayName(category)}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
@@ -255,8 +255,8 @@ export default function ViewCategory() {
                           size="sm"
                           className={`flex items-center px-3 py-1.5 border transition-all duration-200 rounded-md ${
                             category.status === "Active" 
-                              ? "text-green-600 border-green-300 hover:bg-red-50 hover:text-red-600" 
-                              : "text-red-600 border-red-300 hover:bg-green-50 hover:text-green-600"
+                              ? "text-green-600 dark:text-green-400 border-green-300 dark:border-green-600 hover:bg-red-50 dark:hover:bg-red-900/20 hover:text-red-600 dark:hover:text-red-400" 
+                              : "text-red-600 dark:text-red-400 border-red-300 dark:border-red-600 hover:bg-green-50 dark:hover:bg-green-900/20 hover:text-green-600 dark:hover:text-green-400"
                           }`}
                           onClick={() => handleToggleStatus(category)}
                         >
@@ -277,7 +277,7 @@ export default function ViewCategory() {
                         <Button
                           variant="outline"
                           size="sm"
-                          className="flex items-center px-3 py-1.5 bg-blue-600 text-white border border-blue-600 hover:bg-blue-500 hover:border-blue-500 hover:text-white transition-all duration-200 rounded-md"
+                          className="flex items-center px-3 py-1.5 bg-blue-600 dark:bg-blue-600 text-white border border-blue-600 dark:border-blue-600 hover:bg-blue-500 dark:hover:bg-blue-500 hover:border-blue-500 dark:hover:border-blue-500 hover:text-white transition-all duration-200 rounded-md"
                           onClick={() => handleEdit(category)}
                         >
                           <Pencil size={16} className="mr-1.5" />
@@ -288,7 +288,7 @@ export default function ViewCategory() {
                         <Button
                           variant="outline"
                           size="sm"
-                          className="flex items-center px-3 py-1.5 text-red-600 border border-red-300 hover:text-white hover:bg-red-600 hover:border-red-600 transition-all duration-200 rounded-md"
+                          className="flex items-center px-3 py-1.5 text-red-600 dark:text-red-400 border border-red-300 dark:border-red-600 hover:text-white hover:bg-red-600 dark:hover:bg-red-600 hover:border-red-600 dark:hover:border-red-600 transition-all duration-200 rounded-md"
                           onClick={() => handleDelete(category)}
                         >
                           <Trash2 size={16} className="mr-1.5" />
@@ -299,11 +299,11 @@ export default function ViewCategory() {
                   ))
                 ) : (
                   <tr>
-                    <td colSpan="5" className="px-6 py-10 text-center text-gray-500">
+                    <td colSpan="5" className="px-6 py-10 text-center text-gray-500 dark:text-gray-400">
                       <div className="flex flex-col items-center">
-                        <Tag className="w-10 h-10 text-gray-400 mb-2" strokeWidth={1.5} />
+                        <Tag className="w-10 h-10 text-gray-400 dark:text-gray-500 mb-2" strokeWidth={1.5} />
                         <p className="text-lg font-medium">{t("viewcategory.dis1")}</p>
-                        <p className="text-sm text-gray-400 mt-1">{t("viewcategory.dis2")}</p>
+                        <p className="text-sm text-gray-400 dark:text-gray-500 mt-1">{t("viewcategory.dis2")}</p>
                       </div>
                     </td>
                   </tr>
@@ -329,7 +329,7 @@ export default function ViewCategory() {
               label={t("viewcategory.lable1")}
               id="categoryName.en"
               name="categoryName.en"
-              className={errors.en ? "border-red-500" : ""}
+              className={errors.en ? "border-red-500 dark:border-red-400" : ""}
               value={formData.categoryName.en}
               onChange={handleChange}
               placeholder={t("viewcategory.placeholderen")}
@@ -343,7 +343,7 @@ export default function ViewCategory() {
               label={t("viewcategory.lable2")}
               id="categoryName.es"
               name="categoryName.es"
-              className={errors.es ? "border-red-500" : ""}
+              className={errors.es ? "border-red-500 dark:border-red-400" : ""}
               value={formData.categoryName.es}
               onChange={handleChange}
               placeholder={t("viewcategory.placeholderes")}
@@ -352,14 +352,14 @@ export default function ViewCategory() {
           </div>
           
           <div className="space-y-2">
-            <label htmlFor="status" className="block text-sm font-medium text-gray-700">{t("viewcategory.lable3")}</label>
+            <label htmlFor="status" className="block text-sm font-medium text-gray-700 dark:text-gray-300">{t("viewcategory.lable3")}</label>
             <Select 
               onValueChange={handleStatusChange}
               value={formData.status}
             >
               <SelectTrigger 
                 id="status"
-                className={`w-full ${errors.status ? "border-red-500" : ""}`}
+                className={`w-full ${errors.status ? "border-red-500 dark:border-red-400" : ""}`}
               >
                 <SelectValue placeholder={t("viewcategory.placeholderstatus")} />
               </SelectTrigger>
@@ -391,8 +391,8 @@ export default function ViewCategory() {
         description={`${t("viewcategory.dis5")} ${selectedCategory?.status === "Active" ? t("viewcategory.button1").toLowerCase() : t("viewcategory.button").toLowerCase()} ${t("viewcategory.dis6")}`}
       >
         <div className="p-5">
-          <Alert className={selectedCategory?.status === "Active" ? "bg-red-50 border-red-200" : "bg-green-50 border-green-200"}>
-            <AlertDescription>
+          <Alert className={selectedCategory?.status === "Active" ? "bg-red-50 dark:bg-red-900/20 border-red-200 dark:border-red-800" : "bg-green-50 dark:bg-green-900/20 border-green-200 dark:border-green-800"}>
+            <AlertDescription className="text-gray-800 dark:text-gray-200">
               {selectedCategory?.status === "Active" 
                 ? t("viewcategory.dis7")
                 : t("viewcategory.dis8")

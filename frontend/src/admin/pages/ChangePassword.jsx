@@ -4,13 +4,13 @@ import { useTranslation } from 'react-i18next'; // Add this import
 import { Eye, EyeOff, Lock, Shield, CheckCircle, AlertCircle } from 'lucide-react';
 import { changePassword, resetAdminState } from '../../features/admin/admin/adminSlice';
 
-// Shadcn/ui Alert Component
+
 const Alert = ({ children, variant = "default", className = "" }) => {
   const baseStyles = "relative w-full rounded-lg border p-4 [&>svg~*]:pl-7 [&>svg+div]:translate-y-[-3px] [&>svg]:absolute [&>svg]:left-4 [&>svg]:top-4 [&>svg]:text-foreground";
   const variants = {
-    default: "bg-background text-foreground",
-    destructive: "border-red-500/50 text-red-600 dark:border-red-500 [&>svg]:text-red-600 bg-red-50",
-    success: "border-green-500/50 text-green-600 dark:border-green-500 [&>svg]:text-green-600 bg-green-50"
+    default: "bg-background text-foreground dark:bg-gray-800 dark:text-gray-100",
+    destructive: "border-red-500/50 text-red-600 dark:border-red-500 [&>svg]:text-red-600 bg-red-50 dark:bg-red-900/20 dark:text-red-400",
+    success: "border-green-500/50 text-green-600 dark:border-green-500 [&>svg]:text-green-600 bg-green-50 dark:bg-green-900/20 dark:text-green-400"
   };
   
   return (
@@ -31,7 +31,7 @@ const Input = React.forwardRef(({ className = "", type, ...props }, ref) => {
   return (
     <input
       type={type}
-      className={`flex h-10 w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm ring-offset-white file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-gray-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-400 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 ${className}`}
+      className={`flex h-10 w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm ring-offset-white file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-gray-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-400 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100 dark:placeholder:text-gray-400 dark:ring-offset-gray-800 dark:focus-visible:ring-gray-500 ${className}`}
       ref={ref}
       {...props}
     />
@@ -42,18 +42,18 @@ const Input = React.forwardRef(({ className = "", type, ...props }, ref) => {
 const Label = React.forwardRef(({ className = "", ...props }, ref) => (
   <label
     ref={ref}
-    className={`text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 ${className}`}
+    className={`text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 dark:text-gray-200 ${className}`}
     {...props}
   />
 ));
 
 // Shadcn/ui Button Component
 const Button = React.forwardRef(({ className = "", variant = "default", size = "default", ...props }, ref) => {
-  const baseStyles = "inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-400 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50";
+  const baseStyles = "inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-400 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 dark:ring-offset-gray-800 dark:focus-visible:ring-gray-500";
   const variants = {
-    default: "bg-gray-900 text-white hover:bg-gray-800",
-    outline: "border border-gray-300 bg-white hover:bg-gray-50 hover:text-gray-900",
-    ghost: "hover:bg-gray-100 hover:text-gray-900"
+    default: "bg-gray-900 text-white hover:bg-gray-800 dark:bg-gray-100 dark:text-gray-900 dark:hover:bg-gray-200",
+    outline: "border border-gray-300 bg-white hover:bg-gray-50 hover:text-gray-900 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100 dark:hover:bg-gray-700",
+    ghost: "hover:bg-gray-100 hover:text-gray-900 dark:hover:bg-gray-700 dark:hover:text-gray-100"
   };
   const sizes = {
     default: "h-10 px-4 py-2",
@@ -100,15 +100,15 @@ const PasswordStrengthIndicator = ({ password }) => {
   return (
     <div className="mt-2">
       <div className="flex justify-between items-center mb-1">
-        <span className="text-xs text-gray-600">{t('adminchangepassword.strength.label')}</span>
+        <span className="text-xs text-gray-600 dark:text-gray-400">{t('adminchangepassword.strength.label')}</span>
         <span className={`text-xs font-medium ${
-          strength.label === t('adminchangepassword.strength.strong') ? 'text-green-600' : 
-          strength.label === t('adminchangepassword.strength.medium') ? 'text-yellow-600' : 'text-red-600'
+          strength.label === t('adminchangepassword.strength.strong') ? 'text-green-600 dark:text-green-400' : 
+          strength.label === t('adminchangepassword.strength.medium') ? 'text-yellow-600 dark:text-yellow-400' : 'text-red-600 dark:text-red-400'
         }`}>
           {strength.label}
         </span>
       </div>
-      <div className="w-full bg-gray-200 rounded-full h-2">
+      <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
         <div 
           className={`h-2 rounded-full transition-all duration-300 ${strength.color}`}
           style={{ width: `${(strength.score / 5) * 100}%` }}
@@ -256,17 +256,17 @@ const ChangePassword = () => {
   }, [dispatch]);
 
   return (
-    <div className="min-h-screen bg-white py-8 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-white dark:bg-gray-900 py-8 px-4 sm:px-6 lg:px-8">
       <div className="max-w-2xl mx-auto">
         {/* Header */}
         <div className="mb-8">
           <div className="flex items-center mb-4">
-            <div className="h-8 w-8 bg-gray-100 rounded-md flex items-center justify-center mr-3">
-              <Shield className="h-5 w-5 text-gray-600" />
+            <div className="h-8 w-8 bg-gray-100 dark:bg-gray-700 rounded-md flex items-center justify-center mr-3">
+              <Shield className="h-5 w-5 text-gray-600 dark:text-gray-300" />
             </div>
-            <h1 className="text-2xl font-medium text-gray-900">{t('adminchangepassword.title')}</h1>
+            <h1 className="text-2xl font-medium text-gray-900 dark:text-gray-100">{t('adminchangepassword.title')}</h1>
           </div>
-          <p className="text-gray-600">{t('adminchangepassword.subtitle')}</p>
+          <p className="text-gray-600 dark:text-gray-400">{t('adminchangepassword.subtitle')}</p>
         </div>
 
         {/* Success Alert */}
@@ -290,7 +290,7 @@ const ChangePassword = () => {
         )}
 
         {/* Form Container */}
-        <div className="bg-white border border-gray-200 rounded-lg p-8">
+        <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-8">
           <form onSubmit={handleSubmit}>
             <div className="space-y-6">
               {/* Current Password Field */}
@@ -304,7 +304,7 @@ const ChangePassword = () => {
                     value={formData.currentPassword}
                     onChange={handleChange}
                     onBlur={handleBlur}
-                    className={errors.currentPassword ? "border-red-500" : ""}
+                    className={errors.currentPassword ? "border-red-500 dark:border-red-500" : ""}
                     placeholder={t('adminchangepassword.form.currentPassword.placeholder')}
                   />
                   <button
@@ -313,14 +313,14 @@ const ChangePassword = () => {
                     onClick={() => togglePasswordVisibility('current')}
                   >
                     {showPasswords.current ? (
-                      <EyeOff className="h-4 w-4 text-gray-400" />
+                      <EyeOff className="h-4 w-4 text-gray-400 dark:text-gray-500" />
                     ) : (
-                      <Eye className="h-4 w-4 text-gray-400" />
+                      <Eye className="h-4 w-4 text-gray-400 dark:text-gray-500" />
                     )}
                   </button>
                 </div>
                 {errors.currentPassword && (
-                  <p className="text-sm text-red-600">{errors.currentPassword}</p>
+                  <p className="text-sm text-red-600 dark:text-red-400">{errors.currentPassword}</p>
                 )}
               </div>
 
@@ -335,7 +335,7 @@ const ChangePassword = () => {
                     value={formData.newPassword}
                     onChange={handleChange}
                     onBlur={handleBlur}
-                    className={errors.newPassword ? "border-red-500" : ""}
+                    className={errors.newPassword ? "border-red-500 dark:border-red-500" : ""}
                     placeholder={t('adminchangepassword.form.newPassword.placeholder')}
                   />
                   <button
@@ -344,14 +344,14 @@ const ChangePassword = () => {
                     onClick={() => togglePasswordVisibility('new')}
                   >
                     {showPasswords.new ? (
-                      <EyeOff className="h-4 w-4 text-gray-400" />
+                      <EyeOff className="h-4 w-4 text-gray-400 dark:text-gray-500" />
                     ) : (
-                      <Eye className="h-4 w-4 text-gray-400" />
+                      <Eye className="h-4 w-4 text-gray-400 dark:text-gray-500" />
                     )}
                   </button>
                 </div>
                 {errors.newPassword && (
-                  <p className="text-sm text-red-600">{errors.newPassword}</p>
+                  <p className="text-sm text-red-600 dark:text-red-400">{errors.newPassword}</p>
                 )}
                 <PasswordStrengthIndicator password={formData.newPassword} />
               </div>
@@ -367,7 +367,7 @@ const ChangePassword = () => {
                     value={formData.confirmPassword}
                     onChange={handleChange}
                     onBlur={handleBlur}
-                    className={errors.confirmPassword ? "border-red-500" : ""}
+                    className={errors.confirmPassword ? "border-red-500 dark:border-red-500" : ""}
                     placeholder={t('adminchangepassword.form.confirmPassword.placeholder')}
                   />
                   <button
@@ -376,26 +376,26 @@ const ChangePassword = () => {
                     onClick={() => togglePasswordVisibility('confirm')}
                   >
                     {showPasswords.confirm ? (
-                      <EyeOff className="h-4 w-4 text-gray-400" />
+                      <EyeOff className="h-4 w-4 text-gray-400 dark:text-gray-500" />
                     ) : (
-                      <Eye className="h-4 w-4 text-gray-400" />
+                      <Eye className="h-4 w-4 text-gray-400 dark:text-gray-500" />
                     )}
                   </button>
                 </div>
                 {errors.confirmPassword && (
-                  <p className="text-sm text-red-600">{errors.confirmPassword}</p>
+                  <p className="text-sm text-red-600 dark:text-red-400">{errors.confirmPassword}</p>
                 )}
               </div>
 
               {/* Security Guidelines */}
-              <div className="bg-gray-50 rounded-md p-4">
+              <div className="bg-gray-50 dark:bg-gray-700 rounded-md p-4">
                 <div className="flex items-start">
-                  <Lock className="h-5 w-5 text-gray-400 mt-0.5 mr-3 flex-shrink-0" />
+                  <Lock className="h-5 w-5 text-gray-400 dark:text-gray-500 mt-0.5 mr-3 flex-shrink-0" />
                   <div>
-                    <h3 className="text-sm font-medium text-gray-900 mb-2">
+                    <h3 className="text-sm font-medium text-gray-900 dark:text-gray-100 mb-2">
                       {t('adminchangepassword.requirements.title')}
                     </h3>
-                    <ul className="text-sm text-gray-600 space-y-1">
+                    <ul className="text-sm text-gray-600 dark:text-gray-300 space-y-1">
                       <li>• {t('adminchangepassword.requirements.minLength')}</li>
                       <li>• {t('adminchangepassword.requirements.uppercase')}</li>
                       <li>• {t('adminchangepassword.requirements.number')}</li>
@@ -415,7 +415,7 @@ const ChangePassword = () => {
                 >
                   {isLoading ? (
                     <div className="flex items-center">
-                      <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                      <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white dark:border-gray-900 mr-2"></div>
                       {t('adminchangepassword.buttons.submitting')}
                     </div>
                   ) : (

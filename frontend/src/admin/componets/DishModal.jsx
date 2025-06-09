@@ -311,7 +311,7 @@ const DishModal = ({
 
   // Error message component
   const ErrorMessage = ({ error }) => {
-    return error ? <p className="text-red-500 text-xs mt-1">{error}</p> : null;
+    return error ? <p className="text-red-500 dark:text-red-400 text-xs mt-1">{error}</p> : null;
   };
 
   return (
@@ -326,9 +326,9 @@ const DishModal = ({
         <div className="space-y-4">
           {/* Category Selection */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">{t("dishmodal.label")}</label>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">{t("dishmodal.label")}</label>
             <Select onValueChange={handleCategoryChange} value={formData.categoryid}>
-              <SelectTrigger className={`w-full ${errors.categoryid ? "border-red-500" : ""}`}>
+              <SelectTrigger className={`w-full dark:bg-gray-800 dark:border-gray-600 dark:text-white ${errors.categoryid ? "border-red-500 dark:border-red-400" : ""}`}>
                 <SelectValue placeholder={t("dishmodal.label1")} />
               </SelectTrigger>
               <SelectContent>
@@ -344,13 +344,13 @@ const DishModal = ({
 
           {/* Subcategory Selection */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">{t("dishmodal.label2")}</label>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">{t("dishmodal.label2")}</label>
             <Select 
               onValueChange={handleSubcategoryChange} 
               value={formData.subcategoryid}
               disabled={!formData.categoryid}
             >
-              <SelectTrigger className={`w-full ${errors.subcategoryid ? "border-red-500" : ""}`}>
+              <SelectTrigger className={`w-full dark:bg-gray-800 dark:border-gray-600 dark:text-white ${errors.subcategoryid ? "border-red-500 dark:border-red-400" : ""}`}>
                 <SelectValue placeholder={t("dishmodal.label3")} />
               </SelectTrigger>
               <SelectContent>
@@ -371,7 +371,7 @@ const DishModal = ({
                 type="text"
                 label={t("dishmodal.label4")}
                 name="dishName.en"
-                className={errors.dishNameEn ? "border-red-500" : ""}
+                className={errors.dishNameEn ? "border-red-500 dark:border-red-400" : ""}
                 value={formData.dishName.en}
                 onChange={handleChange}
                 placeholder={t("dishmodal.placeholder")}
@@ -384,7 +384,7 @@ const DishModal = ({
                 type="text"
                 label={t("dishmodal.label5")}
                 name="dishName.es"
-                className={errors.dishNameEs ? "border-red-500" : ""}
+                className={errors.dishNameEs ? "border-red-500 dark:border-red-400" : ""}
                 value={formData.dishName.es}
                 onChange={handleChange}
                 placeholder={t("dishmodal.placeholder1")}
@@ -399,7 +399,7 @@ const DishModal = ({
               type="number"
               label={t("dishmodal.label6")}
               name="price"
-              className={errors.price ? "border-red-500" : ""}
+              className={errors.price ? "border-red-500 dark:border-red-400" : ""}
               value={formData.price}
               onChange={handleChange}
               placeholder={t("dishmodal.placeholder2")}
@@ -412,7 +412,7 @@ const DishModal = ({
           {/* Description Fields */}
           <div className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                 {t("dishmodal.label7")}
               </label>
               <textarea
@@ -421,21 +421,21 @@ const DishModal = ({
                 onChange={handleChange}
                 rows={2}
                 maxLength={100}
-                className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-vertical ${
-                  errors.descriptionEn ? "border-red-500" : "border-gray-300"
+                className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 dark:border-gray-600 dark:text-white dark:focus:ring-blue-400 dark:focus:border-blue-400 resize-vertical ${
+                  errors.descriptionEn ? "border-red-500 dark:border-red-400" : "border-gray-300 dark:border-gray-600"
                 }`}
                 placeholder={t("dishmodal.placeholder3")}
               />
               <div className="flex justify-between items-center mt-1">
                 <ErrorMessage error={errors.descriptionEn} />
-                <span className="text-xs text-gray-400">
+                <span className="text-xs text-gray-400 dark:text-gray-500">
                   {formData.description.en.length}/100
                 </span>
               </div>
             </div>
             
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                 {t("dishmodal.label8")}
               </label>
               <textarea
@@ -444,14 +444,14 @@ const DishModal = ({
                 onChange={handleChange}
                 rows={2}
                 maxLength={100}
-                className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-vertical ${
-                  errors.descriptionEs ? "border-red-500" : "border-gray-300"
+                className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 dark:border-gray-600 dark:text-white dark:focus:ring-blue-400 dark:focus:border-blue-400 resize-vertical ${
+                  errors.descriptionEs ? "border-red-500 dark:border-red-400" : "border-gray-300 dark:border-gray-600"
                 }`}
                 placeholder={t("dishmodal.placeholder4")}
               />
               <div className="flex justify-between items-center mt-1">
                 <ErrorMessage error={errors.descriptionEs} />
-                <span className="text-xs text-gray-400">
+                <span className="text-xs text-gray-400 dark:text-gray-500">
                   {formData.description.es.length}/100
                 </span>
               </div>
@@ -460,17 +460,17 @@ const DishModal = ({
 
           {/* Image Upload */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
               {t("dishmodal.label9")}
             </label>
             
             {!imagePreview ? (
-              <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center hover:border-gray-400 transition-colors">
-                <Upload className="mx-auto h-8 w-8 text-gray-400" />
+              <div className="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg p-4 text-center hover:border-gray-400 dark:hover:border-gray-500 transition-colors">
+                <Upload className="mx-auto h-8 w-8 text-gray-400 dark:text-gray-500" />
                 <div className="mt-2">
                   <label
                     htmlFor="imageInput"
-                    className="cursor-pointer inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors"
+                    className="cursor-pointer inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 dark:focus:ring-blue-400 dark:focus:ring-offset-gray-800 transition-colors"
                   >
                     {t("dishmodal.choose")}
                   </label>
@@ -482,7 +482,7 @@ const DishModal = ({
                     className="hidden"
                   />
                 </div>
-                <p className="text-xs text-gray-500 mt-1">
+                <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
                   {t("dishmodal.img")}
                 </p>
               </div>
@@ -491,18 +491,18 @@ const DishModal = ({
                 <img
                   src={getImageUrl(imagePreview)}
                   alt="Preview"
-                  className="w-full h-32 object-cover rounded-lg border border-gray-200"
+                  className="w-full h-32 object-cover rounded-lg border border-gray-200 dark:border-gray-600"
                 />
                 <button
                   type="button"
                   onClick={removeImage}
-                  className="absolute top-2 right-2 p-1 bg-red-600 text-white rounded-full hover:bg-red-700 transition-colors"
+                  className="absolute top-2 right-2 p-1 bg-red-600 text-white rounded-full hover:bg-red-700 dark:bg-red-500 dark:hover:bg-red-600 transition-colors"
                 >
                   <X size={16} />
                 </button>
                 <label
                   htmlFor="imageInput"
-                  className="absolute bottom-2 left-2 cursor-pointer inline-flex items-center px-2 py-1 text-xs bg-black bg-opacity-50 text-white rounded hover:bg-opacity-70 transition-all"
+                  className="absolute bottom-2 left-2 cursor-pointer inline-flex items-center px-2 py-1 text-xs bg-black bg-opacity-50 dark:bg-gray-900 dark:bg-opacity-70 text-white rounded hover:bg-opacity-70 dark:hover:bg-opacity-80 transition-all"
                 >
                   {t("dishmodal.change")}
                 </label>

@@ -1,4 +1,6 @@
 import { useState, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { getKitchenFooterStats } from '../../features/admin/count/countSlice'; // Adjust the import path as needed
 import { 
   Heart,
   ChefHat,
@@ -12,9 +14,13 @@ import {
 } from 'lucide-react';
 
 const AppFooter = () => {
+  const dispatch = useDispatch();
   const [darkMode, setDarkMode] = useState(false);
   const [showScrollTop, setShowScrollTop] = useState(false);
   const [currentYear] = useState(new Date().getFullYear());
+  
+
+  const { kitchenfooter, isLoading } = useSelector((state) => state.count);
   
   // Get dark mode status from document
   useEffect(() => {
@@ -55,6 +61,11 @@ const AppFooter = () => {
     };
   }, []);
   
+  // Fetch kitchen footer stats on component mount
+  useEffect(() => {
+    dispatch(getKitchenFooterStats());
+  }, [dispatch]);
+  
   // Scroll to top function
   const scrollToTop = () => {
     window.scrollTo({
@@ -63,20 +74,11 @@ const AppFooter = () => {
     });
   };
   
-  // Kitchen stats
-  const kitchenStats = [
-    { label: "Active Orders", value: "5" },
-    { label: "Completed Today", value: "37" },
-    { label: "Staff On Duty", value: "6" },
-    { label: "Avg. Prep Time", value: "12 min" }
-  ];
-  
-  // Quick links
-  const quickLinks = [
-    { name: "Order Queue", url: "#" },
-    { name: "Inventory", url: "#" },
-    { name: "Recipe Book", url: "#" },
-    { name: "Staff Schedule", url: "#" }
+  // Kitchen stats - now using the array data from API
+  const kitchenStats = kitchenfooter && Array.isArray(kitchenfooter) ? kitchenfooter : [
+    { label: "Active Orders", value: "0" },
+    { label: "Completed Today", value: "0" },
+    { label: "Staff On Duty", value: "0" }
   ];
   
   // Support contacts
@@ -119,46 +121,20 @@ const AppFooter = () => {
             <div className="grid grid-cols-2 gap-4">
               {kitchenStats.map((stat, index) => (
                 <div key={index} className="flex flex-col">
-                  <span className={`text-xs ${darkMode ? 'text-slate-400' : 'text-amber-600'}`}>{stat.label}</span>
-                  <span className={`text-lg font-semibold ${darkMode ? 'text-amber-400' : 'text-amber-900'}`}>{stat.value}</span>
+                  <span className={`text-xs ${darkMode ? 'text-slate-400' : 'text-amber-600'}`}>
+                    {stat.label}
+                  </span>
+                  <span className={`text-lg font-semibold ${darkMode ? 'text-amber-400' : 'text-amber-900'} ${isLoading ? 'animate-pulse' : ''}`}>
+                    {isLoading ? '...' : stat.value}
+                  </span>
                 </div>
               ))}
             </div>
             <div className="mt-4 flex items-center">
               <Clock size={14} className={darkMode ? 'text-slate-400' : 'text-amber-600'} />
-              <span className={`text-xs ml-1 ${darkMode ? 'text-slate-400' : 'text-amber-600'}`}>Last updated 5 minutes ago</span>
-            </div>
-          </div>
-          
-          {/* Quick links */}
-          <div className="flex flex-col">
-            <h3 className={`font-bold text-base mb-4 ${darkMode ? 'text-white' : 'text-amber-900'}`}>
-              Quick Links
-            </h3>
-            <ul className="space-y-2">
-              {quickLinks.map((link, index) => (
-                <li key={index}>
-                  <a 
-                    href={link.url} 
-                    className={`flex items-center text-sm gap-1 hover:underline ${darkMode ? 'text-amber-400 hover:text-amber-300' : 'text-amber-700 hover:text-amber-900'}`}
-                  >
-                    <ExternalLink size={14} />
-                    {link.name}
-                  </a>
-                </li>
-              ))}
-            </ul>
-            <div className="mt-4">
-              <button 
-                className={`inline-flex items-center px-3 py-2 text-sm font-medium rounded ${
-                  darkMode 
-                    ? 'border border-amber-600 text-amber-400 hover:bg-slate-800' 
-                    : 'bg-amber-100 text-amber-800 hover:bg-amber-200'
-                }`}
-              >
-                <Utensils className="mr-2 h-4 w-4" />
-                Today's Menu
-              </button>
+              <span className={`text-xs ml-1 ${darkMode ? 'text-slate-400' : 'text-amber-600'}`}>
+                {isLoading ? 'Loading...' : 'Last updated 5 minutes ago'}
+              </span>
             </div>
           </div>
           
@@ -191,22 +167,6 @@ const AppFooter = () => {
         <div className="container mx-auto flex flex-col md:flex-row justify-between items-center">
           <div className={`text-xs ${darkMode ? 'text-slate-400' : 'text-amber-700'}`}>
             © {currentYear} KitchenHub. All rights reserved.
-          </div>
-          <div className="flex items-center mt-2 md:mt-0">
-            <span className={`text-xs mr-4 ${darkMode ? 'text-slate-400' : 'text-amber-700'}`}>
-              Made with <Heart size={12} className="inline text-red-500" /> for professional kitchens
-            </span>
-            <div className="flex items-center gap-3">
-              <a href="#" className={`text-xs hover:underline ${darkMode ? 'text-slate-400 hover:text-white' : 'text-amber-700 hover:text-amber-900'}`}>
-                Terms
-              </a>
-              <a href="#" className={`text-xs hover:underline ${darkMode ? 'text-slate-400 hover:text-white' : 'text-amber-700 hover:text-amber-900'}`}>
-                Privacy
-              </a>
-              <a href="#" className={`text-xs hover:underline ${darkMode ? 'text-slate-400 hover:text-white' : 'text-amber-700 hover:text-amber-900'}`}>
-                Help
-              </a>
-            </div>
           </div>
         </div>
       </div>

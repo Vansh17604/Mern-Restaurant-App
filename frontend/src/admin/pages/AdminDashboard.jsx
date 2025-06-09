@@ -27,37 +27,44 @@ import {
 
 // StatsCard Component
 const StatsCard = ({ title, value, icon: Icon, change, color }) => (
-  <div className="p-6 rounded-lg shadow-sm bg-white">
+  <div className="p-6 rounded-lg shadow-sm bg-white dark:bg-gray-800">
     <div className="flex justify-between items-start mb-4">
       <div>
-        <h3 className="text-sm font-medium text-gray-500">{title}</h3>
-        <p className="text-2xl font-bold">{value}</p>
+        <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400">{title}</h3>
+        <p className="text-2xl font-bold text-gray-900 dark:text-white">{value}</p>
       </div>
       <div className={`p-3 rounded-full ${color}`}>
         <Icon size={20} />
       </div>
     </div>
-    <div className="text-sm font-medium text-green-600">
-      {change} <span className="text-gray-500">from last month</span>
+    <div className="text-sm font-medium text-green-600 dark:text-green-400">
+      {change} <span className="text-gray-500 dark:text-gray-400">from last month</span>
     </div>
   </div>
 );
 
 // SalesOverviewChart Component
 const SalesOverviewChart = ({ salesData, isLoading }) => (
-  <div className="p-6 rounded-lg shadow-sm bg-white">
-    <h3 className="text-lg font-medium mb-6">Sales Overview</h3>
+  <div className="p-6 rounded-lg shadow-sm bg-white dark:bg-gray-800">
+    <h3 className="text-lg font-medium mb-6 text-gray-900 dark:text-white">Sales Overview</h3>
     {isLoading ? (
       <div className="flex items-center justify-center h-[300px]">
-        <div className="animate-pulse text-gray-500">Loading...</div>
+        <div className="animate-pulse text-gray-500 dark:text-gray-400">Loading...</div>
       </div>
     ) : (
       <ResponsiveContainer width="100%" height={300}>
         <AreaChart data={salesData}>
-          <CartesianGrid strokeDasharray="3 3" />
-          <XAxis dataKey="name" />
-          <YAxis />
-          <Tooltip />
+          <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
+          <XAxis dataKey="name" stroke="#9CA3AF" />
+          <YAxis stroke="#9CA3AF" />
+          <Tooltip 
+            contentStyle={{ 
+              backgroundColor: 'rgb(255, 255, 255)', 
+              border: '1px solid rgb(75, 85, 99)',
+              borderRadius: '8px',
+              color: 'Black'
+            }} 
+          />
           <Legend />
           <Area 
             type="monotone" 
@@ -83,19 +90,26 @@ const SalesOverviewChart = ({ salesData, isLoading }) => (
 
 // HourlyOrdersChart Component
 const HourlyOrdersChart = ({ hourlyOrdersData, isLoading }) => (
-  <div className="p-6 rounded-lg shadow-sm bg-white">
-    <h3 className="text-lg font-medium mb-6">Hourly Orders</h3>
+  <div className="p-6 rounded-lg shadow-sm bg-white dark:bg-gray-800">
+    <h3 className="text-lg font-medium mb-6 text-gray-900 dark:text-white">Hourly Orders</h3>
     {isLoading ? (
       <div className="flex items-center justify-center h-[300px]">
-        <div className="animate-pulse text-gray-500">Loading...</div>
+        <div className="animate-pulse text-gray-500 dark:text-gray-400">Loading...</div>
       </div>
     ) : (
       <ResponsiveContainer width="100%" height={300}>
         <BarChart data={hourlyOrdersData}>
-          <CartesianGrid strokeDasharray="3 3" />
-          <XAxis dataKey="name" />
-          <YAxis />
-          <Tooltip />
+          <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
+          <XAxis dataKey="name" stroke="#9CA3AF" />
+          <YAxis stroke="#9CA3AF" />
+          <Tooltip 
+            contentStyle={{ 
+              backgroundColor: 'rgb(255, 255, 255)', 
+              border: '1px solid rgb(75, 85, 99)',
+              borderRadius: '8px',
+              color: 'black'
+            }} 
+          />
           <Legend />
           <Bar dataKey="orders" fill="#8884d8" name="Orders" />
         </BarChart>
@@ -109,11 +123,11 @@ const PopularMenuItemsChart = ({ menuItemsData, isLoading }) => {
   const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884d8'];
   
   return (
-    <div className="p-6 rounded-lg shadow-sm bg-white col-span-1 lg:col-span-1">
-      <h3 className="text-lg font-medium mb-6">Popular Menu Items</h3>
+    <div className="p-6 rounded-lg shadow-sm bg-white dark:bg-gray-800 col-span-1 lg:col-span-1">
+      <h3 className="text-lg font-medium mb-6 text-gray-900 dark:text-white">Popular Menu Items</h3>
       {isLoading ? (
         <div className="flex items-center justify-center h-[300px]">
-          <div className="animate-pulse text-gray-500">Loading...</div>
+          <div className="animate-pulse text-gray-500 dark:text-gray-400">Loading...</div>
         </div>
       ) : (
         <ResponsiveContainer width="100%" height={300}>
@@ -132,7 +146,14 @@ const PopularMenuItemsChart = ({ menuItemsData, isLoading }) => {
                 <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
               ))}
             </Pie>
-            <Tooltip />
+            <Tooltip 
+              contentStyle={{ 
+                backgroundColor: 'rgb(255, 255, 255)', 
+                border: '1px solid rgb(75, 85, 99)',
+                borderRadius: '8px',
+                color: 'white'
+              }} 
+            />
             <Legend />
           </PieChart>
         </ResponsiveContainer>
@@ -143,41 +164,41 @@ const PopularMenuItemsChart = ({ menuItemsData, isLoading }) => {
 
 // RecentOrdersTable Component
 const RecentOrdersTable = ({ orders, isLoading }) => {
-  // Status badge color mapping
+  // Status badge color mapping - Updated for dark mode
   const statusColorMap = {
-    'Completed': 'bg-green-100 text-green-800',
-    'Preparing': 'bg-yellow-100 text-yellow-800',
-    'Delivered': 'bg-blue-100 text-blue-800',
-    'Processing': 'bg-purple-100 text-purple-800',
-    'Pending': 'bg-gray-100 text-gray-800'
+    'Completed': 'bg-green-100 text-green-800 dark:bg-green-800 dark:text-green-200',
+    'Preparing': 'bg-yellow-100 text-yellow-800 dark:bg-yellow-800 dark:text-yellow-200',
+    'Delivered': 'bg-blue-100 text-blue-800 dark:bg-blue-800 dark:text-blue-200',
+    'Processing': 'bg-purple-100 text-purple-800 dark:bg-purple-800 dark:text-purple-200',
+    'Pending': 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-200'
   };
 
   return (
-    <div className="p-6 rounded-lg shadow-sm bg-white col-span-1 lg:col-span-2">
-      <h3 className="text-lg font-medium mb-6">Recent Orders</h3>
+    <div className="p-6 rounded-lg shadow-sm bg-white dark:bg-gray-800 col-span-1 lg:col-span-2">
+      <h3 className="text-lg font-medium mb-6 text-gray-900 dark:text-white">Recent Orders</h3>
       {isLoading ? (
         <div className="flex items-center justify-center h-[200px]">
-          <div className="animate-pulse text-gray-500">Loading...</div>
+          <div className="animate-pulse text-gray-500 dark:text-gray-400">Loading...</div>
         </div>
       ) : (
         <div className="overflow-x-auto">
-          <table className="min-w-full divide-y divide-gray-200">
-            <thead className="bg-gray-50">
+          <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+            <thead className="bg-gray-50 dark:bg-gray-700">
               <tr>
-                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Order ID</th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Amount</th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Time</th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Order ID</th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Amount</th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Time</th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Status</th>
               </tr>
             </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
+            <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
               {orders.map((order, i) => (
                 <tr key={i}>
-                  <td className="px-4 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{order.id}</td>
-                  <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-500">{order.amount}</td>
-                  <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-500">{order.time}</td>
+                  <td className="px-4 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">{order.id}</td>
+                  <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">{order.amount}</td>
+                  <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">{order.time}</td>
                   <td className="px-4 py-4 whitespace-nowrap">
-                    <span className={`px-2 py-1 text-xs font-medium rounded-full ${statusColorMap[order.status] || 'bg-gray-100 text-gray-800'}`}>
+                    <span className={`px-2 py-1 text-xs font-medium rounded-full ${statusColorMap[order.status] || 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-200'}`}>
                       {order.status}
                     </span>
                   </td>
@@ -193,15 +214,15 @@ const RecentOrdersTable = ({ orders, isLoading }) => {
 
 // Loading Skeleton for Stats Cards
 const StatsCardSkeleton = () => (
-  <div className="p-6 rounded-lg shadow-sm bg-white animate-pulse">
+  <div className="p-6 rounded-lg shadow-sm bg-white dark:bg-gray-800 animate-pulse">
     <div className="flex justify-between items-start mb-4">
       <div>
-        <div className="h-4 bg-gray-200 rounded w-20 mb-2"></div>
-        <div className="h-8 bg-gray-200 rounded w-16"></div>
+        <div className="h-4 bg-gray-200 dark:bg-gray-600 rounded w-20 mb-2"></div>
+        <div className="h-8 bg-gray-200 dark:bg-gray-600 rounded w-16"></div>
       </div>
-      <div className="w-12 h-12 bg-gray-200 rounded-full"></div>
+      <div className="w-12 h-12 bg-gray-200 dark:bg-gray-600 rounded-full"></div>
     </div>
-    <div className="h-4 bg-gray-200 rounded w-24"></div>
+    <div className="h-4 bg-gray-200 dark:bg-gray-600 rounded w-24"></div>
   </div>
 );
 
@@ -257,14 +278,14 @@ const AdminDashboard = () => {
   // Handle error state
   if (isError) {
     return (
-      <div className="p-4 md:p-6 w-full bg-gray-50 min-h-screen">
+      <div className="p-4 md:p-6 w-full bg-gray-50 dark:bg-gray-900 min-h-screen">
         <div className="flex items-center justify-center h-64">
           <div className="text-center">
-            <div className="text-red-500 text-xl mb-2">Error loading dashboard</div>
-            <div className="text-gray-500 mb-4">{message}</div>
+            <div className="text-red-500 dark:text-red-400 text-xl mb-2">Error loading dashboard</div>
+            <div className="text-gray-500 dark:text-gray-400 mb-4">{message}</div>
             <button 
               onClick={() => window.location.reload()} 
-              className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+              className="px-4 py-2 bg-blue-500 dark:bg-blue-600 text-white rounded hover:bg-blue-600 dark:hover:bg-blue-700"
             >
               Retry
             </button>
@@ -275,10 +296,10 @@ const AdminDashboard = () => {
   }
 
   return (
-    <div className="p-4 md:p-6 w-full bg-gray-50 min-h-screen">
+    <div className="p-4 md:p-6 w-full bg-gray-50 dark:bg-gray-900 min-h-screen">
       <div className="mb-6 md:mb-8">
-        <h1 className="text-xl md:text-2xl font-bold mb-2">Restaurant Admin Dashboard</h1>
-        <p className="text-sm md:text-base text-gray-500">Welcome back! Here's what's happening today.</p>
+        <h1 className="text-xl md:text-2xl font-bold mb-2 text-gray-900 dark:text-white">Restaurant Admin Dashboard</h1>
+        <p className="text-sm md:text-base text-gray-500 dark:text-gray-400">Welcome back! Here's what's happening today.</p>
       </div>
       
       {/* Stats Cards - Responsive grid */}

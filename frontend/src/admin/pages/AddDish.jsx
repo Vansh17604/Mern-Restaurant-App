@@ -84,11 +84,9 @@ export default function AddDish() {
       dispatch(resetDishState());
     }, [dispatch]);
 
-  // Filter subcategories based on selected category - FIXED
   useEffect(() => {
     if (formData.categoryid && subcategories) {
       const filtered = subcategories.filter(subcategory => {
-        // Handle both cases: when categoryid is a string or an object
         const subcategoryCategoryId = typeof subcategory.categoryid === 'object' 
           ? subcategory.categoryid._id 
           : subcategory.categoryid;
@@ -98,7 +96,6 @@ export default function AddDish() {
       
       setFilteredSubcategories(filtered);
       
-      // Reset subcategory selection if current selection is not in filtered list
       if (formData.subcategoryid) {
         const isValidSubcategory = filtered.some(sub => sub._id === formData.subcategoryid);
         if (!isValidSubcategory) {

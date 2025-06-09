@@ -1498,7 +1498,51 @@
     "adminUser": "Usuario Administrador",
     "notAvailable": "N/D"
   }
+},
+"adminDashboard": {
+  "title": "Panel de Administración del Restaurante",
+  "welcomeMessage": "¡Bienvenido de nuevo! Esto es lo que está sucediendo hoy.",
+  "loading": "Cargando...",
+  "error": {
+    "title": "Error al cargar el panel",
+    "retry": "Reintentar"
+  },
+  "stats": {
+    "fromLastMonth": "desde el mes pasado"
+  },
+  "charts": {
+    "salesOverview": {
+      "title": "Resumen de Ventas",
+      "sales": "Ventas ($)",
+      "orders": "Pedidos",
+      "revenuePerOrder": "Ingresos por pedido:"
+    },
+    "hourlyOrders": {
+      "title": "Pedidos por Hora",
+      "orders": "Pedidos"
+    },
+    "popularMenuItems": {
+      "title": "Platos Populares del Menú"
+    }
+  },
+  "recentOrders": {
+    "title": "Pedidos Recientes",
+    "table": {
+      "orderId": "ID de Pedido",
+      "amount": "Monto",
+      "time": "Hora",
+      "status": "Estado"
+    },
+    "status": {
+      "completed": "Completado",
+      "preparing": "Preparando",
+      "delivered": "Entregado",
+      "processing": "Procesando",
+      "pending": "Pendiente"
+    }
+  }
 }
+
 
 
 

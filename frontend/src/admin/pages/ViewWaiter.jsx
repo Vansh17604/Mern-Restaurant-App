@@ -144,23 +144,23 @@ const ViewWaiter = () => {
 
 
   return (
-    <div className="mt-8 bg-white rounded-lg border border-gray-200 shadow-sm p-6">
+    <div className="mt-8 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm p-6">
       <div className="mb-6">
         <div className="flex items-center space-x-3">
           <Users className="w-8 h-8 text-black dark:text-white" strokeWidth={1.5} />
-          <h1 className="text-2xl font-bold text-gray-800 mb-1">{t('viewwaiter.title', 'View Waiters')}</h1>
+          <h1 className="text-2xl font-bold text-gray-800 dark:text-gray-100 mb-1">{t('viewwaiter.title', 'View Waiters')}</h1>
         </div>
-        <p className="text-gray-500 text-sm">{t('viewwaiter.description', 'Manage and view all registered waiters')}</p>
+        <p className="text-gray-500 dark:text-gray-400 text-sm">{t('viewwaiter.description', 'Manage and view all registered waiters')}</p>
       </div>
       
       {/* Search Bar */}
       <div className="mb-6">
         <div className="relative">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 dark:text-gray-500" size={20} />
           <Input
             type="text"
             placeholder={t('viewwaiter.search', 'Search waiters by name, email, phone, address, city, or salary...')}
-            className="pl-10 border-gray-300 focus:border-indigo-500 focus:ring-indigo-500"
+            className="pl-10 border-gray-300 dark:border-gray-600 focus:border-indigo-500 focus:ring-indigo-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
@@ -168,65 +168,65 @@ const ViewWaiter = () => {
       </div>
       
       {/* Waiters Table */}
-      <div className="border rounded-lg overflow-hidden">
+      <div className="border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden">
         {isLoading ? (
-          <div className="flex justify-center items-center py-16">
+          <div className="flex justify-center items-center py-16 bg-white dark:bg-gray-800">
             <img
               src={gif}
               alt="Loading..."
               className="h-16 w-16"
             />
-            <span className="ml-3 text-gray-600">{t('viewwaiter.loading', 'Loading waiters...')}</span>
+            <span className="ml-3 text-gray-600 dark:text-gray-300">{t('viewwaiter.loading', 'Loading waiters...')}</span>
           </div>
         ) : (
           <div className="overflow-x-auto">
-            <table className="w-full">
+            <table className="w-full bg-white dark:bg-gray-800">
               <thead>
-                <tr className="bg-gray-50 border-b border-gray-200">
-                  <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{t('viewwaiter.photo', 'Photo')}</th>
-                  <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{t('viewwaiter.name', 'Name')}</th>
-                  <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{t('viewwaiter.email', 'Email')}</th>
-                  <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{t('viewwaiter.phone', 'Phone')}</th>
-                  <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{t('viewwaiter.address', 'Address')}</th>
-                  <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{t('viewwaiter.city', 'City')}</th>
-                  <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{t('viewwaiter.gender', 'Gender')}</th>
-                  <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{t('viewwaiter.edit', 'Edit')}</th>
-                  <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{t('viewwaiter.delete', 'Delete')}</th>
+                <tr className="bg-gray-50 dark:bg-gray-700 border-b border-gray-200 dark:border-gray-600">
+                  <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">{t('viewwaiter.photo', 'Photo')}</th>
+                  <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">{t('viewwaiter.name', 'Name')}</th>
+                  <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">{t('viewwaiter.email', 'Email')}</th>
+                  <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">{t('viewwaiter.phone', 'Phone')}</th>
+                  <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">{t('viewwaiter.address', 'Address')}</th>
+                  <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">{t('viewwaiter.city', 'City')}</th>
+                  <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">{t('viewwaiter.gender', 'Gender')}</th>
+                  <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">{t('viewwaiter.edit', 'Edit')}</th>
+                  <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">{t('viewwaiter.delete', 'Delete')}</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-200">
+              <tbody className="divide-y divide-gray-200 dark:divide-gray-600">
                 {filteredWaiters.length > 0 ? (
                   filteredWaiters.map((waiter) => (
-                    <tr key={waiter._id} className="hover:bg-gray-50 transition-colors">
+                    <tr key={waiter._id} className="hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
                       <td className="px-6 py-4 whitespace-nowrap">
                         {waiter.photo ? (
                           <img 
                             src={`${base_url}${waiter.photo}`} 
                             alt={getWaiterDisplayName(waiter)}
-                            className="w-12 h-12 object-cover rounded-full border border-gray-200"
+                            className="w-12 h-12 object-cover rounded-full border border-gray-200 dark:border-gray-600"
                           />
                         ) : (
-                          <div className="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center border border-gray-200">
-                            <User className="w-6 h-6 text-gray-400" />
+                          <div className="w-12 h-12 bg-gray-100 dark:bg-gray-600 rounded-full flex items-center justify-center border border-gray-200 dark:border-gray-600">
+                            <User className="w-6 h-6 text-gray-400 dark:text-gray-300" />
                           </div>
                         )}
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-gray-800 font-medium">
+                      <td className="px-6 py-4 whitespace-nowrap text-gray-800 dark:text-gray-200 font-medium">
                         {getWaiterDisplayName(waiter)}
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-gray-600">
+                      <td className="px-6 py-4 whitespace-nowrap text-gray-600 dark:text-gray-300">
                         {waiter.email}
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-gray-600">
+                      <td className="px-6 py-4 whitespace-nowrap text-gray-600 dark:text-gray-300">
                         {waiter.phone}
                       </td>
-                      <td className="px-6 py-4 text-gray-600 max-w-xs truncate">
+                      <td className="px-6 py-4 text-gray-600 dark:text-gray-300 max-w-xs truncate">
                         {getWaiterDisplayAddress(waiter)}
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-gray-600">
+                      <td className="px-6 py-4 whitespace-nowrap text-gray-600 dark:text-gray-300">
                         {getWaiterDisplayCity(waiter)}
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-gray-600 capitalize">
+                      <td className="px-6 py-4 whitespace-nowrap text-gray-600 dark:text-gray-300 capitalize">
                         {waiter.gender}
                       </td>
                     
@@ -235,7 +235,7 @@ const ViewWaiter = () => {
                         <Button
                           variant="outline"
                           size="sm"
-                          className="flex items-center px-2 py-1 bg-blue-600 text-white border border-blue-600 hover:bg-blue-500 hover:border-blue-500 hover:text-white transition-all duration-200 rounded-md text-xs"
+                          className="flex items-center px-2 py-1 bg-blue-600 dark:bg-blue-700 text-white border border-blue-600 dark:border-blue-700 hover:bg-blue-500 dark:hover:bg-blue-600 hover:border-blue-500 dark:hover:border-blue-600 hover:text-white transition-all duration-200 rounded-md text-xs"
                           onClick={() => handleEdit(waiter)}
                         >
                           <Pencil size={12} className="mr-1" />
@@ -246,7 +246,7 @@ const ViewWaiter = () => {
                         <Button
                           variant="outline"
                           size="sm"
-                          className="flex items-center px-2 py-1 text-red-600 border border-red-300 hover:text-white hover:bg-red-600 hover:border-red-600 transition-all duration-200 rounded-md text-xs"
+                          className="flex items-center px-2 py-1 text-red-600 dark:text-red-400 border border-red-300 dark:border-red-600 hover:text-white hover:bg-red-600 dark:hover:bg-red-700 hover:border-red-600 dark:hover:border-red-700 transition-all duration-200 rounded-md text-xs"
                           onClick={() => handleDelete(waiter)}
                         >
                           <Trash2 size={12} className="mr-1" />
@@ -257,11 +257,11 @@ const ViewWaiter = () => {
                   ))
                 ) : (
                   <tr>
-                    <td colSpan="12" className="px-6 py-10 text-center text-gray-500">
+                    <td colSpan="12" className="px-6 py-10 text-center text-gray-500 dark:text-gray-400">
                       <div className="flex flex-col items-center">
-                        <Users className="w-10 h-10 text-gray-400 mb-2" strokeWidth={1.5} />
+                        <Users className="w-10 h-10 text-gray-400 dark:text-gray-500 mb-2" strokeWidth={1.5} />
                         <p className="text-lg font-medium">{t('viewwaiter.noWaiters', 'No waiters found')}</p>
-                        <p className="text-sm text-gray-400 mt-1">{t('viewwaiter.noWaitersDesc', 'Try adjusting your search or add new waiters')}</p>
+                        <p className="text-sm text-gray-400 dark:text-gray-500 mt-1">{t('viewwaiter.noWaitersDesc', 'Try adjusting your search or add new waiters')}</p>
                       </div>
                     </td>
                   </tr>
@@ -292,16 +292,16 @@ const ViewWaiter = () => {
 
       {/* Success/Error Messages */}
       {isError && (
-        <Alert className="mt-4 border-red-200 bg-red-50">
-          <AlertDescription className="text-red-800">
+        <Alert className="mt-4 border-red-200 dark:border-red-800 bg-red-50 dark:bg-red-900/20">
+          <AlertDescription className="text-red-800 dark:text-red-300">
             {message || t('viewwaiter.error', 'An error occurred while processing your request.')}
           </AlertDescription>
         </Alert>
       )}
 
       {isSuccess && (
-        <Alert className="mt-4 border-green-200 bg-green-50">
-          <AlertDescription className="text-green-800">
+        <Alert className="mt-4 border-green-200 dark:border-green-800 bg-green-50 dark:bg-green-900/20">
+          <AlertDescription className="text-green-800 dark:text-green-300">
             {t('viewwaiter.success', 'Operation completed successfully!')}
           </AlertDescription>
         </Alert>

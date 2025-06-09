@@ -28,13 +28,23 @@ const getRecentOrders = async () => {
   const response = await axios.get(`${base_url}/getrecentorder`, config);
   return response.data;
 };
+const getAdnminFooter = async ()=>{
+  const response = await axios.get(`${base_url}/adminfooter?lang=${lang}`, config);
+  return response.data;
+}
+const getKitchenFooter = async () => {
+  const response = await axios.get(`${base_url}/kitchenfooter?lang=${lang}`, config);
+  return response.data;
+};
 
 const countService = {
+  getKitchenFooter,
   getDashboardStats,
   getHourlyOrders,
   getWeeklySales,
   getMenuPopularity,
   getRecentOrders,
+  getAdnminFooter
 };
 
 export default countService;

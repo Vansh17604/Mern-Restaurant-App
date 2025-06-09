@@ -4,7 +4,7 @@ import { Camera, ChefHat, MapPin, Calendar, Phone, Mail, User, Building } from '
 import { updateKitchenProfile, fetchKitchenProfile, resetKitchenState } from '../../features/admin/kitchen/kitchenSlice';
 import { toast } from 'sonner';
 import { useNavigate } from 'react-router-dom';
-import { useTranslation } from 'react-i18next'; // Add this import
+import { useTranslation } from 'react-i18next';
 
 const Input = React.forwardRef(({ className = "", type, darkMode = false, ...props }, ref) => {
   const baseStyles = "flex h-10 w-full rounded-md border px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50";
@@ -69,8 +69,8 @@ const Button = React.forwardRef(({ className = "", variant = "default", size = "
   );
 });
 
-const KitchenProfile = ({ darkMode = false }) => {
-  const { t } = useTranslation(); // Add translation hook
+const KitchenProfile = ({ darkMode: propDarkMode = false }) => {
+  const { t } = useTranslation();
   const dispatch = useDispatch();
   const navigate = useNavigate();
   
@@ -107,7 +107,48 @@ const KitchenProfile = ({ darkMode = false }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [photoFile, setPhotoFile] = useState(null);
   const [photoPreview, setPhotoPreview] = useState(null);
+  const [darkMode, setDarkMode] = useState(propDarkMode);
   const [initialLoad, setInitialLoad] = useState(true);
+
+  // Enhanced dark mode detection
+  useEffect(() => {
+    const checkDarkMode = () => {
+      if (typeof document !== 'undefined') {
+        const isDark = document.body.classList.contains('dark') || 
+                      document.documentElement.classList.contains('dark') ||
+                      propDarkMode;
+        setDarkMode(isDark);
+      }
+    };
+    
+    // Initial check
+    checkDarkMode();
+    
+    // Set up observer for body class changes
+    const observer = new MutationObserver(checkDarkMode);
+    
+    if (typeof document !== 'undefined') {
+      observer.observe(document.body, { 
+        attributes: true, 
+        attributeFilter: ['class'] 
+      });
+      
+      // Also observe documentElement for Tailwind dark mode
+      observer.observe(document.documentElement, { 
+        attributes: true, 
+        attributeFilter: ['class'] 
+      });
+    }
+    
+    return () => {
+      observer.disconnect();
+    };
+  }, [propDarkMode]);
+
+  // Update darkMode when prop changes
+  useEffect(() => {
+    setDarkMode(propDarkMode);
+  }, [propDarkMode]);
 
   useEffect(() => {
     // Fetch kitchen details on component mount
@@ -646,18 +687,18 @@ const KitchenProfile = ({ darkMode = false }) => {
                     </span>
                   </div>
                   <div>
-                    <span className={darkMode ? 'text-slate-400' : 'text-amber-600'}>
-                      {t('kitchenProfile.form.account.lastUpdated')}:
-                    </span>
+                      <span className={darkMode ? 'text-slate-400' : 'text-amber-600'}>
+                       {t('kitchenProfile.form.account.lastUpdated')}:
+                     </span>
                     <span className={`ml-2 ${darkMode ? 'text-slate-200' : 'text-amber-900'}`}>
-                      {kitchen?.updatedAt ? new Date(kitchen.updatedAt).toLocaleDateString() : t('kitchenProfile.form.account.na')}
-                    </span>
-                  </div>
-                </div>
-              </div>
+                       {kitchen?.updatedAt ? new Date(kitchen.updatedAt).toLocaleDateString() : t('kitchenProfile.form.account.na')}
+                     </span>
+                   </div>
+                 </div>
+               </div>
 
-              {/* Action Buttons */}
-              <div className={`flex flex-col sm:flex-row justify-between items-center space-y-3 sm:space-y-0 sm:space-x-3 pt-6 border-t ${
+               {/* Action Buttons */}
+             <div className={`flex flex-col sm:flex-row justify-between items-center space-y-3 sm:space-y-0 sm:space-x-3 pt-6 border-t ${
                 darkMode ? 'border-slate-700' : 'border-amber-200'
               }`}>
                 <Button

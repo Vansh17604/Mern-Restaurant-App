@@ -537,7 +537,7 @@ module.exports.FetchPaymentByOrderId = [
 
 
 module.exports.GenerateBill = async (req, res) => {
-  const { paymentid } = req.query;
+  const { paymentid, lang  } = req.query;
 
   if (!paymentid) {
     return res.status(400).json({ msg: "Payment ID is required" });
@@ -557,12 +557,11 @@ module.exports.GenerateBill = async (req, res) => {
     const dishIds = orderData.dishes.map(d => d.dish_id);
     const dishesData = await Dish.find({ _id: { $in: dishIds } });
 
-    // Generate HTML string
-    const receiptHTML = generateReceiptHTML(billData, orderData, dishesData);
+    // ✅ Pass lang to generateReceiptHTML
+    const receiptHTML = generateReceiptHTML(billData, orderData, dishesData, lang);
 
-  
     const browser = await puppeteer.launch({
-      headless: 'new', 
+      headless: 'new',
     });
     const page = await browser.newPage();
 

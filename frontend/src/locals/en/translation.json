@@ -1513,6 +1513,48 @@
       "adminUser": "Admin User",
       "notAvailable": "N/A"
     }
+  }, "adminDashboard": {
+    "title": "Restaurant Admin Dashboard",
+    "welcomeMessage": "Welcome back! Here's what's happening today.",
+    "loading": "Loading...",
+    "error": {
+      "title": "Error loading dashboard",
+      "retry": "Retry"
+    },
+    "stats": {
+      "fromLastMonth": "from last month"
+    },
+    "charts": {
+      "salesOverview": {
+        "title": "Sales Overview",
+        "sales": "Sales ($)",
+        "orders": "Orders",
+        "revenuePerOrder": "Revenue per order:"
+      },
+      "hourlyOrders": {
+        "title": "Hourly Orders",
+        "orders": "Orders"
+      },
+      "popularMenuItems": {
+        "title": "Popular Menu Items"
+      }
+    },
+    "recentOrders": {
+      "title": "Recent Orders",
+      "table": {
+        "orderId": "Order ID",
+        "amount": "Amount",
+        "time": "Time",
+        "status": "Status"
+      },
+      "status": {
+        "completed": "Completed",
+        "preparing": "Preparing",
+        "delivered": "Delivered",
+        "processing": "Processing",
+        "pending": "Pending"
+      }
+    }
   }
 
 

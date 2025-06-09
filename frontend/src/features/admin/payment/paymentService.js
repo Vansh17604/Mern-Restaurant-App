@@ -16,7 +16,7 @@ const getAllPayments = async () => {
   return response.data;
 };
 const generateBill = async (paymentId) => {
-  const response = await axios.get(`${base_url}/generatebill?paymentid=${paymentId}`, {
+  const response = await axios.get(`${base_url}/generatebill?paymentid=${paymentId}&lang=${lang}`, {
     headers: {
       ...config.headers,
       Accept: "application/pdf", // <-- expecting PDF now

@@ -18,12 +18,13 @@ app.use(express.json());
 app.use(cookieParser())
 app.use(express.urlencoded({ extended: true }));
 app.use(Routes);
+app.use('/uploads', express.static(path.resolve(__dirname, '../public/uploads')));
 app.use(express.static(path.join(__dirname, '../../frontend/dist')));
 app.get('/*splat', (req, res) => {
   res.sendFile(path.join(__dirname, '../../frontend/dist/index.html'));
 });
 
-app.use('/uploads', express.static(path.resolve(__dirname, '../public/uploads')));
+
 
 
 mongoose.connect(process.env.MONGODB_URL)

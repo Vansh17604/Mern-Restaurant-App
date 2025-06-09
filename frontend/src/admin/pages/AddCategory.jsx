@@ -105,18 +105,18 @@ export default function AddCategory() {
   };
 
   const ErrorMessage = ({ error }) => {
-    return error ? <p className="text-red-500 text-xs mt-1">{error}</p> : null;
+    return error ? <p className="text-red-500 dark:text-red-400 text-xs mt-1">{error}</p> : null;
   };
 
   return (
-    <div className="flex flex-col min-h-screen bg-gray-50">
+    <div className="flex flex-col min-h-screen bg-gray-50 dark:bg-gray-900">
       {/* Header */}
-      <div className="bg-white border-b border-gray-200 shadow-sm">
+      <div className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 shadow-sm">
         <div className="px-6 py-5 max-w-7xl mx-auto">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-3">
-              <Tag className="w-8 h-8 text-black" strokeWidth={1.5} />
-              <h1 className="text-2xl font-bold text-gray-800">{t("adminaddcategory.title")}</h1>
+              <Tag className="w-8 h-8 text-black dark:text-white" strokeWidth={1.5} />
+              <h1 className="text-2xl font-bold text-gray-800 dark:text-gray-100">{t("adminaddcategory.title")}</h1>
             </div>
           </div>
         </div>
@@ -124,7 +124,7 @@ export default function AddCategory() {
 
       <div className="flex-1 px-6 py-6 max-w-7xl w-full mx-auto">
         {/* {isSuccess && (
-          <Alert className="bg-green-50 text-green-800 border border-green-200 mb-6">
+          <Alert className="bg-green-50 dark:bg-green-900/20 text-green-800 dark:text-green-300 border border-green-200 dark:border-green-800 mb-6">
             <AlertDescription>
               {t("adminaddcategory.alert")}
             </AlertDescription>
@@ -132,17 +132,17 @@ export default function AddCategory() {
         )} */}
         
         {isError && (
-          <Alert className="bg-red-50 text-red-800 border border-red-200 mb-6">
+          <Alert className="bg-red-50 dark:bg-red-900/20 text-red-800 dark:text-red-300 border border-red-200 dark:border-red-800 mb-6">
             <AlertDescription>
               {message}
             </AlertDescription>
           </Alert>
         )}
         
-        <div className="bg-white rounded-lg border border-gray-200 shadow-sm p-6">
+        <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm p-6">
           <div className="mb-6">
-            <h2 className="text-lg font-medium text-gray-800 mb-1">{t("adminaddcategory.title1")}</h2>
-            <p className="text-gray-500 text-sm">{t("adminaddcategory.dis")}</p>
+            <h2 className="text-lg font-medium text-gray-800 dark:text-gray-100 mb-1">{t("adminaddcategory.title1")}</h2>
+            <p className="text-gray-500 dark:text-gray-400 text-sm">{t("adminaddcategory.dis")}</p>
           </div>
           
           <div className="space-y-6">
@@ -152,7 +152,7 @@ export default function AddCategory() {
                 label={t("adminaddcategory.lable1")}
                 id="categoryName.en"
                 name="categoryName.en"
-                className={errors.en ? "border-red-500" : ""}
+                className={errors.en ? "border-red-500 dark:border-red-400" : ""}
                 value={formData.categoryName.en}
                 onChange={handleChange}
                 placeholder={t("adminaddcategory.placeholderen")}
@@ -166,7 +166,7 @@ export default function AddCategory() {
                 label={t("adminaddcategory.lable2")}
                 id="categoryName.es"
                 name="categoryName.es"
-                className={errors.es ? "border-red-500" : ""}
+                className={errors.es ? "border-red-500 dark:border-red-400" : ""}
                 value={formData.categoryName.es}
                 onChange={handleChange}
                 placeholder={t("adminaddcategory.placeholderes")}
@@ -175,19 +175,19 @@ export default function AddCategory() {
             </div>
           </div>
           
-          <div className="mt-8 pt-5 border-t border-gray-200 flex justify-end space-x-4">
+          <div className="mt-8 pt-5 border-t border-gray-200 dark:border-gray-700 flex justify-end space-x-4">
             <Button 
               type="button" 
               variant="outline" 
               onClick={handleClearForm}
-              className="px-4"
+              className="px-4 border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700"
             >
               {t("adminaddcategory.clear")}
             </Button>
             
             <Button 
               type="button" 
-              className="bg-green-700 hover:bg-green-500 text-white px-4"
+              className="bg-green-700 hover:bg-green-500 dark:bg-green-600 dark:hover:bg-green-500 text-white px-4"
               disabled={isLoading}
               onClick={handleSubmit}
             >

@@ -6,10 +6,12 @@ import { toast } from "sonner";
 
 const initialState = {
   dashboardStats: {},
+  kitchenfooter: [],
   hourlyOrders: [],
   weeklySales: [],
   menuPopularity: [],
   recentOrders: [],
+  footerStats: [],
   isError: false,
   isSuccess: false,
   isLoading: false,
@@ -76,6 +78,29 @@ export const getRecentOrders = createAsyncThunk(
   }
 );
 
+export const getAdminFooterStats= createAsyncThunk(
+  "count/getAdminFooterStats",
+  async (_, thunkAPI) =>{
+    
+      try {
+        return await countService.getAdnminFooter();
+        } catch (error) {
+          return thunkAPI.rejectWithValue(error.response?.data?.msg || "Fetching admin footer stats failed");
+          }
+        }
+          
+);
+export const getKitchenFooterStats = createAsyncThunk(
+  "count/getKitchenFooterStats",
+  async (_, thunkAPI) => {
+    try {
+      return await countService.getKitchenFooter();
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response?.data?.msg || "Fetching kitchen footer stats failed");
+    }
+  }
+);
+
 export const countSlice = createSlice({
   name: "count",
   initialState,
@@ -120,6 +145,21 @@ export const countSlice = createSlice({
         state.message = action.payload;
         toast.error(action.payload);
       })
+      .addCase(getKitchenFooterStats.pending, (state) => {
+  state.isLoading = true;
+})
+.addCase(getKitchenFooterStats.fulfilled, (state, action) => {
+  state.isLoading = false;
+  state.isSuccess = true;
+  state.kitchenfooter = action.payload;
+})
+.addCase(getKitchenFooterStats.rejected, (state, action) => {
+  state.isLoading = false;
+  state.isError = true;
+  state.message = action.payload;
+  toast.error(action.payload);
+})
+
 
       // Weekly Sales
       .addCase(getWeeklySales.pending, (state) => {
@@ -136,6 +176,22 @@ export const countSlice = createSlice({
         state.message = action.payload;
         toast.error(action.payload);
       })
+      .addCase(getAdminFooterStats.pending,(state)=>{
+        state.isLoading=true;
+      })
+      .addCase(getAdminFooterStats.fulfilled,(state,action)=>
+        {
+          state.isLoading=false;
+          state.isSuccess=true;
+          state.footerStats=action.payload;
+          })
+          .addCase(getAdminFooterStats.rejected,(state,action)=>
+            {
+              state.isLoading=false;
+              state.isError=true;
+              state.message=action.payload;
+              toast.error(action.payload);
+              })
 
       // Menu Popularity
       .addCase(getMenuPopularity.pending, (state) => {
