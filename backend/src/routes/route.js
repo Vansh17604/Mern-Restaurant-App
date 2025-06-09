@@ -30,7 +30,7 @@ router.put("/waiter/update/:id",verifyTokenAndAuthorize('Admin'),upload.single("
 router.delete("/waiter/delete/:id",verifyTokenAndAuthorize('Admin'),WaiterController.DeleteWaiter);
 router.get("/getwaiter",verifyTokenAndAuthorize('Admin'),WaiterController.GetAllWaiters);
 router.post("/login",AuthController.Login);
-router.post("/validate-token",verifyTokenAndAuthorize('Admin','Kitchen','Waiter'),AuthController.validateToken);
+router.post("/validate-token",AuthController.validateToken);
 router.post("/logout",AuthController.Logout);
 
 router.post("/category",verifyTokenAndAuthorize('Admin'),CategoryController.CreateCategory);

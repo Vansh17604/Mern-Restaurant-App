@@ -74,7 +74,6 @@ const AppFooter = () => {
     });
   };
   
-  // Kitchen stats - now using the array data from API
   const kitchenStats = kitchenfooter && Array.isArray(kitchenfooter) ? kitchenfooter : [
     { label: "Active Orders", value: "0" },
     { label: "Completed Today", value: "0" },
