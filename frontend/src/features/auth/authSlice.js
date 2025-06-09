@@ -98,7 +98,7 @@ export const authSlice = createSlice({
       .addCase(validateToken.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = true;
-        state.message = action.payload;
+        // state.message = action.payload;
         state.user = null;
         state.role = null;
         toast.error("Session expired. Please login again.");
