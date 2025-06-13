@@ -13,7 +13,10 @@ import {
   User,
   UserCheck,
   ShoppingCart,
-  Truck
+  Truck,
+  Filter,
+  Search,
+  ChevronDown
 } from 'lucide-react';
 
 import { Button } from "../../components/ui/button";
@@ -50,6 +53,7 @@ const WaiterDashboard = () => {
   const [orderMode, setOrderMode] = useState('create'); // 'create' or 'edit'
   const [existingOrder, setExistingOrder] = useState(null);
   const [modalInitialized, setModalInitialized] = useState(false);
+  const [showFilters, setShowFilters] = useState(false);
   
   useEffect(() => {
     dispatch(fetchOrderbyWaiterId(currentWaiterId));
@@ -229,15 +233,15 @@ const WaiterDashboard = () => {
   if (!user || !currentWaiterId) {
     return (
       <div className={cn(
-        "flex items-center justify-center min-h-screen",
+        "flex items-center justify-center min-h-screen px-4",
         darkMode ? "bg-slate-900 text-white" : "bg-gray-50 text-gray-900"
       )}>
-        <div className="text-center p-8 rounded-lg shadow-lg max-w-md mx-4">
+        <div className="text-center p-6 rounded-lg shadow-lg max-w-sm w-full">
           <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
             <User className="w-8 h-8 text-red-600" />
           </div>
           <h2 className="text-xl font-semibold mb-2">{t('waiterDashboard.auth.required')}</h2>
-          <p className="text-gray-500">{t('waiterDashboard.auth.loginMessage')}</p>
+          <p className="text-gray-500 text-sm">{t('waiterDashboard.auth.loginMessage')}</p>
         </div>
       </div>
     );
@@ -246,7 +250,7 @@ const WaiterDashboard = () => {
   if (isLoading || ordersLoading) {
     return (
       <div className={cn(
-        "flex items-center justify-center min-h-screen",
+        "flex items-center justify-center min-h-screen px-4",
         darkMode ? "bg-slate-900 text-white" : "bg-gray-50 text-gray-900"
       )}>
         <div className="text-center">
@@ -260,16 +264,16 @@ const WaiterDashboard = () => {
   if (isError) {
     return (
       <div className={cn(
-        "flex items-center justify-center min-h-screen",
+        "flex items-center justify-center min-h-screen px-4",
         darkMode ? "bg-slate-900 text-white" : "bg-gray-50 text-gray-900"
       )}>
-        <div className="text-center p-8 rounded-lg shadow-lg max-w-md mx-4">
+        <div className="text-center p-6 rounded-lg shadow-lg max-w-sm w-full">
           <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
             <X className="w-8 h-8 text-red-600" />
           </div>
           <h2 className="text-xl font-semibold mb-2 text-red-600">{t('waiterDashboard.error.title')}</h2>
-          <p className="text-gray-500 mb-4">{message}</p>
-          <Button onClick={() => dispatch(fetchTables())} className="bg-blue-600 hover:bg-blue-700">
+          <p className="text-gray-500 mb-4 text-sm">{message}</p>
+          <Button onClick={() => dispatch(fetchTables())} className="bg-blue-600 hover:bg-blue-700 w-full">
             {t('waiterDashboard.error.tryAgain')}
           </Button>
         </div>
@@ -279,122 +283,203 @@ const WaiterDashboard = () => {
 
   return (
     <div className={cn(
-      "p-3 md:p-6 w-full min-h-screen transition-colors duration-200",
+      "min-h-screen transition-colors duration-200",
       darkMode ? "bg-slate-900 text-white" : "bg-gray-50 text-gray-900"
     )}>
-      <div className="mb-6">
-        <div className="flex items-center justify-between mb-4">
-          <div>
-            <h1 className={cn(
-              "text-2xl md:text-3xl font-bold mb-2 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent"
-            )}>
-              {t('waiterDashboard.title')}
-            </h1>
+      {/* Mobile Header */}
+      <div className="sticky top-0 z-40 px-4 py-3 border-b backdrop-blur-sm bg-opacity-90">
+        <div className={cn(
+          "bg-opacity-90 backdrop-blur-sm",
+          darkMode ? "bg-slate-900 border-slate-700" : "bg-white border-gray-200"
+        )}>
+          <div className="flex items-center justify-between mb-3">
+            <div className="flex-1">
+              <h1 className="text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                {t('waiterDashboard.title')}
+              </h1>
+              <p className={cn(
+                "text-xs",
+                darkMode ? "text-slate-300" : "text-gray-600"
+              )}>
+                {currentWaiterRole === 'Waiter' 
+                  ? t('waiterDashboard.welcome.waiter')
+                  : t('waiterDashboard.welcome.general')
+                }
+              </p>
+            </div>
             
-            <p className={cn(
-              "text-sm md:text-base",
-              darkMode ? "text-slate-300" : "text-gray-600"
-            )}>
-              {currentWaiterRole === 'Waiter' 
-                ? t('waiterDashboard.welcome.waiter')
-                : t('waiterDashboard.welcome.general')
-              }
-            </p>
-          </div>
-          
-          <div className="hidden md:flex items-center space-x-2">
             <div className={cn(
-              "px-3 py-1 rounded-full text-sm font-medium",
+              "px-2 py-1 rounded-full text-xs font-medium",
               darkMode ? "bg-slate-700 text-slate-300" : "bg-blue-100 text-blue-800"
             )}>
               {currentWaiterRole}
             </div>
           </div>
-        </div>
-      </div>
-      
-      <div className="grid grid-cols-2 md:grid-cols-5 gap-3 md:gap-4 mb-6">
-        <StatsCard 
-          title={t('waiterDashboard.stats.available')} 
-          value={stats.available} 
-          icon={CheckCircle} 
-          color="bg-emerald-500" 
-          darkMode={darkMode}
-        />
-        <StatsCard 
-          title={t('waiterDashboard.stats.assigned')} 
-          value={stats.assigned} 
-          icon={UserCheck} 
-          color="bg-amber-500" 
-          darkMode={darkMode}
-        />
-        {currentWaiterRole === 'Waiter' && (
-          <StatsCard 
-            title={t('waiterDashboard.stats.myTables')} 
-            value={stats.myTables} 
-            icon={User} 
-            color="bg-blue-500" 
-            darkMode={darkMode}
-          />
-        )}
-        <StatsCard 
-          title={t('waiterDashboard.stats.ordersToday')} 
-          value={stats.ordersToday} 
-          icon={ShoppingCart} 
-          color="bg-purple-500" 
-          darkMode={darkMode}
-        />
-        <StatsCard 
-          title={t('waiterDashboard.stats.total')} 
-          value={stats.total} 
-          icon={Utensils} 
-          color="bg-slate-500" 
-          darkMode={darkMode}
-        />
-      </div>
-      
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 md:gap-4">
-        {filteredTables.map(table => (
-          <EnhancedTableCard 
-            key={table.id} 
-            table={table} 
-            darkMode={darkMode}
-            currentWaiterId={currentWaiterId}
-            currentWaiterRole={currentWaiterRole}
-            onTakeOrder={() => handleOpenTakeOrderModal(table)}
-            onAssignWaiter={handleAssignWaiter}
-            onServeOrder={handleServeOrder}
-            t={t}
-          />
-        ))}
-      </div>
-      
-      {/* Empty State */}
-      {filteredTables.length === 0 && (
-        <div className="text-center py-12">
-          <div className="mb-4 flex justify-center">
-            <div className={cn(
-              "w-16 h-16 rounded-full flex items-center justify-center",
-              darkMode ? "bg-slate-800" : "bg-gray-100"
-            )}>
-              <CheckCircle size={32} className="text-gray-400" />
+
+          {/* Mobile Search and Filter Bar */}
+          <div className="space-y-2">
+            <div className="flex gap-2">
+              {/* Search Input */}
+              <div className="flex-1 relative">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={16} />
+                <input
+                  type="text"
+                  placeholder={t('waiterDashboard.search.placeholder')}
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className={cn(
+                    "w-full pl-9 pr-3 py-2 rounded-lg border text-sm",
+                    darkMode 
+                      ? "bg-slate-800 border-slate-600 text-white placeholder-gray-400" 
+                      : "bg-white border-gray-300 text-gray-900 placeholder-gray-500"
+                  )}
+                />
+              </div>
+              
+              {/* Filter Toggle Button */}
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setShowFilters(!showFilters)}
+                className={cn(
+                  "px-3 py-2",
+                  showFilters && "bg-blue-100 border-blue-300 text-blue-700"
+                )}
+              >
+                <Filter size={16} />
+                <ChevronDown size={14} className={cn(
+                  "ml-1 transition-transform",
+                  showFilters && "rotate-180"
+                )} />
+              </Button>
             </div>
+
+            {/* Collapsible Filter Options */}
+            {showFilters && (
+              <div className="flex flex-wrap gap-2 pt-2 border-t border-gray-200 dark:border-slate-700">
+                {[
+                  { key: 'all', label: t('waiterDashboard.filters.all') },
+                  { key: 'Available', label: t('waiterDashboard.filters.available') },
+                  { key: 'Assigned', label: t('waiterDashboard.filters.assigned') },
+                  ...(currentWaiterRole === 'Waiter' ? [{ key: 'myTables', label: t('waiterDashboard.filters.myTables') }] : []),
+                  { key: 'withOrders', label: t('waiterDashboard.filters.withOrders') }
+                ].map(filterOption => (
+                  <button
+                    key={filterOption.key}
+                    onClick={() => setFilter(filterOption.key)}
+                    className={cn(
+                      "px-3 py-1 rounded-full text-xs font-medium transition-colors",
+                      filter === filterOption.key
+                        ? "bg-blue-600 text-white"
+                        : darkMode
+                        ? "bg-slate-700 text-slate-300 hover:bg-slate-600"
+                        : "bg-gray-200 text-gray-700 hover:bg-gray-300"
+                    )}
+                  >
+                    {filterOption.label}
+                  </button>
+                ))}
+              </div>
+            )}
           </div>
-          <h3 className="text-lg font-semibold mb-2">{t('waiterDashboard.emptyState.noTables')}</h3>
-          <p className={cn(
-            "text-sm max-w-md mx-auto",
-            darkMode ? "text-slate-400" : "text-gray-500"
-          )}>
-            {searchTerm 
-              ? t('waiterDashboard.emptyState.noTablesMatch', { searchTerm })
-              : t('waiterDashboard.emptyState.noTablesAvailable', { 
-                  filter: filter !== 'all' ? t(`waiterDashboard.emptyState.filterContext.${filter}`, filter.replace('myTables', 'your')) : '',
-                  role: currentWaiterRole === 'Waiter' ? t('waiterDashboard.emptyState.roleContext.waiter') : t('waiterDashboard.emptyState.roleContext.general')
-                })
-            }
-          </p>
         </div>
-      )}
+      </div>
+      
+      {/* Main Content */}
+      <div className="px-4 pb-4">
+        {/* Mobile Stats Grid - 2x3 layout */}
+        <div className="grid grid-cols-2 gap-3 mb-4 mt-4">
+          <StatsCard 
+            title={t('waiterDashboard.stats.available')} 
+            value={stats.available} 
+            icon={CheckCircle} 
+            color="bg-emerald-500" 
+            darkMode={darkMode}
+            compact={true}
+          />
+          <StatsCard 
+            title={t('waiterDashboard.stats.assigned')} 
+            value={stats.assigned} 
+            icon={UserCheck} 
+            color="bg-amber-500" 
+            darkMode={darkMode}
+            compact={true}
+          />
+          {currentWaiterRole === 'Waiter' && (
+            <StatsCard 
+              title={t('waiterDashboard.stats.myTables')} 
+              value={stats.myTables} 
+              icon={User} 
+              color="bg-blue-500" 
+              darkMode={darkMode}
+              compact={true}
+            />
+          )}
+          <StatsCard 
+            title={t('waiterDashboard.stats.ordersToday')} 
+            value={stats.ordersToday} 
+            icon={ShoppingCart} 
+            color="bg-purple-500" 
+            darkMode={darkMode}
+            compact={true}
+          />
+          <StatsCard 
+            title={t('waiterDashboard.stats.total')} 
+            value={stats.total} 
+            icon={Utensils} 
+            color="bg-slate-500" 
+            darkMode={darkMode}
+            compact={true}
+          />
+          {/* Empty cell for layout if needed */}
+          {currentWaiterRole !== 'Waiter' && <div></div>}
+        </div>
+        
+        {/* Mobile Table Cards - Single column layout */}
+        <div className="space-y-3">
+          {filteredTables.map(table => (
+            <EnhancedTableCard 
+              key={table.id} 
+              table={table} 
+              darkMode={darkMode}
+              currentWaiterId={currentWaiterId}
+              currentWaiterRole={currentWaiterRole}
+              onTakeOrder={() => handleOpenTakeOrderModal(table)}
+              onAssignWaiter={handleAssignWaiter}
+              onServeOrder={handleServeOrder}
+              t={t}
+              isMobile={true}
+            />
+          ))}
+        </div>
+        
+        {/* Empty State */}
+        {filteredTables.length === 0 && (
+          <div className="text-center py-12 px-4">
+            <div className="mb-4 flex justify-center">
+              <div className={cn(
+                "w-16 h-16 rounded-full flex items-center justify-center",
+                darkMode ? "bg-slate-800" : "bg-gray-100"
+              )}>
+                <CheckCircle size={32} className="text-gray-400" />
+              </div>
+            </div>
+            <h3 className="text-lg font-semibold mb-2">{t('waiterDashboard.emptyState.noTables')}</h3>
+            <p className={cn(
+              "text-sm",
+              darkMode ? "text-slate-400" : "text-gray-500"
+            )}>
+              {searchTerm 
+                ? t('waiterDashboard.emptyState.noTablesMatch', { searchTerm })
+                : t('waiterDashboard.emptyState.noTablesAvailable', { 
+                    filter: filter !== 'all' ? t(`waiterDashboard.emptyState.filterContext.${filter}`, filter.replace('myTables', 'your')) : '',
+                    role: currentWaiterRole === 'Waiter' ? t('waiterDashboard.emptyState.roleContext.waiter') : t('waiterDashboard.emptyState.roleContext.general')
+                  })
+              }
+            </p>
+          </div>
+        )}
+      </div>
       
       {selectedTable && isTakeOrderModalOpen && modalInitialized && (
         <TakeOrderModal 
@@ -419,7 +504,8 @@ const EnhancedTableCard = ({
   onTakeOrder,
   onAssignWaiter,
   onServeOrder,
-  t
+  t,
+  isMobile = false
 }) => {
   const getStatusColor = (status) => {
     switch (status) {
@@ -512,178 +598,168 @@ const EnhancedTableCard = ({
 
   return (
     <div className={cn(
-      "rounded-lg border transition-all duration-300 overflow-hidden hover:scale-[1.01] hover:shadow-lg",
-      darkMode ? "bg-slate-800 border-slate-700 shadow-md" : "bg-white border-gray-200 shadow-sm",
+      "rounded-xl border transition-all duration-300 overflow-hidden",
+      darkMode ? "bg-slate-800 border-slate-700 shadow-lg" : "bg-white border-gray-200 shadow-md",
       isDisabled ? "opacity-60" : "",
       showMyTableBadge ? "ring-2 ring-blue-400" : "",
-      table.hasActiveOrders ? "ring-2 ring-emerald-400" : ""
+      table.hasActiveOrders ? "ring-2 ring-emerald-400" : "",
+      isMobile && "hover:shadow-lg active:scale-[0.98]"
     )}>
       
-      {/* Compact Image Section */}
-      <div className="relative h-20 w-full overflow-hidden">
-        <img 
-          src={getStatusImage(table.status)} 
-          alt={t('waiterDashboard.table.tableNumber', { number: table.tableNumber })}
-          className="w-full h-full object-cover"
-          onError={(e) => {
-            e.target.src = '/assets/default-table.jpg'; 
-          }}
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
-        <div className="absolute top-1 right-1 flex gap-1">
-          <div className={cn(
-            "px-1.5 py-0.5 rounded-full text-xs font-medium text-white shadow-sm",
-            getStatusColor(table.status)
-          )}>
-            {table.status === 'Available' ? t('waiterDashboard.table.status.free') : t('waiterDashboard.table.status.busy')}
-          </div>
-          {showMyTableBadge && (
-            <div className="px-1.5 py-0.5 rounded-full text-xs font-medium text-white shadow-sm bg-blue-500">
-              {t('waiterDashboard.table.waiter.mine')}
+      {/* Mobile Header Section */}
+      <div className="p-4">
+        <div className="flex items-center justify-between mb-3">
+          <div className="flex items-center space-x-3">
+            <div className={cn(
+              "w-12 h-12 rounded-xl flex items-center justify-center text-white font-bold text-lg shadow-md",
+              getStatusColor(table.status)
+            )}>
+              {table.tableNumber}
             </div>
-          )}
-        </div>
-      </div>
-      
-      {/* Compact Content Section */}
-      <div className="p-3">
-        <div className="flex justify-between items-center mb-2">
-          <h3 className="font-bold text-lg text-gray-900 dark:text-white">
-            {t('waiterDashboard.table.tableNumber', { number: table.tableNumber })}
-          </h3>
-          <div className="flex items-center text-xs text-gray-600 dark:text-gray-400 bg-gray-100 dark:bg-slate-700 px-2 py-1 rounded">
-            <Users size={12} className="mr-1" />
-            <span className="font-medium">{table.capacity}</span>
+            
+            <div>
+              <h3 className="font-bold text-lg text-gray-900 dark:text-white">
+                {t('waiterDashboard.table.tableNumber', { number: table.tableNumber })}
+              </h3>
+              <div className="flex items-center text-sm text-gray-600 dark:text-gray-400">
+                <Users size={14} className="mr-1" />
+                <span>{table.capacity} {t('waiterDashboard.table.capacity')}</span>
+              </div>
+            </div>
+          </div>
+
+          <div className="flex flex-col items-end space-y-1">
+            <div className={cn(
+              "px-2 py-1 rounded-lg text-xs font-medium text-white",
+              getStatusColor(table.status)
+            )}>
+              {table.status === 'Available' ? t('waiterDashboard.table.status.free') : t('waiterDashboard.table.status.busy')}
+            </div>
+            {showMyTableBadge && (
+              <div className="px-2 py-1 rounded-lg text-xs font-medium text-white bg-blue-500">
+                {t('waiterDashboard.table.waiter.mine')}
+              </div>
+            )}
           </div>
         </div>
 
-        {/* Compact Waiter Info */}
+        {/* Waiter Information */}
         {table.isWaiterAssigned && (
-          <div className="mb-2">
+          <div className="mb-3">
             <div className={cn(
-              "flex items-center text-xs p-2 rounded",
+              "flex items-center text-sm p-3 rounded-lg",
               showMyTableBadge 
                 ? "bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300" 
                 : "bg-amber-50 dark:bg-amber-900/20 text-amber-700 dark:text-amber-300"
             )}>
-              <User size={12} className="mr-1" />
-              <span className="truncate font-medium">
+              <User size={16} className="mr-2" />
+              <span className="font-medium">
                 {table.waiterName || t('waiterDashboard.table.waiter.unknown')}
-                {showMyTableBadge && <span className="ml-1 font-bold">{t('waiterDashboard.table.waiter.you')}</span>}
+                {showMyTableBadge && <span className="ml-1 font-bold">({t('waiterDashboard.table.waiter.you')})</span>}
               </span>
             </div>
           </div>
         )}
 
-        {/* Compact Order Information */}
+        {/* Mobile Order Information */}
         {table.hasActiveOrders && (
-          <div className="order-container p-2 bg-white rounded-lg shadow-sm border text-xs">
-            {/* Compact Header */}
-            <div className="flex justify-between items-center mb-1">
-              <span className="font-medium text-gray-700">
-                {t('waiterDashboard.order.orders', { count: table.orders.length })}
-              </span>
+          <div className={cn(
+            "p-4 rounded-xl border mb-4",
+            darkMode ? "bg-slate-700 border-slate-600" : "bg-gray-50 border-gray-200"
+          )}>
+            {/* Order Header */}
+            <div className="flex justify-between items-center mb-3">
+              <div className="flex items-center space-x-2">
+                <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></div>
+                <span className="font-semibold text-gray-900 dark:text-white">
+                  {t('waiterDashboard.order.orders', { count: table.orders.length })}
+                </span>
+              </div>
               {table.totalOrderAmount > 0 && (
-                <span className="font-bold text-green-600">
+                <span className="font-bold text-green-600 text-lg">
                   ${table.totalOrderAmount.toFixed(2)}
                 </span>
               )}
             </div>
 
-            {/* First Order Summary */}
+            {/* Latest Order Details */}
             {table.orders.length > 0 && (
-              <div className="space-y-1">
-                {/* Order ID & Status */}
-                <div className="flex justify-between items-center">
-                  <span className="text-gray-500">
-                    {t('waiterDashboard.order.orderNumber', { id: table.orders[0]._id?.slice(-4) || 'N/A' })}
+              <div className="space-y-3">
+                {/* Order Status and ID */}
+                <div className="flex justify-between items-center p-2 bg-white dark:bg-slate-800 rounded-lg">
+                  <span className="text-sm text-gray-600 dark:text-gray-400">
+                    #{table.orders[0]._id?.slice(-6) || 'N/A'}
                   </span>
-                  <span className={`px-1.5 py-0.5 rounded text-xs font-medium ${
+                  <span className={cn(
+                    "px-2 py-1 rounded-full text-xs font-medium",
                     table.orders[0].orderstatus === 'prepared'
-                      ? 'bg-green-100 text-green-700'
-                      : 'bg-yellow-100 text-yellow-700'
-                  }`}>
+                      ? 'bg-green-100 text-green-700 dark:bg-green-900/20 dark:text-green-300'
+                      : table.orders[0].orderstatus === 'preparing'
+                      ? 'bg-blue-100 text-blue-700 dark:bg-blue-900/20 dark:text-blue-300'
+                      : 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/20 dark:text-yellow-300'
+                  )}>
                     {getOrderStatusText(table.orders[0].orderstatus)}
                   </span>
                 </div>
 
-                {/* Dishes Summary */}
+                {/* Dishes List */}
                 {table.orders[0].dishes && table.orders[0].dishes.length > 0 && (
-                  <div className="bg-gray-50 rounded p-1.5">
-                    <div className="text-gray-600 mb-1">
+                  <div className="space-y-2">
+                    <div className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                       {t('waiterDashboard.order.dishes', { count: table.orders[0].dishes.length })}
                     </div>
 
-                    {/* Top 2 Dishes */}
-                    <div className="space-y-1">
-                      {table.orders[0].dishes.slice(0, 2).map((dish, index) => (
-                        <div key={dish._id || index} className="flex items-center justify-between py-1 px-2 bg-white rounded border-l-2 border-blue-200">
-                          <div className="flex items-center space-x-2 flex-1">
-                            <span className="font-medium text-gray-800 text-xs">
-                              {getDishName(dish).length > 10 
-                                ? `${getDishName(dish).substring(0, 10)}...` 
-                                : getDishName(dish)}
+                    {/* Show all dishes on mobile */}
+                    {table.orders[0].dishes.map((dish, index) => (
+                      <div key={dish._id || index} className={cn(
+                        "flex items-center justify-between p-3 rounded-lg border-l-4",
+                        dish.status === 'prepared' 
+                          ? "bg-green-50 border-green-400 dark:bg-green-900/10" 
+                          : "bg-gray-50 border-gray-200 dark:bg-slate-700/50 dark:border-slate-600"
+                      )}>
+                        <div className="flex-1">
+                          <div className="flex items-center justify-between">
+                            <span className="font-medium text-gray-900 dark:text-white text-sm">
+                              {getDishName(dish)}
                             </span>
-                            <span className="text-blue-600 font-bold text-xs">
-                              x{dish.quantity}
+                            <span className="text-sm font-semibold text-gray-700 dark:text-gray-300">
+                              x{dish.quantity || 1}
                             </span>
                           </div>
-                          <div className="flex items-center space-x-2">
-                            <span className="text-green-600 font-semibold text-xs">
-                              ${getDishPrice(dish).toFixed(2)}
+                          <div className="flex items-center justify-between mt-1">
+                            <span className="text-xs text-gray-500 dark:text-gray-400">
+                              ${getDishPrice(dish).toFixed(2)} {t('waiterDashboard.order.each')}
                             </span>
-                            {/* Dish Status */}
-                           {dish.status && (
-                              <span className={`px-1.5 py-0.5 rounded text-xs font-medium text-white ${
-                                dish.status === 'prepared' 
-                                  ? 'bg-green-500' 
-                                  : dish.status === 'preparing'
-                                  ? 'bg-blue-500'
-                                  : 'bg-yellow-500'
-                              }`}>
+                            {dish.status && (
+                              <span className={cn(
+                                "px-2 py-0.5 rounded-full text-xs font-medium",
+                                getOrderStatusColor(dish.status),
+                                "text-white"
+                              )}>
                                 {getOrderStatusText(dish.status)}
                               </span>
                             )}
                           </div>
                         </div>
-                      ))}
-                      {table.orders[0].dishes.length > 2 && (
-                        <div className="text-center text-gray-500 text-xs py-1">
-                          {t('waiterDashboard.order.moreDishes', { count: table.orders[0].dishes.length - 2 })}
-                        </div>
-                      )}
-                    </div>
+                      </div>
+                    ))}
                   </div>
                 )}
 
-                {/* Serve Button for Ready Orders */}
+                {/* Serve Order Action */}
                 {hasOrdersWithPreparedStatus && (
-                  <div className="mt-2 pt-2 border-t border-gray-200">
-                    <div className="flex items-center justify-between">
-                      <span className="text-green-600 font-medium text-xs animate-pulse">
-                        🔔 {t('waiterDashboard.order.readyToServe')}
-                      </span>
-                      <Button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          onServeOrder(table.orders[0]._id);
-                        }}
-                        size="sm"
-                        className="bg-green-600 hover:bg-green-700 text-white px-2 py-1 text-xs"
-                      >
-                        <Truck size={12} className="mr-1" />
-                        {t('waiterDashboard.buttons.serve')}
-                      </Button>
-                    </div>
-                  </div>
-                )}
-
-                {/* Multiple Orders Indicator */}
-                {table.orders.length > 1 && (
-                  <div className="mt-1 text-center">
-                    <span className="text-blue-600 font-medium text-xs">
-                      {t('waiterDashboard.order.moreOrders', { count: table.orders.length - 1 })}
-                    </span>
+                  <div className="pt-2 border-t border-gray-200 dark:border-slate-600">
+                    <Button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleServeOrder(table.orders[0]._id);
+                      }}
+                      className="w-full bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-4 rounded-lg transition-colors"
+                      size="sm"
+                    >
+                      <Truck size={16} className="mr-2" />
+                      {t('waiterDashboard.buttons.markAsServed')}
+                    </Button>
                   </div>
                 )}
               </div>
@@ -691,71 +767,49 @@ const EnhancedTableCard = ({
           </div>
         )}
 
-        {/* Action Buttons */}
-        <div className="mt-3 space-y-2">
-          {/* Assign Button (for unassigned tables) */}
-          {!table.isWaiterAssigned && table.status === 'Available' && (
-            <Button
-              onClick={() => onAssignWaiter(table.id)}
-              size="sm"
-              className="w-full bg-blue-600 hover:bg-blue-700 text-white"
-            >
-              <UserCheck size={14} className="mr-1" />
-              {t('waiterDashboard.buttons.assignToMe')}
-            </Button>
-          )}
-
-          {/* Take Order / Manage Order Button */}
-          {(table.isAssignedToCurrentWaiter || currentWaiterRole !== 'Waiter') && (
-            <Button
-              onClick={() => onTakeOrder(table)}
-              disabled={isDisabled}
-              size="sm"
-              variant={table.hasActiveOrders ? "default" : "outline"}
-              className={cn(
-                "w-full transition-all duration-200",
-                table.hasActiveOrders 
-                  ? "bg-emerald-600 hover:bg-emerald-700 text-white border-emerald-600" 
-                  : "border-blue-600 text-blue-600 hover:bg-blue-600 hover:text-white",
-                isDisabled && "opacity-50 cursor-not-allowed"
+        {/* Mobile Action Buttons */}
+        <div className="flex gap-2">
+          {!table.isWaiterAssigned ? (
+            <>
+              <Button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onAssignWaiter(table.id);
+                }}
+                className="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-4 rounded-lg transition-colors"
+                disabled={isDisabled}
+              >
+                <UserCheck size={16} className="mr-2" />
+                {t('waiterDashboard.buttons.assignToMe')}
+              </Button>
+            </>
+          ) : (
+            <>
+              {(table.isAssignedToCurrentWaiter || currentWaiterRole !== 'Waiter') && (
+                <Button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onTakeOrder();
+                  }}
+                  className="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white font-medium py-3 px-4 rounded-lg transition-colors"
+                  disabled={isDisabled}
+                >
+                  {table.hasActiveOrders ? (
+                    <>
+                      <Edit size={16} className="mr-2" />
+                      {getButtonText()}
+                    </>
+                  ) : (
+                    <>
+                      <Plus size={16} className="mr-2" />
+                      {getButtonText()}
+                    </>
+                  )}
+                </Button>
               )}
-            >
-              {table.hasActiveOrders ? (
-                <>
-                  <Edit size={14} className="mr-1" />
-                  {getButtonText()}
-                </>
-              ) : (
-                <>
-                  <Plus size={14} className="mr-1" />
-                  {getButtonText()}
-                </>
-              )}
-            </Button>
+            </>
           )}
         </div>
-
-        {/* Last Order Time */}
-        {table.orders.length > 0 && (
-          <div className="mt-2 pt-2 border-t border-gray-200 dark:border-slate-700">
-            <div className="flex items-center justify-between text-xs text-gray-500 dark:text-gray-400">
-              <div className="flex items-center">
-                <Clock size={12} className="mr-1" />
-                <span>
-                  {new Date(table.orders[0].createdAt).toLocaleTimeString([], {
-                    hour: t('waiterDashboard.time.format.hour'),
-                    minute: t('waiterDashboard.time.format.minute')
-                  })}
-                </span>
-              </div>
-              {table.orders[0].totalAmount && (
-                <span className="font-medium text-green-600">
-                  {formatPrice(table.orders[0].totalAmount, t('waiterDashboard.currency.format'))}
-                </span>
-              )}
-            </div>
-          </div>
-        )}
       </div>
     </div>
   );

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { ClipboardList, Search, Calendar, DollarSign, User, ChefHat, Table, Clock, Package, CreditCard, FileText } from "lucide-react";
+import { ClipboardList, Search, Calendar, DollarSign, User, ChefHat, Table, Clock, Package, CreditCard, FileText, Eye, X } from "lucide-react";
 import { Button } from "../../components/ui/button";
 import { Input } from "../../components/ui/input";
 import { Alert, AlertDescription } from "../../components/ui/alert";
@@ -25,7 +25,8 @@ const OrderDetails = () => {
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [filterStatus, setFilterStatus] = useState("all");
   const [orderPaymentStatus, setOrderPaymentStatus] = useState({});
-  const [paymentSubmitted, setPaymentSubmitted] = useState(false); // Track if payment was submitted
+  const [paymentSubmitted, setPaymentSubmitted] = useState(false);
+  const [viewMode, setViewMode] = useState('table'); // 'table' or 'cards'
   
   // Payment form state
   const [paymentForm, setPaymentForm] = useState({
@@ -133,6 +134,21 @@ const OrderDetails = () => {
       }
     }
   }, [bill, dispatch]);
+
+  // Detect screen size and auto-switch view mode
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth < 768) {
+        setViewMode('cards');
+      } else {
+        setViewMode('table');
+      }
+    };
+
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   // Get status badge color
   const getStatusBadgeColor = (status) => {
@@ -297,394 +313,529 @@ const OrderDetails = () => {
     { value: 'cancelled', label: t('orderdetails.cancelled') || 'Cancelled' },
   ];
 
+  // Mobile Card Component
+  const OrderCard = ({ order }) => {
+    const paymentStatus = orderPaymentStatus[order._id];
+    const isPaymentComplete = paymentStatus?.toLowerCase() === 'complete';
+    
+    return (
+      <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-4 shadow-sm">
+        {/* Header */}
+        <div className="flex justify-between items-start mb-3">
+          <div>
+            <h3 className="font-semibold text-gray-900 dark:text-gray-100 text-sm">
+              #{order._id?.slice(-8) || 'N/A'}
+            </h3>
+            <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full border mt-1 ${getStatusBadgeColor(order.orderstatus)}`}>
+              {order.orderstatus || 'N/A'}
+            </span>
+          </div>
+          <div className="text-right">
+            <div className="text-lg font-bold text-gray-900 dark:text-gray-100">
+              {getCurrencySymbol(order.dishes?.[0]?.dish_id?.currency || 'USD')}
+              {calculateOrderTotal(order.dishes).toFixed(2)}
+            </div>
+          </div>
+        </div>
+
+        {/* Details */}
+        <div className="space-y-2 text-sm">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center text-gray-600 dark:text-gray-400">
+              <Table className="w-4 h-4 mr-2" />
+              <span>Table</span>
+            </div>
+            <span className="text-gray-900 dark:text-gray-100 font-medium">
+              {order.tableid?.tablenumber || 'N/A'}
+            </span>
+          </div>
+          
+          <div className="flex items-center justify-between">
+            <div className="flex items-center text-gray-600 dark:text-gray-400">
+              <User className="w-4 h-4 mr-2" />
+              <span>Waiter</span>
+            </div>
+            <span className="text-gray-900 dark:text-gray-100 font-medium">
+              {order.waiterid?.name || 'N/A'}
+            </span>
+          </div>
+          
+          <div className="flex items-center justify-between">
+            <div className="flex items-center text-gray-600 dark:text-gray-400">
+              <ChefHat className="w-4 h-4 mr-2" />
+              <span>Kitchen</span>
+            </div>
+            <span className="text-gray-900 dark:text-gray-100 font-medium">
+              {order.kitchenid?.name || 'N/A'}
+            </span>
+          </div>
+          
+          <div className="flex items-center justify-between">
+            <div className="flex items-center text-gray-600 dark:text-gray-400">
+              <Calendar className="w-4 h-4 mr-2" />
+              <span>Date</span>
+            </div>
+            <span className="text-gray-900 dark:text-gray-100 font-medium text-xs">
+              {formatDate(order.orderdate)}
+            </span>
+          </div>
+        </div>
+
+        {/* Actions */}
+        {order.orderstatus?.toLowerCase() === 'served' && createPayment && (
+          <div className="mt-4 pt-3 border-t border-gray-200 dark:border-gray-700">
+            {isPaymentComplete ? (
+              <Button
+                variant="outline"
+                size="sm"
+                className="w-full flex items-center justify-center px-3 py-2 bg-blue-600 text-white border border-blue-600 hover:bg-blue-700 hover:border-blue-700 dark:bg-blue-700 dark:hover:bg-blue-600 transition-all duration-200 rounded-md text-sm"
+                onClick={() => handleGenerateBill(order)}
+                disabled={paymentLoading}
+              >
+                <FileText size={16} className="mr-2" />
+                Generate Bill
+              </Button>
+            ) : (
+              <Button
+                variant="outline"
+                size="sm"
+                className="w-full flex items-center justify-center px-3 py-2 bg-green-600 text-white border border-green-600 hover:bg-green-700 hover:border-green-700 dark:bg-green-700 dark:hover:bg-green-600 transition-all duration-200 rounded-md text-sm"
+                onClick={() => handlePayment(order)}
+              >
+                <CreditCard size={16} className="mr-2" />
+                {t('orderdetails.payment') || 'Payment'}
+              </Button>
+            )}
+          </div>
+        )}
+      </div>
+    );
+  };
+
   return (
-    <div className="mt-8 bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm p-6">
-      <div className="mb-6">
+    <div className="mt-4 sm:mt-8 bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm p-3 sm:p-6">
+      <div className="mb-4 sm:mb-6">
         <div className="flex items-center space-x-3">
-          <ClipboardList className="w-8 h-8 text-black dark:text-white" strokeWidth={1.5} />
-          <h1 className="text-2xl font-bold text-gray-800 dark:text-gray-100 mb-1">
+          <ClipboardList className="w-6 h-6 sm:w-8 sm:h-8 text-black dark:text-white" strokeWidth={1.5} />
+          <h1 className="text-xl sm:text-2xl font-bold text-gray-800 dark:text-gray-100 mb-1">
             {t('orderdetails.title') || 'Order Management'}
           </h1>
         </div>
-        <p className="text-gray-500 dark:text-gray-400 text-sm">
+        <p className="text-gray-500 dark:text-gray-400 text-xs sm:text-sm">
           {t('orderdetails.description') || 'View and manage all restaurant orders'}
         </p>
       </div>
       
       {/* Filter and Search Controls */}
-      <div className="mb-6 flex flex-col sm:flex-row gap-4">
+      <div className="mb-4 sm:mb-6 flex flex-col gap-3 sm:gap-4">
         {/* Search Bar */}
-        <div className="flex-1">
+        <div className="w-full">
           <div className="relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 dark:text-gray-500" size={20} />
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 dark:text-gray-500" size={18} />
             <Input
               type="text"
-              placeholder={t('orderdetails.search_placeholder') || "Search by Order ID, Table, Waiter, Kitchen, or Status..."}
-              className="pl-10 border-gray-300 dark:border-gray-600 focus:border-indigo-500 focus:ring-indigo-500 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400"
+              placeholder={t('orderdetails.search_placeholder') || "Search orders..."}
+              className="pl-10 text-sm border-gray-300 dark:border-gray-600 focus:border-indigo-500 focus:ring-indigo-500 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
           </div>
         </div>
         
-        {/* Status Filter */}
-        <div className="sm:w-48">
-          <select
-            value={filterStatus}
-            onChange={(e) => setFilterStatus(e.target.value)}
-            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"
-          >
-            {statusOptions.map(option => (
-              <option key={option.value} value={option.value}>
-                {option.label}
-              </option>
-            ))}
-          </select>
+        {/* Status Filter and View Toggle */}
+        <div className="flex gap-2 sm:gap-4">
+          <div className="flex-1">
+            <select
+              value={filterStatus}
+              onChange={(e) => setFilterStatus(e.target.value)}
+              className="w-full px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"
+            >
+              {statusOptions.map(option => (
+                <option key={option.value} value={option.value}>
+                  {option.label}
+                </option>
+              ))}
+            </select>
+          </div>
+          
+          {/* View Mode Toggle - Hidden on mobile since auto-switching */}
+          <div className="hidden sm:flex">
+            <Button
+              variant={viewMode === 'table' ? 'default' : 'outline'}
+              size="sm"
+              onClick={() => setViewMode('table')}
+              className="px-3 py-2 text-sm"
+            >
+              Table
+            </Button>
+            <Button
+              variant={viewMode === 'cards' ? 'default' : 'outline'}
+              size="sm"
+              onClick={() => setViewMode('cards')}
+              className="px-3 py-2 text-sm ml-1"
+            >
+              Cards
+            </Button>
+          </div>
         </div>
       </div>
       
-      {/* Orders Table */}
+      {/* Orders Display */}
       <div className="border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden">
         {isLoading ? (
-          <div className="flex justify-center items-center py-16 bg-white dark:bg-gray-900">
+          <div className="flex justify-center items-center py-12 sm:py-16 bg-white dark:bg-gray-900">
             <img
               src={gif}
               alt="Loading..."
-              className="h-16 w-16"
+              className="h-12 w-12 sm:h-16 sm:w-16"
             />
-            <span className="ml-3 text-gray-600 dark:text-gray-300">
+            <span className="ml-3 text-gray-600 dark:text-gray-300 text-sm">
               {t('orderdetails.loading') || 'Loading orders...'}
             </span>
           </div>
         ) : (
-          <div className="overflow-x-auto">
-            <table className="w-full bg-white dark:bg-gray-900">
-              <thead>
-                <tr className="bg-gray-50 dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
-                  <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                    {t('orderdetails.order_id') || 'Order ID'}
-                  </th>
-                  <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                    {t('orderdetails.table') || 'Table'}
-                  </th>
-                  <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                    {t('orderdetails.waiter') || 'Waiter'}
-                  </th>
-                  <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                    {t('orderdetails.kitchen') || 'Kitchen'}
-                  </th>
-                  <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                    {t('orderdetails.status') || 'Status'}
-                  </th>
-                  <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                    {t('orderdetails.total') || 'Total'}
-                  </th>
-                  <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                    {t('orderdetails.date') || 'Order Date'}
-                  </th>
-                  <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                    {t('orderdetails.actions') || 'Actions'}
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
-                {filteredOrders.length > 0 ? (
-                  filteredOrders.map((order) => {
-                    const paymentStatus = orderPaymentStatus[order._id];
-                    const isPaymentComplete = paymentStatus?.toLowerCase() === 'complete';
-                    
-                    return (
-                      <tr key={order._id} className="hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          <div className="text-sm font-medium text-gray-900 dark:text-gray-100">
-                            #{order._id?.slice(-8) || 'N/A'}
-                          </div>
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          <div className="flex items-center">
-                            <Table className="w-4 h-4 text-gray-400 dark:text-gray-500 mr-2" />
-                            <span className="text-sm text-gray-900 dark:text-gray-100">
-                              {order.tableid?.tablenumber || 'N/A'}
-                            </span>
-                          </div>
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          <div className="flex items-center">
-                            <User className="w-4 h-4 text-gray-400 dark:text-gray-500 mr-2" />
-                            <span className="text-sm text-gray-900 dark:text-gray-100">
-                              {order.waiterid?.name || 'N/A'}
-                            </span>
-                          </div>
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          <div className="flex items-center">
-                            <ChefHat className="w-4 h-4 text-gray-400 dark:text-gray-500 mr-2" />
-                            <span className="text-sm text-gray-900 dark:text-gray-100">
-                              {order.kitchenid?.name || 'N/A'}
-                            </span>
-                          </div>
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full border ${getStatusBadgeColor(order.orderstatus)}`}>
-                            {order.orderstatus || 'N/A'}
-                          </span>
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          <div className="text-sm font-medium text-gray-900 dark:text-gray-100">
-                            {getCurrencySymbol(order.dishes?.[0]?.dish_id?.currency || 'USD')}
-                            {calculateOrderTotal(order.dishes).toFixed(2)}
-                          </div>
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          <div className="flex items-center text-sm text-gray-500 dark:text-gray-400">
-                            <Calendar className="w-4 h-4 mr-1" />
-                            {formatDate(order.orderdate)}
-                          </div>
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          <div className="flex items-center space-x-2">
-                            {order.orderstatus?.toLowerCase() === 'served' && createPayment && (
-                              <>
-                                {isPaymentComplete ? (
-                                  <Button
-                                    variant="outline"
-                                    size="sm"
-                                    className="flex items-center px-3 py-1 bg-blue-600 text-white border border-blue-600 hover:bg-blue-700 hover:border-blue-700 dark:bg-blue-700 dark:hover:bg-blue-600 transition-all duration-200 rounded-md text-xs"
-                                    onClick={() => handleGenerateBill(order)}
-                                    disabled={paymentLoading}
-                                  >
-                                    <FileText size={12} className="mr-1" />
-                                    Generate Bill
-                                  </Button>
-                                ) : (
-                                  <Button
-                                    variant="outline"
-                                    size="sm"
-                                    className="flex items-center px-3 py-1 bg-green-600 text-white border border-green-600 hover:bg-green-700 hover:border-green-700 dark:bg-green-700 dark:hover:bg-green-600 transition-all duration-200 rounded-md text-xs"
-                                    onClick={() => handlePayment(order)}
-                                  >
-                                    <CreditCard size={12} className="mr-1" />
-                                    {t('orderdetails.payment') || 'Payment'}
-                                  </Button>
+          <>
+            {/* Desktop Table View */}
+            {viewMode === 'table' && (
+              <div className="overflow-x-auto">
+                <table className="w-full bg-white dark:bg-gray-900 min-w-[800px]">
+                  <thead>
+                    <tr className="bg-gray-50 dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
+                      <th className="px-4 sm:px-6 py-3 sm:py-4 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                        {t('orderdetails.order_id') || 'Order ID'}
+                      </th>
+                      <th className="px-4 sm:px-6 py-3 sm:py-4 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                        {t('orderdetails.table') || 'Table'}
+                      </th>
+                      <th className="px-4 sm:px-6 py-3 sm:py-4 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                        {t('orderdetails.waiter') || 'Waiter'}
+                      </th>
+                      <th className="px-4 sm:px-6 py-3 sm:py-4 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                        {t('orderdetails.kitchen') || 'Kitchen'}
+                      </th>
+                      <th className="px-4 sm:px-6 py-3 sm:py-4 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                        {t('orderdetails.status') || 'Status'}
+                      </th>
+                      <th className="px-4 sm:px-6 py-3 sm:py-4 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                        {t('orderdetails.total') || 'Total'}
+                      </th>
+                      <th className="px-4 sm:px-6 py-3 sm:py-4 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                        {t('orderdetails.date') || 'Order Date'}
+                      </th>
+                      <th className="px-4 sm:px-6 py-3 sm:py-4 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                        {t('orderdetails.actions') || 'Actions'}
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
+                    {filteredOrders.length > 0 ? (
+                      filteredOrders.map((order) => {
+                        const paymentStatus = orderPaymentStatus[order._id];
+                        const isPaymentComplete = paymentStatus?.toLowerCase() === 'complete';
+                        
+                        return (
+                          <tr key={order._id} className="hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
+                            <td className="px-4 sm:px-6 py-3 sm:py-4 whitespace-nowrap">
+                              <div className="text-sm font-medium text-gray-900 dark:text-gray-100">
+                                #{order._id?.slice(-8) || 'N/A'}
+                              </div>
+                            </td>
+                            <td className="px-4 sm:px-6 py-3 sm:py-4 whitespace-nowrap">
+                              <div className="flex items-center">
+                                <Table className="w-4 h-4 text-gray-400 dark:text-gray-500 mr-2" />
+                                <span className="text-sm text-gray-900 dark:text-gray-100">
+                                  {order.tableid?.tablenumber || 'N/A'}
+                                </span>
+                              </div>
+                            </td>
+                            <td className="px-4 sm:px-6 py-3 sm:py-4 whitespace-nowrap">
+                              <div className="flex items-center">
+                                <User className="w-4 h-4 text-gray-400 dark:text-gray-500 mr-2" />
+                                <span className="text-sm text-gray-900 dark:text-gray-100">
+                                  {order.waiterid?.name || 'N/A'}
+                                </span>
+                              </div>
+                            </td>
+                            <td className="px-4 sm:px-6 py-3 sm:py-4 whitespace-nowrap">
+                              <div className="flex items-center">
+                                <ChefHat className="w-4 h-4 text-gray-400 dark:text-gray-500 mr-2" />
+                                <span className="text-sm text-gray-900 dark:text-gray-100">
+                                  {order.kitchenid?.name || 'N/A'}
+                                </span>
+                              </div>
+                            </td>
+                            <td className="px-4 sm:px-6 py-3 sm:py-4 whitespace-nowrap">
+                              <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full border ${getStatusBadgeColor(order.orderstatus)}`}>
+                                {order.orderstatus || 'N/A'}
+                              </span>
+                            </td>
+                            <td className="px-4 sm:px-6 py-3 sm:py-4 whitespace-nowrap">
+                              <div className="text-sm font-medium text-gray-900 dark:text-gray-100">
+                                {getCurrencySymbol(order.dishes?.[0]?.dish_id?.currency || 'USD')}
+                                {calculateOrderTotal(order.dishes).toFixed(2)}
+                              </div>
+                            </td>
+                            <td className="px-4 sm:px-6 py-3 sm:py-4 whitespace-nowrap">
+                              <div className="flex items-center text-sm text-gray-500 dark:text-gray-400">
+                                <Calendar className="w-4 h-4 mr-1" />
+                                <span className="hidden lg:inline">
+                                  {formatDate(order.orderdate)}
+                                </span>
+                                <span className="lg:hidden">
+                                  {new Date(order.orderdate).toLocaleDateString()}
+                                </span>
+                              </div>
+                            </td>
+                            <td className="px-4 sm:px-6 py-3 sm:py-4 whitespace-nowrap">
+                              <div className="flex items-center space-x-2">
+                                {order.orderstatus?.toLowerCase() === 'served' && createPayment && (
+                                  <>
+                                    {isPaymentComplete ? (
+                                      <Button
+                                        variant="outline"
+                                        size="sm"
+                                        className="flex items-center px-2 sm:px-3 py-1 bg-blue-600 text-white border border-blue-600 hover:bg-blue-700 hover:border-blue-700 dark:bg-blue-700 dark:hover:bg-blue-600 transition-all duration-200 rounded-md text-xs"
+                                        onClick={() => handleGenerateBill(order)}
+                                        disabled={paymentLoading}
+                                      >
+                                        <FileText size={12} className="mr-1" />
+                                        <span className="hidden sm:inline">Generate Bill</span>
+                                        <span className="sm:hidden">Bill</span>
+                                      </Button>
+                                    ) : (
+                                      <Button
+                                        variant="outline"
+                                        size="sm"
+                                        className="flex items-center px-2 sm:px-3 py-1 bg-green-600 text-white border border-green-600 hover:bg-green-700 hover:border-green-700 dark:bg-green-700 dark:hover:bg-green-600 transition-all duration-200 rounded-md text-xs"
+                                        onClick={() => handlePayment(order)}
+                                      >
+                                        <CreditCard size={12} className="mr-1" />
+                                        <span className="hidden sm:inline">{t('orderdetails.payment') || 'Payment'}</span>
+                                        <span className="sm:hidden">Pay</span>
+                                      </Button>
+                                    )}
+                                  </>
                                 )}
-                              </>
-                            )}
+                              </div>
+                            </td>
+                          </tr>
+                        )
+                      })
+                    ) : (
+                      <tr>
+                        <td colSpan="8" className="px-4 sm:px-6 py-8 sm:py-10 text-center text-gray-500 dark:text-gray-400 bg-white dark:bg-gray-900">
+                          <div className="flex flex-col items-center">
+                            <ClipboardList className="w-8 h-8 sm:w-10 sm:h-10 text-gray-400 dark:text-gray-500 mb-3" />
+                            <p className="text-sm sm:text-base text-gray-500 dark:text-gray-400">
+                              {t('orderdetails.no_orders') || 'No orders found'}
+                            </p>
+                            <p className="text-xs sm:text-sm text-gray-400 dark:text-gray-500 mt-1">
+                              {t('orderdetails.adjust_filters') || 'Try adjusting your filters or search terms'}
+                            </p>
                           </div>
                         </td>
                       </tr>
-                    )
-                  })
+                    )}
+                  </tbody>
+                </table>
+              </div>
+            )}
+
+            {/* Mobile Cards View */}
+            {viewMode === 'cards' && (
+              <div className="p-4 space-y-4">
+                {filteredOrders.length > 0 ? (
+                  filteredOrders.map((order) => (
+                    <OrderCard key={order._id} order={order} />
+                  ))
                 ) : (
-                  <tr>
-                    <td colSpan="8" className="px-6 py-10 text-center text-gray-500 dark:text-gray-400 bg-white dark:bg-gray-900">
-                      <div className="flex flex-col items-center">
-                        <ClipboardList className="w-10 h-10 text-gray-400 dark:text-gray-500 mb-2" strokeWidth={1.5} />
-                        <p className="text-lg font-medium">
-                          {t('orderdetails.no_orders') || 'No orders found'}
-                        </p>
-                        <p className="text-sm text-gray-400 dark:text-gray-500 mt-1">
-                          {t('orderdetails.no_orders_description') || 'No orders match your current filters'}
-                        </p>
-                      </div>
-                    </td>
-                  </tr>
+                  <div className="text-center py-8">
+                    <ClipboardList className="w-10 h-10 text-gray-400 dark:text-gray-500 mb-3 mx-auto" />
+                    <p className="text-base text-gray-500 dark:text-gray-400">
+                      {t('orderdetails.no_orders') || 'No orders found'}
+                    </p>
+                    <p className="text-sm text-gray-400 dark:text-gray-500 mt-1">
+                      {t('orderdetails.adjust_filters') || 'Try adjusting your filters or search terms'}
+                    </p>
+                  </div>
                 )}
-              </tbody>
-            </table>
-          </div>
+              </div>
+            )}
+          </>
         )}
       </div>
 
       {/* Payment Modal */}
-      {createPayment && (
-        <CustomModal
-          open={isPaymentModalOpen}
-          hideModal={closePaymentModal}
-          hideFooter={true}
-          title={`${t('orderdetails.payment_details') || 'Payment Details'} - #${selectedOrder?._id?.slice(-8) || ''}`}
-          size="md"
-        >
-          {selectedOrder && (
-            <div className="bg-white dark:bg-gray-900">
-              <form onSubmit={handlePaymentSubmit} className="space-y-6">
-                {/* Success Message */}
-                {paymentSuccess && (
-                  <Alert className="border-green-200 bg-green-50 dark:border-green-800 dark:bg-green-900/20">
-                    <AlertDescription className="text-green-800 dark:text-green-300 flex items-center justify-between">
-                      <span>{t('orderdetails.payment_success') || "Payment processed successfully!"}</span>
-                      <Button
-                        type="button"
-                        variant="outline"
-                        size="sm"
-                        onClick={closePaymentModal}
-                        className="ml-4 bg-green-600 text-white border-green-600 hover:bg-green-700 dark:bg-green-700 dark:hover:bg-green-600"
-                      >
-                        Close
-                      </Button>
-                    </AlertDescription>
-                  </Alert>
-                )}
-
-                {/* Error Message */}
-                {paymentError && (
-                  <Alert className="border-red-200 bg-red-50 dark:border-red-800 dark:bg-red-900/20">
-                    <AlertDescription className="text-red-800 dark:text-red-300">
-                      {t('orderdetails.payment_error') || "Payment processing failed. Please try again."}
-                    </AlertDescription>
-                  </Alert>
-                )}
-
-                {/* Order Summary */}
-                <div className="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg">
-                  <h3 className="font-semibold text-gray-800 dark:text-gray-200 mb-3 flex items-center">
-                    <ClipboardList className="w-5 h-5 mr-2" />
-                    {t('orderdetails.order_summary') || 'Order Summary'}
-                  </h3>
-                  <div className="space-y-2 text-sm">
-                    <div className="flex justify-between">
-                      <span className="text-gray-600 dark:text-gray-400">{t('orderdetails.table') || 'Table'}:</span>
-                      <span className="font-medium text-gray-900 dark:text-gray-100">{selectedOrder.tableid?.tablenumber || 'N/A'}</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-gray-600 dark:text-gray-400">{t('orderdetails.waiter') || 'Waiter'}:</span>
-                      <span className="font-medium text-gray-900 dark:text-gray-100">{selectedOrder.waiterid?.name || 'N/A'}</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-gray-600 dark:text-gray-400">{t('orderdetails.total_amount') || 'Total Amount'}:</span>
-                      <span className="font-bold text-lg text-indigo-600 dark:text-indigo-400">
-                        {getCurrencySymbol(selectedOrder.dishes?.[0]?.dish_id?.currency || 'USD')}
-                        {calculateOrderTotal(selectedOrder.dishes).toFixed(2)}
-                      </span>
-                    </div>
-                  </div>
-                </div>
-
-               
-                {!paymentSuccess && (
-                  <div className="space-y-4">
-                    <div>
-                      <label htmlFor="customername" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                        {t('orderdetails.customer_name') || 'Customer Name'} *
-                      </label>
-                      <Input
-                        type="text"
-                        id="customername"
-                        name="customername"
-                        value={paymentForm.customername}
-                        onChange={handlePaymentFormChange}
-                        placeholder={t('orderdetails.enter_customer_name') || 'Enter customer name'}
-                        required
-                        className="w-full bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-600 placeholder-gray-500 dark:placeholder-gray-400"
-                        disabled={paymentLoading}
-                      />
-                    </div>
-
-                    <div>
-                      <label htmlFor="paymentmethod" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                        {t('orderdetails.payment_method') || 'Payment Method'} *
-                      </label>
-                      <select
-                        id="paymentmethod"
-                        name="paymentmethod"
-                        value={paymentForm.paymentmethod}
-                        onChange={handlePaymentFormChange}
-                        className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"
-                        required
-                        disabled={paymentLoading}
-                      >
-                        <option value="cash">{t('orderdetails.cash') || 'Cash'}</option>
-                        <option value="card">{t('orderdetails.card') || 'Card'}</option>
-                        <option value="upi">{t('orderdetails.upi') || 'UPI'}</option>
-                        <option value="digital_wallet">{t('orderdetails.digital_wallet') || 'Digital Wallet'}</option>
-                      </select>
-                    </div>
-
-                    <div>
-                      <label htmlFor="amount" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                        {t('orderdetails.amount') || 'Amount'} *
-                      </label>
-                      <Input
-                        type="number"
-                        id="amount"
-                        name="amount"
-                        value={paymentForm.amount}
-                        onChange={handlePaymentFormChange}
-                        placeholder="0.00"
-                        step="0.01"
-                        min="0"
-                        required
-                        className="w-full bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-600 placeholder-gray-500 dark:placeholder-gray-400"
-                        disabled={paymentLoading}
-                      />
-                    </div>
-                  </div>
-                )}
-
-                {/* Action Buttons */}
-                <div className="flex justify-end space-x-3 pt-4 border-t border-gray-200 dark:border-gray-700">
-                  <Button
-                    type="button"
-                    variant="outline"
-                    onClick={closePaymentModal}
-                    disabled={paymentLoading}
-                    className="px-4 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800"
-                  >
-                    {t('orderdetails.cancel') || 'Cancel'}
-                  </Button>
-                  {!paymentSuccess && (
-                    <Button
-                      type="submit"
-                      disabled={paymentLoading || !paymentForm.customername}
-                      className="bg-indigo-600 text-white hover:bg-indigo-700 dark:bg-indigo-700 dark:hover:bg-indigo-600 disabled:opacity-50 disabled:cursor-not-allowed px-6 py-2"
-                    >
-                      {paymentLoading ? (
-                        <>
-                          <Clock className="w-4 h-4 mr-2 animate-spin" />
-                          {t('orderdetails.processing') || 'Processing...'}
-                        </>
-                      ) : (
-                        <>
-                          <CreditCard className="w-4 h-4 mr-2" />
-                          {t('orderdetails.process_payment') || 'Process Payment'}
-                        </>
-                      )}
-                    </Button>
-                  )}
-                </div>
-              </form>
-            </div>
+      <CustomModal
+        isOpen={isPaymentModalOpen}
+        onClose={closePaymentModal}
+        title={
+          <div className="flex items-center">
+            <CreditCard className="w-5 h-5 mr-2" />
+            {t('orderdetails.payment_modal_title') || 'Process Payment'}
+          </div>
+        }
+        size="md"
+      >
+        <div className="p-6">
+          {paymentSuccess && paymentSubmitted && (
+            <Alert className="mb-4 bg-green-50 border-green-200 dark:bg-green-900/20 dark:border-green-800">
+              <AlertDescription className="text-green-800 dark:text-green-300">
+                {t('orderdetails.payment_success') || 'Payment processed successfully!'}
+              </AlertDescription>
+            </Alert>
           )}
-        </CustomModal>
-      )}
 
-      {/* Order Items Modal - Optional detailed view */}
-      {selectedOrder && (
-        <div className="hidden">
-          <div className="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg mt-4">
-            <h4 className="font-semibold text-gray-800 dark:text-gray-200 mb-3 flex items-center">
-              <Package className="w-5 h-5 mr-2" />
-              {t('orderdetails.order_items') || 'Order Items'}
-            </h4>
-            <div className="space-y-2">
-              {selectedOrder.dishes?.map((dishItem, index) => (
-                <div key={index} className="flex justify-between items-center py-2 border-b border-gray-200 dark:border-gray-600 last:border-b-0">
-                  <div>
-                    <span className="font-medium text-gray-900 dark:text-gray-100">
-                      {getDishDisplayName(dishItem.dish_id)}
-                    </span>
-                    <span className="text-gray-500 dark:text-gray-400 ml-2">
-                      x{dishItem.quantity}
-                    </span>
-                  </div>
-                  <span className="font-medium text-gray-900 dark:text-gray-100">
-                    {getCurrencySymbol(dishItem.dish_id?.currency || 'USD')}
-                    {((dishItem.dish_id?.price || 0) * (dishItem.quantity || 0)).toFixed(2)}
+          {paymentError && (
+            <Alert className="mb-4 bg-red-50 border-red-200 dark:bg-red-900/20 dark:border-red-800">
+              <AlertDescription className="text-red-800 dark:text-red-300">
+                {message || t('orderdetails.payment_error') || 'Error processing payment. Please try again.'}
+              </AlertDescription>
+            </Alert>
+          )}
+
+          {selectedOrder && (
+            <div className="mb-6">
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2">
+                {t('orderdetails.order_summary') || 'Order Summary'}
+              </h3>
+              <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-4">
+                <div className="flex justify-between items-center mb-2">
+                  <span className="text-sm text-gray-600 dark:text-gray-400">
+                    {t('orderdetails.order_id') || 'Order ID'}:
+                  </span>
+                  <span className="text-sm font-medium text-gray-900 dark:text-gray-100">
+                    #{selectedOrder._id?.slice(-8)}
                   </span>
                 </div>
-              ))}
+                <div className="flex justify-between items-center mb-2">
+                  <span className="text-sm text-gray-600 dark:text-gray-400">
+                    {t('orderdetails.table') || 'Table'}:
+                  </span>
+                  <span className="text-sm font-medium text-gray-900 dark:text-gray-100">
+                    {selectedOrder.tableid?.tablenumber}
+                  </span>
+                </div>
+                <div className="flex justify-between items-center mb-4">
+                  <span className="text-sm text-gray-600 dark:text-gray-400">
+                    {t('orderdetails.total_amount') || 'Total Amount'}:
+                  </span>
+                  <span className="text-lg font-bold text-gray-900 dark:text-gray-100">
+                    {getCurrencySymbol(selectedOrder.dishes?.[0]?.dish_id?.currency || 'USD')}
+                    {calculateOrderTotal(selectedOrder.dishes).toFixed(2)}
+                  </span>
+                </div>
+
+                {/* Dishes List */}
+                <div className="border-t border-gray-200 dark:border-gray-700 pt-3">
+                  <h4 className="text-sm font-medium text-gray-900 dark:text-gray-100 mb-2">
+                    {t('orderdetails.items') || 'Items'}:
+                  </h4>
+                  <div className="space-y-1">
+                    {selectedOrder.dishes?.map((dishItem, index) => (
+                      <div key={index} className="flex justify-between text-sm">
+                        <span className="text-gray-600 dark:text-gray-400">
+                          {getDishDisplayName(dishItem.dish_id)} × {dishItem.quantity}
+                        </span>
+                        <span className="text-gray-900 dark:text-gray-100">
+                          {getCurrencySymbol(dishItem.dish_id?.currency || 'USD')}
+                          {((dishItem.dish_id?.price || 0) * (dishItem.quantity || 0)).toFixed(2)}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
             </div>
-          </div>
+          )}
+
+          <form onSubmit={handlePaymentSubmit} className="space-y-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                {t('orderdetails.customer_name') || 'Customer Name'}
+              </label>
+              <Input
+                type="text"
+                name="customername"
+                value={paymentForm.customername}
+                onChange={handlePaymentFormChange}
+                placeholder={t('orderdetails.enter_customer_name') || 'Enter customer name'}
+                className="w-full"
+                required
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                {t('orderdetails.payment_method') || 'Payment Method'}
+              </label>
+              <select
+                name="paymentmethod"
+                value={paymentForm.paymentmethod}
+                onChange={handlePaymentFormChange}
+                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"
+                required
+              >
+                <option value="cash">{t('orderdetails.cash') || 'Cash'}</option>
+                <option value="card">{t('orderdetails.card') || 'Card'}</option>
+                <option value="upi">{t('orderdetails.upi') || 'UPI'}</option>
+                <option value="other">{t('orderdetails.other') || 'Other'}</option>
+              </select>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                {t('orderdetails.amount') || 'Amount'}
+              </label>
+              <Input
+                type="number"
+                name="amount"
+                value={paymentForm.amount}
+                onChange={handlePaymentFormChange}
+                placeholder="0.00"
+                className="w-full"
+                step="0.01"
+                min="0"
+                required
+              />
+            </div>
+
+            <div className="flex justify-end space-x-3 pt-4">
+              <Button
+                type="button"
+                variant="outline"
+                onClick={closePaymentModal}
+                className="px-4 py-2"
+                disabled={paymentLoading}
+              >
+                {t('orderdetails.cancel') || 'Cancel'}
+              </Button>
+              <Button
+                type="submit"
+                className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white"
+                disabled={paymentLoading || paymentSubmitted}
+              >
+                {paymentLoading ? (
+                  <div className="flex items-center">
+                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                    {t('orderdetails.processing') || 'Processing...'}
+                  </div>
+                ) : (
+                  t('orderdetails.process_payment') || 'Process Payment'
+                )}
+              </Button>
+            </div>
+          </form>
         </div>
+      </CustomModal>
+
+      {/* Error Alert */}
+      {isError && (
+        <Alert className="mt-4 bg-red-50 border-red-200 dark:bg-red-900/20 dark:border-red-800">
+          <AlertDescription className="text-red-800 dark:text-red-300">
+            {message || t('orderdetails.error') || 'An error occurred while loading orders.'}
+          </AlertDescription>
+        </Alert>
       )}
     </div>
   );
