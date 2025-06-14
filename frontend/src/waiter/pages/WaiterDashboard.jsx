@@ -181,7 +181,7 @@ const WaiterDashboard = () => {
           ['pending', 'preparing'].includes(order.orderstatus)
         ) || table.orders[0]  
       : null;
-    setTimeout(() => {
+   
       setSelectedTable(table);
       
       if (activeOrder) {
@@ -194,7 +194,7 @@ const WaiterDashboard = () => {
       
       setModalInitialized(true);
       setIsTakeOrderModalOpen(true);
-    }, 50);
+   
   };
 
   const handleCloseTakeOrderModal = () => {
