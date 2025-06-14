@@ -204,12 +204,12 @@ const WaiterDashboard = () => {
     setExistingOrder(null);
     setOrderMode('create');
     
-    setTimeout(() => {
+   
       if (currentWaiterId) {
         dispatch(fetchOrderbyWaiterId(currentWaiterId));
       }
       dispatch(fetchTables());
-    }, 200);
+    
   };
 
   const filteredTables = roleFilteredTables.filter(table => {
