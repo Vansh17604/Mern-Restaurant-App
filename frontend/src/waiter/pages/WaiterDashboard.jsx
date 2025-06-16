@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { cn } from "../../lib/utils";
@@ -15,18 +15,14 @@ import {
   ShoppingCart,
   Truck
 } from 'lucide-react';
-
 import { Button } from "../../components/ui/button";
-
 import StatsCard from '../componets/StatsCard';
 import TakeOrderModal from '../modals/TakeOrderModal';
-
 import { 
   fetchTables,  
   assignWaiter,
   resetTableState 
 } from '../../features/admin/table/tableSlice';
-
 import { 
   fetchOrderbyWaiterId,
   resetOrderState,
@@ -35,100 +31,128 @@ import {
 
 const WaiterDashboard = () => {
   const dispatch = useDispatch();
-  const { t, i18n } = useTranslation();
-  const { tables, isLoading, isError, message } = useSelector((state) => state.table);
-  const { orders, isLoading: ordersLoading } = useSelector((state) => state.order);
-  const { user } = useSelector((state) => state.auth);
-  const currentWaiterId = user?.id;
-  const currentWaiterRole = user?.role;
+  const { t } = useTranslation();
   
-  const [filter, setFilter] = useState('all');
-  const [searchTerm, setSearchTerm] = useState('');
+  // Redux state
+  const { tables = [], isLoading, isError, message } = useSelector((state) => state.table);
+  const { orders = [], isLoading: ordersLoading } = useSelector((state) => state.order);
+  const { user } = useSelector((state) => state.auth);
+  
+  // Local state
   const [darkMode, setDarkMode] = useState(false);
   const [selectedTable, setSelectedTable] = useState(null);
   const [isTakeOrderModalOpen, setIsTakeOrderModalOpen] = useState(false);
-  const [orderMode, setOrderMode] = useState('create'); // 'create' or 'edit'
+  const [orderMode, setOrderMode] = useState('create');
   const [existingOrder, setExistingOrder] = useState(null);
-  const [modalInitialized, setModalInitialized] = useState(false);
-  
+  const [isModalProcessing, setIsModalProcessing] = useState(false);
+
+  // Refs for cleanup
+  const modalTimeoutRef = useRef(null);
+  const isComponentMountedRef = useRef(true);
+
+  const currentWaiterId = user?.id;
+  const currentWaiterRole = user?.role;
+
+  // Cleanup on unmount
   useEffect(() => {
-    dispatch(fetchOrderbyWaiterId(currentWaiterId));
+    return () => {
+      isComponentMountedRef.current = false;
+      if (modalTimeoutRef.current) {
+        clearTimeout(modalTimeoutRef.current);
+      }
+    };
+  }, []);
+
+  // Fetch data on mount
+  useEffect(() => {
+    if (currentWaiterId) {
+      dispatch(fetchOrderbyWaiterId(currentWaiterId));
+    }
     dispatch(fetchTables());
-    
+
     return () => {
       dispatch(resetTableState());
       dispatch(resetOrderState());
     };
-  }, [dispatch]);
+  }, [dispatch, currentWaiterId]);
 
+  // Dark mode detection
   useEffect(() => {
     const checkDarkMode = () => {
-      if (document) {
+      if (document?.body) {
         setDarkMode(document.body.classList.contains('dark'));
       }
     };
     
     checkDarkMode();
-
     const observer = new MutationObserver(checkDarkMode);
+    observer.observe(document.body, {
+      attributes: true,
+      attributeFilter: ['class']
+    });
     
-    if (document) {
-      observer.observe(document.body, { 
-        attributes: true, 
-        attributeFilter: ['class'] 
-      });
-    }
-    
-    return () => {
-      observer.disconnect();
-    };
+    return () => observer.disconnect();
   }, []);
 
+  // Debug effect to monitor modal state changes
+  useEffect(() => {
+    console.log('Modal state changed:', {
+      isTakeOrderModalOpen,
+      selectedTable: selectedTable?.id,
+      orderMode,
+      existingOrder: existingOrder?._id
+    });
+  }, [isTakeOrderModalOpen, selectedTable, orderMode, existingOrder]);
+
+  // Format table data with proper field mapping
   const formatTableData = (backendTables) => {
     return backendTables.map(table => {
+      // Find orders for this table (fixed field name: tableid)
       const tableOrders = orders.filter(order => 
         order.tableid === table._id || order.tableid?._id === table._id
       );
       
       return {
         id: table._id,
-        tableNumber: table.tablenumber,
-        status: getTableStatus(table.tablestatus),
-        capacity: table.tablecapacity,
+        tableNumber: table.tablenumber, // Fixed field name
+        status: table.tablestatus, // Use actual status from backend
+        capacity: table.tablecapacity, // Fixed field name
         waiter: table.waiter_id,
         waiterName: table.waiter_id?.name || null,
         waiterId: table.waiter_id?._id || table.waiter_id,
         isWaiterAssigned: !!table.waiter_id,
         isAssignedToCurrentWaiter: table.waiter_id?._id === currentWaiterId || table.waiter_id === currentWaiterId,
-        originalStatus: table.tablestatus,
         orders: tableOrders,
         hasActiveOrders: tableOrders.length > 0,
-        totalOrderAmount: tableOrders.reduce((sum, order) => sum + (order.totalAmount || 0), 0)
+        totalOrderAmount: tableOrders.reduce((sum, order) => {
+          // Calculate total from dishes
+          const dishTotal = order.dishes?.reduce((dishSum, dish) => {
+            const price = dish.dish_id?.price || 0;
+            const quantity = dish.quantity || 1;
+            return dishSum + (price * quantity);
+          }, 0) || 0;
+          return sum + dishTotal;
+        }, 0)
       };
     });
   };
 
-  const getTableStatus = (backendStatus) => {
-    const statusMap = {
-      'Available': 'Available',
-      'Assigned': 'Assigned',
-    };
-    return statusMap[backendStatus] || 'Available';
-  };
-
   const formattedTables = formatTableData(tables);
 
+  // Filter tables based on role
   const getFilteredTablesByRole = (tables) => {
-    tables.filter(table => 
-      table.status === 'Available' || 
-      table.isAssignedToCurrentWaiter
-    );
-    
-    return tables;
+    if (currentWaiterRole === 'Waiter') {
+      return tables.filter(table => 
+        table.status === 'Available' || 
+        table.isAssignedToCurrentWaiter
+      );
+    }
+    return tables; // Admin/Manager can see all tables
   };
 
   const roleFilteredTables = getFilteredTablesByRole(formattedTables);
 
+  // Calculate stats
   const stats = {
     available: roleFilteredTables.filter(table => table.status === 'Available').length,
     assigned: roleFilteredTables.filter(table => table.status === 'Assigned').length,
@@ -136,17 +160,19 @@ const WaiterDashboard = () => {
     total: roleFilteredTables.length,
     ordersToday: orders.filter(order => {
       const today = new Date();
-      const orderDate = new Date(order.createdAt);
+      const orderDate = new Date(order.orderdate || order.createdAt);
       return orderDate.toDateString() === today.toDateString();
     }).length
   };
 
-  const handleAssignWaiter = async (tableId, waiterId = currentWaiterId) => {
+  // Handle waiter assignment
+  const handleAssignWaiter = async (tableId) => {
     try {
       await dispatch(assignWaiter({ 
         tableId, 
-        data: { waiter_id: waiterId || currentWaiterId } 
+        data: { waiter_id: currentWaiterId } 
       }));
+      // Refresh data
       setTimeout(() => {
         dispatch(fetchTables());
         if (currentWaiterId) {
@@ -154,10 +180,11 @@ const WaiterDashboard = () => {
         }
       }, 500);
     } catch (error) {
-      // Handle error
+      console.error('Error assigning waiter:', error);
     }
   };
 
+  // Handle order serving
   const handleServeOrder = async (orderId) => {
     try {
       await dispatch(markOrderAsServed(orderId));
@@ -172,60 +199,47 @@ const WaiterDashboard = () => {
     }
   };
 
-  const handleOpenTakeOrderModal = (table) => {
-    setIsTakeOrderModalOpen(false);
-    setModalInitialized(false);
+  // Updated handleTakeOrder function - more reliable
+  const handleTakeOrder = useCallback((table) => {
+    console.log('Taking order for table:', table); // Debug log
+    
+    setSelectedTable(table);
+    
+    // Check for existing orders
+    const existingTableOrder = orders.find(order => 
+      (order.tableid === table.id || order.tableid?._id === table.id) && 
+      order.orderstatus !== 'completed'
+    );
+    
+    if (existingTableOrder) {
+      console.log('Found existing order:', existingTableOrder); // Debug log
+      setOrderMode('edit');
+      setExistingOrder(existingTableOrder);
+    } else {
+      console.log('Creating new order'); // Debug log
+      setOrderMode('create');
+      setExistingOrder(null);
+    }
+    
+    // Set modal open AFTER setting all other states
+    setIsTakeOrderModalOpen(true);
+  }, [orders]);
 
-    const activeOrder = table.orders && table.orders.length > 0 
-      ? table.orders.find(order => 
-          ['pending', 'preparing'].includes(order.orderstatus)
-        ) || table.orders[0]  
-      : null;
-   
-      setSelectedTable(table);
-      
-      if (activeOrder) {
-        setOrderMode('edit');
-        setExistingOrder(activeOrder);
-      } else {
-        setOrderMode('create');
-        setExistingOrder(null);
-      }
-      
-      setModalInitialized(true);
-      setIsTakeOrderModalOpen(true);
-   
-  };
-
-  const handleCloseTakeOrderModal = () => {
+  // Updated handleCloseModal function
+  const handleCloseModal = useCallback(() => {
+    console.log('Closing modal, isModalProcessing:', isModalProcessing); // Debug log
+    
+    if (isModalProcessing) return;
+    
     setIsTakeOrderModalOpen(false);
-    setModalInitialized(false);
+    
+    // Clean up states immediately, no need for timeout
     setSelectedTable(null);
     setExistingOrder(null);
     setOrderMode('create');
-    
-   
-      if (currentWaiterId) {
-        dispatch(fetchOrderbyWaiterId(currentWaiterId));
-      }
-      dispatch(fetchTables());
-    
-  };
+  }, [isModalProcessing]);
 
-  const filteredTables = roleFilteredTables.filter(table => {
-    const matchesFilter = filter === 'all' || 
-      (filter === 'Assigned' && table.status === 'Assigned') ||
-      (filter === 'Available' && table.status === 'Available') ||
-      (filter === 'myTables' && table.isAssignedToCurrentWaiter) ||
-      (filter === 'withOrders' && table.hasActiveOrders);
-    
-    const matchesSearch = searchTerm === '' || 
-      table.tableNumber.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      (table.waiterName && table.waiterName.toLowerCase().includes(searchTerm.toLowerCase()));
-    
-    return matchesFilter && matchesSearch;
-  });
-
+  // Auth check
   if (!user || !currentWaiterId) {
     return (
       <div className={cn(
@@ -236,13 +250,14 @@ const WaiterDashboard = () => {
           <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
             <User className="w-8 h-8 text-red-600" />
           </div>
-          <h2 className="text-xl font-semibold mb-2">{t('waiterDashboard.auth.required')}</h2>
-          <p className="text-gray-500">{t('waiterDashboard.auth.loginMessage')}</p>
+          <h2 className="text-xl font-semibold mb-2">Authentication Required</h2>
+          <p className="text-gray-500">Please log in to access the waiter dashboard.</p>
         </div>
       </div>
     );
   }
 
+  // Loading state
   if (isLoading || ordersLoading) {
     return (
       <div className={cn(
@@ -251,12 +266,13 @@ const WaiterDashboard = () => {
       )}>
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-          <p className="text-lg font-medium">{t('waiterDashboard.loading.dashboard')}</p>
+          <p className="text-lg font-medium">Loading dashboard...</p>
         </div>
       </div>
     );
   }
 
+  // Error state
   if (isError) {
     return (
       <div className={cn(
@@ -267,10 +283,10 @@ const WaiterDashboard = () => {
           <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
             <X className="w-8 h-8 text-red-600" />
           </div>
-          <h2 className="text-xl font-semibold mb-2 text-red-600">{t('waiterDashboard.error.title')}</h2>
+          <h2 className="text-xl font-semibold mb-2 text-red-600">Error Loading Dashboard</h2>
           <p className="text-gray-500 mb-4">{message}</p>
           <Button onClick={() => dispatch(fetchTables())} className="bg-blue-600 hover:bg-blue-700">
-            {t('waiterDashboard.error.tryAgain')}
+            Try Again
           </Button>
         </div>
       </div>
@@ -282,22 +298,20 @@ const WaiterDashboard = () => {
       "p-3 md:p-6 w-full min-h-screen transition-colors duration-200",
       darkMode ? "bg-slate-900 text-white" : "bg-gray-50 text-gray-900"
     )}>
+      {/* Header */}
       <div className="mb-6">
         <div className="flex items-center justify-between mb-4">
           <div>
-            <h1 className={cn(
-              "text-2xl md:text-3xl font-bold mb-2 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent"
-            )}>
-              {t('waiterDashboard.title')}
+            <h1 className="text-2xl md:text-3xl font-bold mb-2 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+              Waiter Dashboard
             </h1>
-            
             <p className={cn(
               "text-sm md:text-base",
               darkMode ? "text-slate-300" : "text-gray-600"
             )}>
               {currentWaiterRole === 'Waiter' 
-                ? t('waiterDashboard.welcome.waiter')
-                : t('waiterDashboard.welcome.general')
+                ? `Welcome back! Manage your assigned tables and orders.`
+                : `Restaurant table and order management system.`
               }
             </p>
           </div>
@@ -315,14 +329,14 @@ const WaiterDashboard = () => {
       
       <div className="grid grid-cols-2 md:grid-cols-5 gap-3 md:gap-4 mb-6">
         <StatsCard 
-          title={t('waiterDashboard.stats.available')} 
+          title="Available" 
           value={stats.available} 
           icon={CheckCircle} 
           color="bg-emerald-500" 
           darkMode={darkMode}
         />
         <StatsCard 
-          title={t('waiterDashboard.stats.assigned')} 
+          title="Assigned" 
           value={stats.assigned} 
           icon={UserCheck} 
           color="bg-amber-500" 
@@ -330,7 +344,7 @@ const WaiterDashboard = () => {
         />
         {currentWaiterRole === 'Waiter' && (
           <StatsCard 
-            title={t('waiterDashboard.stats.myTables')} 
+            title="My Tables" 
             value={stats.myTables} 
             icon={User} 
             color="bg-blue-500" 
@@ -338,14 +352,14 @@ const WaiterDashboard = () => {
           />
         )}
         <StatsCard 
-          title={t('waiterDashboard.stats.ordersToday')} 
+          title="Orders Today" 
           value={stats.ordersToday} 
           icon={ShoppingCart} 
           color="bg-purple-500" 
           darkMode={darkMode}
         />
         <StatsCard 
-          title={t('waiterDashboard.stats.total')} 
+          title="Total Tables" 
           value={stats.total} 
           icon={Utensils} 
           color="bg-slate-500" 
@@ -353,24 +367,24 @@ const WaiterDashboard = () => {
         />
       </div>
       
+      {/* Table Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 md:gap-4">
-        {filteredTables.map(table => (
-          <EnhancedTableCard 
+        {roleFilteredTables.map(table => (
+          <TableCard 
             key={table.id} 
             table={table} 
             darkMode={darkMode}
             currentWaiterId={currentWaiterId}
             currentWaiterRole={currentWaiterRole}
-            onTakeOrder={() => handleOpenTakeOrderModal(table)}
+            onTakeOrder={handleTakeOrder}
             onAssignWaiter={handleAssignWaiter}
             onServeOrder={handleServeOrder}
-            t={t}
           />
         ))}
       </div>
       
       {/* Empty State */}
-      {filteredTables.length === 0 && (
+      {roleFilteredTables.length === 0 && (
         <div className="text-center py-12">
           <div className="mb-4 flex justify-center">
             <div className={cn(
@@ -380,78 +394,59 @@ const WaiterDashboard = () => {
               <CheckCircle size={32} className="text-gray-400" />
             </div>
           </div>
-          <h3 className="text-lg font-semibold mb-2">{t('waiterDashboard.emptyState.noTables')}</h3>
+          <h3 className="text-lg font-semibold mb-2">No Tables Available</h3>
           <p className={cn(
             "text-sm max-w-md mx-auto",
             darkMode ? "text-slate-400" : "text-gray-500"
           )}>
-            {searchTerm 
-              ? t('waiterDashboard.emptyState.noTablesMatch', { searchTerm })
-              : t('waiterDashboard.emptyState.noTablesAvailable', { 
-                  filter: filter !== 'all' ? t(`waiterDashboard.emptyState.filterContext.${filter}`, filter.replace('myTables', 'your')) : '',
-                  role: currentWaiterRole === 'Waiter' ? t('waiterDashboard.emptyState.roleContext.waiter') : t('waiterDashboard.emptyState.roleContext.general')
-                })
+            {currentWaiterRole === 'Waiter' 
+              ? "No tables are currently available or assigned to you."
+              : "No tables are currently available in the system."
             }
           </p>
         </div>
       )}
       
-      {selectedTable && isTakeOrderModalOpen && modalInitialized && (
-        <TakeOrderModal 
-          open={isTakeOrderModalOpen} 
-          onClose={handleCloseTakeOrderModal}
+      {/* Modal rendering - simplified and fixed */}
+      {isTakeOrderModalOpen && selectedTable && (
+        <TakeOrderModal
+          open={isTakeOrderModalOpen}
+          onClose={handleCloseModal}
           tableId={selectedTable.id}
-          waiterId={currentWaiterId}
           darkMode={darkMode}
-          mode={orderMode}
+          waiterId={currentWaiterId}
           existingOrder={existingOrder}
+          mode={orderMode}
         />
       )}
     </div>
   );
 };
 
-const EnhancedTableCard = ({ 
+// Table Card Component
+const TableCard = ({ 
   table, 
   darkMode, 
   currentWaiterId,
   currentWaiterRole,
   onTakeOrder,
   onAssignWaiter,
-  onServeOrder,
-  t
+  onServeOrder
 }) => {
   const getStatusColor = (status) => {
     switch (status) {
       case 'Available': return 'bg-emerald-500';
       case 'Assigned': return 'bg-amber-500';
+      case 'Occupied': return 'bg-red-500';
       default: return 'bg-gray-500';
     }
   };
 
-  const getOrderStatusColor = (status) => {
-    switch (status) {
-      case 'order': return 'bg-blue-500';
-      case 'pending': return 'bg-yellow-500';
-      case 'preparing': return 'bg-blue-500';
-      case 'prepared': return 'bg-orange-500';
-      case 'served': return 'bg-green-500';
-      default: return 'bg-gray-500';
-    }
-  };
-
-  const getOrderStatusText = (status) => {
-    return t(`waiterDashboard.order.status.${status}`, status);
-  };
-
-  const getStatusText = (status) => {
-    return t(`waiterDashboard.table.status.${status.toLowerCase()}`, status);
-  };
-  
   const getStatusImage = (status) => {
     switch (status) {
       case 'Available': return '/assets/COLOURBOX54131781.jpg';
-      case 'Assigned': return '/assets/couple-people-meet-on-date-happy-loving-pair-of-man-woman-sitting-at-table-together-2F7430K.jpg';
+      case 'Assigned': 
+      case 'Occupied': return '/assets/couple-people-meet-on-date-happy-loving-pair-of-man-woman-sitting-at-table-together-2F7430K.jpg';
       default: return '/assets/COLOURBOX54131781.jpg';
     }
   };
@@ -462,53 +457,46 @@ const EnhancedTableCard = ({
 
   const showMyTableBadge = table.isAssignedToCurrentWaiter;
 
-  const formatPrice = (price, currency = 'USD') => {
-    return new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: currency
-    }).format(price);
-  };
+ // Updated getDishName function with better fallback logic
+const getDishName = (dish) => {
+  
+  if (dish?.dish_id?.dishName) {
+    // Handle both object and string formats
+    if (typeof dish.dish_id.dishName === 'object') {
+      return dish.dish_id.dishName.en || 
+             dish.dish_id.dishName.default || 
+             Object.values(dish.dish_id.dishName)[0] || 
+             'Unknown Dish';
+    }
+    return dish.dish_id.dishName;
+  }
+  
 
-  const hasOrdersWithPreparedStatus = table.orders && table.orders.some(order => 
-    order.orderstatus === 'prepared' || order.dishes?.some(dish => dish.status === 'prepared')
-  );
+  
+  // Try direct properties on the dish object
+  if (dish?.dishName) {
+    if (typeof dish.dishName === 'object') {
+      return dish.dishName.en || 
+             dish.dishName.default || 
+             Object.values(dish.dishName)[0] || 
+             'Unknown Dish';
+    }
+    return dish.dishName;
+  }
 
-  const getButtonText = () => {
-    if (table.hasActiveOrders) {
-      return t('waiterDashboard.buttons.manage');
-    } else {
-      return t('waiterDashboard.buttons.takeOrder');
-    }
-  };
-
-  const getDishName = (dish) => {
-    if (dish?.dish_id?.dishName?.en) {
-      return dish.dish_id.dishName.en;
-    }
-    if (dish?.dish_id?.dishName) {
-      return typeof dish.dish_id.dishName === 'string' ? dish.dish_id.dishName : dish.dish_id.dishName.en || t('waiterDashboard.order.unknownDish');
-    }
-    if (dish?.dishName?.en) {
-      return dish.dishName.en;
-    }
-    if (dish?.dishName) {
-      return typeof dish.dishName === 'string' ? dish.dishName : dish.dishName.en || t('waiterDashboard.order.unknownDish');
-    }
-    if (dish?.name) {
-      return dish.name;
-    }
-    return t('waiterDashboard.order.unknownDish');
-  };
+  
+  // If all else fails, return Unknown Dish
+  return 'Unknown Dish';
+};
 
   const getDishPrice = (dish) => {
-    if (dish?.dish_id?.price) {
-      return dish.dish_id.price;
-    }
-    if (dish?.price) {
-      return dish.price;
-    }
-    return 0;
+    return dish?.dish_id?.price || dish?.price || 0;
   };
+
+  const hasReadyOrders = table.orders.some(order => 
+    order.orderstatus === 'prepared' || 
+    order.dishes?.some(dish => dish.status === 'prepared')
+  );
 
   return (
     <div className={cn(
@@ -519,11 +507,11 @@ const EnhancedTableCard = ({
       table.hasActiveOrders ? "ring-2 ring-emerald-400" : ""
     )}>
       
-      {/* Compact Image Section */}
+      {/* Image Header */}
       <div className="relative h-20 w-full overflow-hidden">
         <img 
           src={getStatusImage(table.status)} 
-          alt={t('waiterDashboard.table.tableNumber', { number: table.tableNumber })}
+          alt={`Table ${table.tableNumber}`}
           className="w-full h-full object-cover"
           onError={(e) => {
             e.target.src = '/assets/default-table.jpg'; 
@@ -535,21 +523,21 @@ const EnhancedTableCard = ({
             "px-1.5 py-0.5 rounded-full text-xs font-medium text-white shadow-sm",
             getStatusColor(table.status)
           )}>
-            {table.status === 'Available' ? t('waiterDashboard.table.status.free') : t('waiterDashboard.table.status.busy')}
+            {table.status}
           </div>
           {showMyTableBadge && (
             <div className="px-1.5 py-0.5 rounded-full text-xs font-medium text-white shadow-sm bg-blue-500">
-              {t('waiterDashboard.table.waiter.mine')}
+              Mine
             </div>
           )}
         </div>
       </div>
       
-      {/* Compact Content Section */}
+      {/* Content */}
       <div className="p-3">
         <div className="flex justify-between items-center mb-2">
           <h3 className="font-bold text-lg text-gray-900 dark:text-white">
-            {t('waiterDashboard.table.tableNumber', { number: table.tableNumber })}
+            Table {table.tableNumber}
           </h3>
           <div className="flex items-center text-xs text-gray-600 dark:text-gray-400 bg-gray-100 dark:bg-slate-700 px-2 py-1 rounded">
             <Users size={12} className="mr-1" />
@@ -557,7 +545,7 @@ const EnhancedTableCard = ({
           </div>
         </div>
 
-        {/* Compact Waiter Info */}
+        {/* Waiter Info */}
         {table.isWaiterAssigned && (
           <div className="mb-2">
             <div className={cn(
@@ -568,20 +556,19 @@ const EnhancedTableCard = ({
             )}>
               <User size={12} className="mr-1" />
               <span className="truncate font-medium">
-                {table.waiterName || t('waiterDashboard.table.waiter.unknown')}
-                {showMyTableBadge && <span className="ml-1 font-bold">{t('waiterDashboard.table.waiter.you')}</span>}
+                {table.waiterName || 'Unknown Waiter'}
+                {showMyTableBadge && <span className="ml-1 font-bold">(You)</span>}
               </span>
             </div>
           </div>
         )}
 
-        {/* Compact Order Information */}
-        {table.hasActiveOrders && (
-          <div className="order-container p-2 bg-white rounded-lg shadow-sm border text-xs">
-            {/* Compact Header */}
+        {/* Order Information */}
+        {table.hasActiveOrders && table.orders.length > 0 && (
+          <div className="mb-3 p-2 bg-gray-50 dark:bg-slate-700 rounded-lg text-xs">
             <div className="flex justify-between items-center mb-1">
-              <span className="font-medium text-gray-700">
-                {t('waiterDashboard.order.orders', { count: table.orders.length })}
+              <span className="font-medium text-gray-700 dark:text-gray-300">
+                {table.orders.length} Order{table.orders.length > 1 ? 's' : ''}
               </span>
               {table.totalOrderAmount > 0 && (
                 <span className="font-bold text-green-600">
@@ -590,78 +577,60 @@ const EnhancedTableCard = ({
               )}
             </div>
 
-            {/* First Order Summary */}
-            {table.orders.length > 0 && (
+            {/* First Order Details */}
+            {table.orders[0] && (
               <div className="space-y-1">
-                {/* Order ID & Status */}
                 <div className="flex justify-between items-center">
                   <span className="text-gray-500">
-                    {t('waiterDashboard.order.orderNumber', { id: table.orders[0]._id?.slice(-4) || 'N/A' })}
+                    Order #{table.orders[0]._id?.slice(-4) || 'N/A'}
                   </span>
                   <span className={`px-1.5 py-0.5 rounded text-xs font-medium ${
                     table.orders[0].orderstatus === 'prepared'
                       ? 'bg-green-100 text-green-700'
                       : 'bg-yellow-100 text-yellow-700'
                   }`}>
-                    {getOrderStatusText(table.orders[0].orderstatus)}
+                    {table.orders[0].orderstatus}
                   </span>
                 </div>
 
-                {/* Dishes Summary */}
+                {/* Dishes */}
                 {table.orders[0].dishes && table.orders[0].dishes.length > 0 && (
-                  <div className="bg-gray-50 rounded p-1.5">
-                    <div className="text-gray-600 mb-1">
-                      {t('waiterDashboard.order.dishes', { count: table.orders[0].dishes.length })}
-                    </div>
-
-                    {/* Top 2 Dishes */}
-                    <div className="space-y-1">
-                      {table.orders[0].dishes.slice(0, 2).map((dish, index) => (
-                        <div key={dish._id || index} className="flex items-center justify-between py-1 px-2 bg-white rounded border-l-2 border-blue-200">
-                          <div className="flex items-center space-x-2 flex-1">
-                            <span className="font-medium text-gray-800 text-xs">
-                              {getDishName(dish).length > 10 
-                                ? `${getDishName(dish).substring(0, 10)}...` 
-                                : getDishName(dish)}
+                  <div className="space-y-1">
+                    {table.orders[0].dishes.slice(0, 2).map((dish, index) => (
+                      <div key={index} className="flex justify-between items-center py-1 px-2 bg-white dark:bg-slate-600 rounded">
+                        <span className="font-medium text-gray-800 dark:text-gray-200 text-xs truncate">
+                          {getDishName(dish)} x{dish.quantity}
+                        </span>
+                        <div className="flex items-center space-x-1">
+                          <span className="text-green-600 font-semibold text-xs">
+                            ${getDishPrice(dish).toFixed(2)}
+                          </span>
+                          {dish.status && (
+                            <span className={`px-1 py-0.5 rounded text-xs text-white ${
+                              dish.status === 'prepared' 
+                                ? 'bg-green-500' 
+                                : 'bg-yellow-500'
+                            }`}>
+                              {dish.status}
                             </span>
-                            <span className="text-blue-600 font-bold text-xs">
-                              x{dish.quantity}
-                            </span>
-                          </div>
-                          <div className="flex items-center space-x-2">
-                            <span className="text-green-600 font-semibold text-xs">
-                              ${getDishPrice(dish).toFixed(2)}
-                            </span>
-                            {/* Dish Status */}
-                           {dish.status && (
-                              <span className={`px-1.5 py-0.5 rounded text-xs font-medium text-white ${
-                                dish.status === 'prepared' 
-                                  ? 'bg-green-500' 
-                                  : dish.status === 'preparing'
-                                  ? 'bg-blue-500'
-                                  : 'bg-yellow-500'
-                              }`}>
-                                {getOrderStatusText(dish.status)}
-                              </span>
-                            )}
-                          </div>
+                          )}
                         </div>
-                      ))}
-                      {table.orders[0].dishes.length > 2 && (
-                        <div className="text-center text-gray-500 text-xs py-1">
-                          {t('waiterDashboard.order.moreDishes', { count: table.orders[0].dishes.length - 2 })}
-                        </div>
-                      )}
-                    </div>
+                      </div>
+                    ))}
+                    {table.orders[0].dishes.length > 2 && (
+                      <div className="text-center text-gray-500 text-xs">
+                        +{table.orders[0].dishes.length - 2} more dishes
+                      </div>
+                    )}
                   </div>
                 )}
 
-                {/* Serve Button for Ready Orders */}
-                {hasOrdersWithPreparedStatus && (
-                  <div className="mt-2 pt-2 border-t border-gray-200">
+                {/* Ready to Serve Alert */}
+                {hasReadyOrders && (
+                  <div className="mt-2 pt-2 border-t border-gray-200 dark:border-slate-600">
                     <div className="flex items-center justify-between">
                       <span className="text-green-600 font-medium text-xs animate-pulse">
-                        🔔 {t('waiterDashboard.order.readyToServe')}
+                        🔔 Ready to Serve
                       </span>
                       <Button
                         onClick={(e) => {
@@ -672,18 +641,9 @@ const EnhancedTableCard = ({
                         className="bg-green-600 hover:bg-green-700 text-white px-2 py-1 text-xs"
                       >
                         <Truck size={12} className="mr-1" />
-                        {t('waiterDashboard.buttons.serve')}
+                        Serve
                       </Button>
                     </div>
-                  </div>
-                )}
-
-                {/* Multiple Orders Indicator */}
-                {table.orders.length > 1 && (
-                  <div className="mt-1 text-center">
-                    <span className="text-blue-600 font-medium text-xs">
-                      {t('waiterDashboard.order.moreOrders', { count: table.orders.length - 1 })}
-                    </span>
                   </div>
                 )}
               </div>
@@ -692,8 +652,8 @@ const EnhancedTableCard = ({
         )}
 
         {/* Action Buttons */}
-        <div className="mt-3 space-y-2">
-          {/* Assign Button (for unassigned tables) */}
+        <div className="space-y-2">
+          {/* Assign Button */}
           {!table.isWaiterAssigned && table.status === 'Available' && (
             <Button
               onClick={() => onAssignWaiter(table.id)}
@@ -701,11 +661,11 @@ const EnhancedTableCard = ({
               className="w-full bg-blue-600 hover:bg-blue-700 text-white"
             >
               <UserCheck size={14} className="mr-1" />
-              {t('waiterDashboard.buttons.assignToMe')}
+              Assign to Me
             </Button>
           )}
 
-          {/* Take Order / Manage Order Button */}
+          {/* Take/Manage Order Button */}
           {(table.isAssignedToCurrentWaiter || currentWaiterRole !== 'Waiter') && (
             <Button
               onClick={() => onTakeOrder(table)}
@@ -715,7 +675,7 @@ const EnhancedTableCard = ({
               className={cn(
                 "w-full transition-all duration-200",
                 table.hasActiveOrders 
-                  ? "bg-emerald-600 hover:bg-emerald-700 text-white border-emerald-600" 
+                  ? "bg-emerald-600 hover:bg-emerald-700 text-white" 
                   : "border-blue-600 text-blue-600 hover:bg-blue-600 hover:text-white",
                 isDisabled && "opacity-50 cursor-not-allowed"
               )}
@@ -723,36 +683,31 @@ const EnhancedTableCard = ({
               {table.hasActiveOrders ? (
                 <>
                   <Edit size={14} className="mr-1" />
-                  {getButtonText()}
+                  Manage Order
                 </>
               ) : (
                 <>
                   <Plus size={14} className="mr-1" />
-                  {getButtonText()}
+                  Take Order
                 </>
               )}
             </Button>
           )}
         </div>
 
-        {/* Last Order Time */}
+        {/* Order Timestamp */}
         {table.orders.length > 0 && (
           <div className="mt-2 pt-2 border-t border-gray-200 dark:border-slate-700">
             <div className="flex items-center justify-between text-xs text-gray-500 dark:text-gray-400">
               <div className="flex items-center">
                 <Clock size={12} className="mr-1" />
                 <span>
-                  {new Date(table.orders[0].createdAt).toLocaleTimeString([], {
-                    hour: t('waiterDashboard.time.format.hour'),
-                    minute: t('waiterDashboard.time.format.minute')
+                  {new Date(table.orders[0].orderdate || table.orders[0].createdAt).toLocaleTimeString([], {
+                    hour: '2-digit',
+                    minute: '2-digit'
                   })}
                 </span>
               </div>
-              {table.orders[0].totalAmount && (
-                <span className="font-medium text-green-600">
-                  {formatPrice(table.orders[0].totalAmount, t('waiterDashboard.currency.format'))}
-                </span>
-              )}
             </div>
           </div>
         )}

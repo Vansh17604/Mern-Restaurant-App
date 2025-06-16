@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { Search, Plus, Minus, X, ChefHat, ShoppingCart, Receipt, Star, Utensils, CheckCircle, Loader2, ImageIcon } from 'lucide-react';
@@ -35,50 +35,89 @@ const TakeOrderModal = ({
   const [hasHandledSuccess, setHasHandledSuccess] = useState(false);
   const [imageErrors, setImageErrors] = useState(new Set());
   
+  // Refs to track component state
   const isMountedRef = useRef(true);
+  const successHandledRef = useRef(false);
+  const orderSubmittedRef = useRef(false);
+  const fetchAttemptedRef = useRef(false); // Add this to track fetch attempts
+  
   const currentLanguage = i18n.language || 'en';
   const isEditMode = mode === 'edit' && existingOrder;
 
-  
+  // Cleanup on unmount
   useEffect(() => {
     return () => {
       isMountedRef.current = false;
     };
   }, []);
 
-  // Reset success tracking when modal opens/closes
+  // Fetch dishes when modal opens - FIXED VERSION
+  useEffect(() => {
+    if (open && !fetchAttemptedRef.current) {
+      fetchAttemptedRef.current = true;
+      
+      // Only fetch if we don't have dishes or they're not loading
+      if (!dishes || dishes.length === 0) {
+        dispatch(fetchActiveDishes())
+          .then(() => {
+            if (isMountedRef.current) {
+              setDishesInitialized(true);
+            }
+          })
+          .catch((error) => {
+            console.error('Error fetching dishes:', error);
+            if (isMountedRef.current) {
+              setDishesInitialized(true);
+            }
+          });
+      } else {
+        // If dishes already exist, mark as initialized
+        setDishesInitialized(true);
+      }
+    }
+  }, [open, dispatch, dishes]); // Removed dishesInitialized and dishesLoading from dependencies
+
+  // Reset states when modal opens/closes
   useEffect(() => {
     if (open) {
+      // Modal is opening - reset states
       setHasHandledSuccess(false);
       setIsSubmitting(false);
-      setDishesInitialized(false);
       setImageErrors(new Set());
+      successHandledRef.current = false;
+      orderSubmittedRef.current = false;
+      fetchAttemptedRef.current = false; // Reset fetch attempt flag
       dispatch(resetOrderState());
     } else {
+      // Modal is closing - cleanup
       setOrderItems([]);
       setSelectedCategory('All');
       setSearchTerm('');
       setDishesInitialized(false);
       setImageErrors(new Set());
+      successHandledRef.current = false;
+      orderSubmittedRef.current = false;
+      fetchAttemptedRef.current = false; // Reset fetch attempt flag
     }
   }, [open, dispatch]);
 
-  // Fetch dishes when modal opens
+  // Alternative approach: Use a separate effect to track when dishes are loaded
   useEffect(() => {
-    if (open && !dishesInitialized) {
-      dispatch(fetchActiveDishes())
-        .then(() => {
-          setDishesInitialized(true);
-        })
-        .catch((error) => {
-          console.error('Error fetching dishes:', error);
-        });
+    if (dishes && dishes.length > 0 && !dishesInitialized) {
+      setDishesInitialized(true);
     }
-  }, [open, dispatch, dishesInitialized]);
+  }, [dishes, dishesInitialized]);
 
   // Initialize order items for edit mode
   useEffect(() => {
-    if (open && isEditMode && existingOrder && dishesInitialized && dishes?.length > 0) {
+    if (
+      open && 
+      isEditMode && 
+      existingOrder && 
+      dishesInitialized && 
+      dishes?.length > 0 &&
+      orderItems.length === 0
+    ) {
       if (!existingOrder.dishes || !Array.isArray(existingOrder.dishes)) {
         return;
       }
@@ -113,28 +152,43 @@ const TakeOrderModal = ({
       
       setOrderItems(initialOrderItems);
     }
-  }, [open, isEditMode, existingOrder, dishesInitialized, dishes, currentLanguage]);
+  }, [open, isEditMode, existingOrder, dishesInitialized, dishes, currentLanguage, orderItems.length]);
 
   // Handle order success
   useEffect(() => {
-    if (isSuccess && !hasHandledSuccess && isMountedRef.current) {
+    if (
+      isSuccess && 
+      !successHandledRef.current && 
+      orderSubmittedRef.current &&
+      isMountedRef.current
+    ) {
+      successHandledRef.current = true;
       setHasHandledSuccess(true);
       setIsSubmitting(false);
       
+      // Close modal after successful submission
       setTimeout(() => {
-        if (isMountedRef.current) {
+        if (isMountedRef.current && typeof onClose === 'function') {
           onClose();
         }
       }, 500);
     }
-  }, [isSuccess, hasHandledSuccess, onClose]);
+  }, [isSuccess, onClose]);
 
   // Handle order error
   useEffect(() => {
-    if (isError && isSubmitting) {
+    if (isError && orderSubmittedRef.current) {
       setIsSubmitting(false);
+      orderSubmittedRef.current = false;
     }
-  }, [isError, message, isSubmitting]);
+  }, [isError, message]);
+
+  // Memoized close handler
+  const handleClose = useCallback(() => {
+    if (typeof onClose === 'function' && !isSubmitting) {
+      onClose();
+    }
+  }, [onClose, isSubmitting]);
 
   // Get unique categories
   const categories = ['All', ...new Set(
@@ -155,134 +209,145 @@ const TakeOrderModal = ({
   }) || [];
 
   // Handle image error
-  const handleImageError = (dishId) => {
+  const handleImageError = useCallback((dishId) => {
     setImageErrors(prev => new Set([...prev, dishId]));
-  };
+  }, []);
 
   // Get image URL
-  const getImageUrl = (imageUrl) => {
+  const getImageUrl = useCallback((imageUrl) => {
     if (!imageUrl) return null;
     if (imageUrl.startsWith('http')) return imageUrl;
     return `${base_url}${imageUrl}`;
-  };
+  }, []);
 
   // Add item to order
-  const addToOrder = (dish) => {
+  const addToOrder = useCallback((dish) => {
     if (!dish || !dish._id) return;
     
-    const existingItem = orderItems.find(item => item.dish_id === dish._id);
-    
-    if (existingItem) {
-      setOrderItems(prev => prev.map(item =>
-        item.dish_id === dish._id 
-          ? { ...item, quantity: item.quantity + 1 }
-          : item
-      ));
-    } else {
-      const newItem = {
-        dish_id: dish._id,
-        dishName: dish.dishName?.[currentLanguage] || dish.dishName?.en || dish.dishName || 'Unknown Dish',
-        price: dish.price || 0,
-        currency: dish.currency || 'USD',
-        quantity: 1,
-        status: 'order',
-        imageUrl: dish.imageUrl
-      };
-      setOrderItems(prev => [...prev, newItem]);
-    }
-  };
-
-  // Remove item from order - now checks status
-  const removeFromOrder = (dishId) => {
-    const item = orderItems.find(item => item.dish_id === dishId);
-    if (item && item.status !== 'prepare') {
-      setOrderItems(prev => prev.filter(item => item.dish_id !== dishId));
-    }
-  };
-
-  const updateQuantity = (dishId, newQuantity) => {
-    const item = orderItems.find(item => item.dish_id === dishId);
-    
-    if (newQuantity <= 0) {
-      if (item && item.status !== 'prepare') {
-        removeFromOrder(dishId);
-      }
-    } else {
-      const currentQuantity = item ? item.quantity : 0;
-      if (newQuantity < currentQuantity && item && item.status === 'prepare') {
-        return; // Don't allow decreasing quantity for items being prepared
-      }
+    setOrderItems(prev => {
+      const existingItem = prev.find(item => item.dish_id === dish._id);
       
-      setOrderItems(prev => prev.map(item =>
-        item.dish_id === dishId 
-          ? { ...item, quantity: newQuantity }
-          : item
-      ));
-    }
-  };
+      if (existingItem) {
+        return prev.map(item =>
+          item.dish_id === dish._id 
+            ? { ...item, quantity: item.quantity + 1 }
+            : item
+        );
+      } else {
+        const newItem = {
+          dish_id: dish._id,
+          dishName: dish.dishName?.[currentLanguage] || dish.dishName?.en || dish.dishName || 'Unknown Dish',
+          price: dish.price || 0,
+          currency: dish.currency || 'USD',
+          quantity: 1,
+          status: 'order',
+          imageUrl: dish.imageUrl
+        };
+        return [...prev, newItem];
+      }
+    });
+  }, [currentLanguage]);
+
+  // Remove item from order
+  const removeFromOrder = useCallback((dishId) => {
+    setOrderItems(prev => {
+      const item = prev.find(item => item.dish_id === dishId);
+      if (item && item.status !== 'prepare') {
+        return prev.filter(item => item.dish_id !== dishId);
+      }
+      return prev;
+    });
+  }, []);
+
+  // Update quantity
+  const updateQuantity = useCallback((dishId, newQuantity) => {
+    setOrderItems(prev => {
+      const item = prev.find(item => item.dish_id === dishId);
+      
+      if (newQuantity <= 0) {
+        if (item && item.status !== 'prepare') {
+          return prev.filter(item => item.dish_id !== dishId);
+        }
+        return prev;
+      } else {
+        const currentQuantity = item ? item.quantity : 0;
+        if (newQuantity < currentQuantity && item && item.status === 'prepare') {
+          return prev;
+        }
+        
+        return prev.map(item =>
+          item.dish_id === dishId 
+            ? { ...item, quantity: newQuantity }
+            : item
+        );
+      }
+    });
+  }, []);
 
   // Calculate total
-  const calculateTotal = () => {
+  const calculateTotal = useCallback(() => {
     return orderItems.reduce((total, item) => total + (item.price * item.quantity), 0);
-  };
+  }, [orderItems]);
 
   // Submit order
-const handleSubmitOrder = async () => {
-  if (orderItems.length === 0) {
-    alert(t('TakeOrderModal.pleaseAddAtLeastOneItem'));
-    return;
-  }
-
-  setIsSubmitting(true);
-
-  try {
-    if (isEditMode) {
-      const dishesArray = orderItems.map(item => ({
-        dish_id: item.dish_id,
-        quantity: item.quantity,
-        status: item.status || 'order'
-      }));
-
-      console.log('Sending dishes for update:', dishesArray);
-
-      await dispatch(updateOrderDishes({
-        id: existingOrder._id,
-        dishes: dishesArray
-      }));
-    } else {
-      const orderData = {
-        tableid: tableId,
-        waiterid: waiterId,
-        dishes: orderItems,
-        totalAmount: calculateTotal(),
-        orderstatus: 'order'
-      };
-      await dispatch(createOrder(orderData));
+  const handleSubmitOrder = useCallback(async () => {
+    if (orderItems.length === 0) {
+      alert(t('TakeOrderModal.pleaseAddAtLeastOneItem') || 'Please add at least one item');
+      return;
     }
-    
-    // Close modal immediately after dispatch
-    onClose();
-    
-  } catch (error) {
-    console.error('Error submitting order:', error);
-    setIsSubmitting(false);
-    // Don't close modal if there's an error
-  }
-};
 
-  const formatPrice = (price, currency = 'USD') => {
+    if (isSubmitting || orderSubmittedRef.current) {
+      return;
+    }
+
+    setIsSubmitting(true);
+    orderSubmittedRef.current = true;
+
+    try {
+      if (isEditMode) {
+        const dishesArray = orderItems.map(item => ({
+          dish_id: item.dish_id,
+          quantity: item.quantity,
+          status: item.status || 'order'
+        }));
+
+        await dispatch(updateOrderDishes({
+          id: existingOrder._id,
+          dishes: dishesArray
+        }));
+      } else {
+        const orderData = {
+          tableid: tableId,
+          waiterid: waiterId,
+          dishes: orderItems,
+          totalAmount: calculateTotal(),
+          orderstatus: 'order'
+        };
+        await dispatch(createOrder(orderData));
+      }
+      
+    } catch (error) {
+      console.error('Error submitting order:', error);
+      setIsSubmitting(false);
+      orderSubmittedRef.current = false;
+    }
+  }, [orderItems, isSubmitting, isEditMode, existingOrder, tableId, waiterId, calculateTotal, dispatch, t]);
+
+  // Format price
+  const formatPrice = useCallback((price, currency = 'USD') => {
     return new Intl.NumberFormat('en-US', {
       style: 'currency',
       currency: currency
     }).format(price || 0);
-  };
+  }, []);
 
   // Get item quantity in order
-  const getItemQuantity = (dishId) => {
+  const getItemQuantity = useCallback((dishId) => {
     const item = orderItems.find(item => item.dish_id === dishId);
     return item ? item.quantity : 0;
-  };
+  }, [orderItems]);
 
+  // Early return if modal should not be shown
   if (!open) return null;
 
   return (
@@ -290,7 +355,7 @@ const handleSubmitOrder = async () => {
       <div className={`w-full max-w-5xl h-[70vh] rounded-xl shadow-2xl overflow-hidden ${
         darkMode ? 'bg-slate-900 border border-slate-700' : 'bg-white border border-gray-200'
       }`}>
-        {/* Compact Header */}
+        {/* Header */}
         <div className={`flex items-center justify-between p-3 border-b ${
           darkMode ? 'border-slate-700 bg-slate-800' : 'border-gray-200 bg-gray-50'
         }`}>
@@ -300,7 +365,7 @@ const handleSubmitOrder = async () => {
             </div>
             <div>
               <h2 className="text-lg font-bold text-violet-600">
-                {isEditMode ? t('TakeOrderModal.editOrder') : t('TakeOrderModal.takeOrder')}
+                {isEditMode ? (t('TakeOrderModal.editOrder') || 'Edit Order') : (t('TakeOrderModal.takeOrder') || 'Take Order')}
               </h2>
               {tableId && (
                 <p className="text-xs text-gray-500">Table {tableId}</p>
@@ -308,24 +373,25 @@ const handleSubmitOrder = async () => {
             </div>
           </div>
           <Button
-            onClick={onClose}
+            onClick={handleClose}
             variant="ghost"
             size="icon"
             className="hover:bg-red-100 hover:text-red-600 rounded-full h-7 w-7"
+            disabled={isSubmitting}
           >
             <X size={16} />
           </Button>
         </div>
 
-   
         <div className="flex h-[calc(70vh-4rem)]">
+          {/* Left Side - Dishes */}
           <div className="flex-1 p-3 overflow-hidden flex flex-col">
             <div className="mb-3 space-y-2">
               <div className="relative">
                 <Search className="absolute left-2 top-1/2 transform -translate-y-1/2 text-gray-400" size={14} />
                 <Input
                   type="text"
-                  placeholder={t('TakeOrderModal.searchDishes')}
+                  placeholder={t('TakeOrderModal.searchDishes') || 'Search dishes...'}
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                   className="pl-8 py-1.5 text-sm rounded-lg h-8"
@@ -345,25 +411,24 @@ const handleSubmitOrder = async () => {
                         : 'hover:bg-violet-50'
                     }`}
                   >
-                    {category === 'All' ? t('TakeOrderModal.all') : 
-                     t(`TakeOrderModal.categories.${category.toLowerCase().replace(/\s+/g, '')}`, category)}
+                    {category === 'All' ? (t('TakeOrderModal.all') || 'All') : category}
                   </Button>
                 ))}
               </div>
             </div>
 
-            {/* Compact Dishes Grid */}
+            {/* Dishes Grid */}
             <ScrollArea className="flex-1">
               <div className="grid grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-2 pb-2">
                 {dishesLoading ? (
                   <div className="col-span-full flex flex-col items-center justify-center py-8">
                     <Loader2 className="w-6 h-6 text-violet-600 animate-spin mb-2" />
-                    <p className="text-sm text-gray-600">{t('TakeOrderModal.loadingDishes')}</p>
+                    <p className="text-sm text-gray-600">{t('TakeOrderModal.loadingDishes') || 'Loading dishes...'}</p>
                   </div>
                 ) : filteredDishes.length === 0 ? (
                   <div className="col-span-full flex flex-col items-center justify-center py-8">
                     <Utensils size={32} className="mb-2 text-gray-300" />
-                    <p className="text-sm text-gray-500">{t('TakeOrderModal.noDishesFound')}</p>
+                    <p className="text-sm text-gray-500">{t('TakeOrderModal.noDishesFound') || 'No dishes found'}</p>
                   </div>
                 ) : (
                   filteredDishes.map(dish => {
@@ -382,7 +447,7 @@ const handleSubmitOrder = async () => {
                         onClick={() => addToOrder(dish)}
                       >
                         <CardContent className="p-0">
-                          {/* Compact Image Section */}
+                          {/* Image Section */}
                           <div className="relative h-16 overflow-hidden bg-gray-100">
                             {imageUrl && !hasImageError ? (
                               <img
@@ -410,13 +475,13 @@ const handleSubmitOrder = async () => {
                             </div>
                           </div>
 
-                          {/* Compact Content Section */}
+                          {/* Content Section */}
                           <div className="p-1.5">
                             <h4 className="font-semibold text-xs leading-tight mb-1 line-clamp-2 text-gray-900">
                               {dish.dishName?.[currentLanguage] || dish.dishName?.en || dish.dishName || 'Unknown Dish'}
                             </h4>
 
-                            {/* Compact Add Button */}
+                            {/* Add Button */}
                             <Button
                               onClick={(e) => {
                                 e.stopPropagation();
@@ -426,7 +491,7 @@ const handleSubmitOrder = async () => {
                               className="w-full h-5 text-xs rounded bg-violet-600 hover:bg-violet-700 text-white"
                             >
                               <Plus size={10} className="mr-0.5" />
-                              {quantity > 0 ? t('TakeOrderModal.addMore') : t('TakeOrderModal.add')}
+                              {quantity > 0 ? (t('TakeOrderModal.addMore') || 'Add More') : (t('TakeOrderModal.add') || 'Add')}
                             </Button>
                           </div>
                         </CardContent>
@@ -438,7 +503,7 @@ const handleSubmitOrder = async () => {
             </ScrollArea>
           </div>
 
-          {/* Right Side - Compact Order Summary */}
+          {/* Right Side - Order Summary */}
           <div className="w-72 flex-shrink-0 border-l border-gray-200 dark:border-slate-700">
             <div className={`h-full flex flex-col ${
               darkMode ? 'bg-slate-800' : 'bg-gray-50'
@@ -447,7 +512,7 @@ const handleSubmitOrder = async () => {
                 <div className="flex items-center justify-between">
                   <h3 className="font-bold text-sm flex items-center text-gray-900">
                     <ShoppingCart size={16} className="mr-1 text-violet-600" />
-                    {t('TakeOrderModal.orderSummary')}
+                    {t('TakeOrderModal.orderSummary') || 'Order Summary'}
                   </h3>
                   {orderItems.length > 0 && (
                     <Badge className="bg-violet-100 text-violet-800 rounded-full text-xs">
@@ -461,8 +526,12 @@ const handleSubmitOrder = async () => {
                 <div className="flex-1 flex items-center justify-center text-center p-4">
                   <div>
                     <Receipt size={32} className="mx-auto mb-2 text-gray-300" />
-                    <p className="text-sm font-semibold mb-1 text-gray-500">{t('TakeOrderModal.noItemsInOrder')}</p>
-                    <p className="text-xs text-gray-400">{t('TakeOrderModal.startAddingDishes')}</p>
+                    <p className="text-sm font-semibold mb-1 text-gray-500">
+                      {t('TakeOrderModal.noItemsInOrder') || 'No items in order'}
+                    </p>
+                    <p className="text-xs text-gray-400">
+                      {t('TakeOrderModal.startAddingDishes') || 'Start adding dishes'}
+                    </p>
                   </div>
                 </div>
               ) : (
@@ -484,7 +553,7 @@ const handleSubmitOrder = async () => {
                                   </h5>
                                   {isPreparing && (
                                     <span className="text-xs text-orange-600 font-medium">
-                                      {t('TakeOrderModal.preparing')}
+                                      {t('TakeOrderModal.preparing') || 'Preparing...'}
                                     </span>
                                   )}
                                 </div>
@@ -504,9 +573,7 @@ const handleSubmitOrder = async () => {
                               </div>
                               
                               <div className="flex items-center justify-between">
-                                
                                 <div className="flex items-center space-x-1">
-                                
                                   <Button
                                     onClick={() => updateQuantity(item.dish_id, item.quantity - 1)}
                                     variant="outline"
@@ -541,10 +608,12 @@ const handleSubmitOrder = async () => {
                     </div>
                   </ScrollArea>
 
-                  {/* Compact Submit Section */}
+                  {/* Submit Section */}
                   <div className="p-3 border-t border-gray-200 space-y-2">
                     <div className="flex justify-between items-center">
-                      <span className="font-bold text-sm text-gray-900">{t('TakeOrderModal.total')}:</span>
+                      <span className="font-bold text-sm text-gray-900">
+                        {t('TakeOrderModal.total') || 'Total'}:
+                      </span>
                       <span className="font-bold text-lg text-emerald-600">
                         {formatPrice(calculateTotal())}
                       </span>
@@ -552,18 +621,18 @@ const handleSubmitOrder = async () => {
                     
                     <Button
                       onClick={handleSubmitOrder}
-                      disabled={isSubmitting || orderLoading}
-                      className="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-2 text-sm font-bold rounded-lg"
+                      disabled={isSubmitting || orderLoading || orderSubmittedRef.current}
+                      className="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-2 text-sm font-bold rounded-lg disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                       {isSubmitting || orderLoading ? (
                         <>
                           <Loader2 className="w-3 h-3 animate-spin mr-1" />
-                          {isEditMode ? t('TakeOrderModal.updating') : t('TakeOrderModal.submitting')}
+                          {isEditMode ? (t('TakeOrderModal.updating') || 'Updating...') : (t('TakeOrderModal.submitting') || 'Submitting...')}
                         </>
                       ) : (
                         <>
                           <CheckCircle size={14} className="mr-1" />
-                          {isEditMode ? t('TakeOrderModal.updateOrder') : t('TakeOrderModal.submitOrder')}
+                          {isEditMode ? (t('TakeOrderModal.updateOrder') || 'Update Order') : (t('TakeOrderModal.submitOrder') || 'Submit Order')}
                         </>
                       )}
                     </Button>
